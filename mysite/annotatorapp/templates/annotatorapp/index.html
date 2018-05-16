@@ -1,0 +1,28 @@
+{% extends "annotatorapp/base.html" %}
+{%block title%}Input{%endblock%}
+{%block content%}
+  <form 
+    method = "POST" 
+    action = "{% url 'annotatorapp:presentdataview' %} ">{% csrf_token %}
+    <div class="form-group">
+      <label for="line">Sentence:</label>
+      <input type="text" class="form-control" id="line" placeholder="Enter sentence" name="line" value='rAmasya BAryA sIwA wasya anujaH lakRmaNaH ca rAmeNa saha vanam gacCawaH'>
+    </div>
+
+    <label for="linetype">type:</label>
+    <select class="form-control"  id="linetype" name = 'linetype'>
+        <option>WX</option>
+        <option>SLP</option>
+        <!-- <option>devanagiri</option>
+        <option>IAST</option>
+         --><option>Velthuis</option>
+        <option>KH</option>
+    </select>
+
+    <div class="checkbox">
+        <label><input type="checkbox" name = "checkbox" >save line</label>
+    </div>
+
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+{%endblock%}

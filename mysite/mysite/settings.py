@@ -25,13 +25,13 @@ SECRET_KEY = '_(s+y8m$aa5360tr@gyts*b9%i5p#^vsmdxzehpdv@q=07+!vn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-	'annotatorapp',
+	'annotatorapp.apps.AnnotatorappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

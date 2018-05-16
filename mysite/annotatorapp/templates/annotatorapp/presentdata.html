@@ -1,0 +1,613 @@
+{% extends "annotatorapp/base.html" %}
+
+{%block title%}Presentdata{%endblock%}
+
+{%block content%}
+{% load poll_extras %}
+
+<p id = 'show_lemma'> <br> </p>
+
+<div class="panel-group">
+  <ul class="pager">
+  <li class="next"><a  href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="refresh option">Reset</a></li>
+  </ul>
+  <div class="panel panel-default">
+      
+        <div class="panel-heading" >
+          
+          <h3 class="panel-title">
+            <a data-toggle="collapse" href="#collapse{{sentid}}">{{line}}</a>
+          </h3>
+         
+        </div>
+        <div id="collapse{{sentid}}" class="panel-collapse collapse">
+          <table class="table table-hover">
+              <thead>
+                  <tr>
+                      <th>word</th>
+                      <th>lemma </th>
+                      <th>morph </th>
+                      <th>auxi</th>
+                      <th>preverb</th>
+                      <th></th>
+                      <th></th>
+                  </tr>
+              </thead>
+             
+              <tbody>
+                 {% for wd in wordsdata %}
+                   
+                    {% if not wd.isEliminated %}
+                     <tr>
+                          <th>{{wd.word}}</th>
+                          <th>{{wd.lemma}} </th>
+                          <th>{{wd.morph}} </th>
+                          <th>{{wd.aux_info}}</th>
+                          <th>{{wd.pre_verb}}</th>
+                          <th>{% if wd.isSelected %}
+                            
+                            <a class="btn btn-success btn-xs" title="Select option and eliminate others">Selected</a>
+                          
+                          {% endif %}</th>
+                      
+                      </tr>
+                     {%endif%} 
+   
+                    
+                {%endfor%}
+              </tbody>
+    </table>
+
+   
+      
+    </div>
+
+
+   <div class="panel-body"> 
+
+
+    <table class="table table-hover">
+      <tbody>
+        
+        {%for l in levelrange%}
+        
+        <tr>
+          
+          {%for p in positionrange%}
+              
+
+            {%with lp1=levelpos|getdicvalue:l lp2=levelwordpos|getdicvalue:l x=l|getstring:p%}
+              
+            {%if p|checkpos:lp1 == 'ok'%}
+              <td></td>
+            {%elif p|checkpos:lp2 == 'ok'%}
+
+              {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
+
+                <td colspan={{wd1.colspan}} align="left"  class={{wd1.color_class}} > 
+
+                     <div class="draggable_operator ui-draggable ui-draggable-handle" title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off'>{{wd1.word}} </div>
+                  
+                  
+                </td>
+
+              
+                {%endwith%}
+              {%else%}
+            {%endif%}
+            {%endwith%}
+          {%endfor%}
+        </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+   </div>
+  </div>
+</div>
+{%endblock%}
+{% block javascript %}
+<div class="container-fluid" >
+  <h1>demo</h1>
+  <button class="delete_selected_button">Delete selected operator / link</button>
+  <button class="get_data">Get data</button>
+  <table>
+    <tbody id="tbody"></tbody>
+  </table>
+  <button class="save_data">save_data</button>
+  <button class="show1">showwords</button><button class="show2">showlinks</button><button id="hide">hide</button><button class="save_data1">save_shown_data</button>
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" align='center'>Edit Link Properties</h4>
+        </div>
+        <div class="modal-body">
+          <p id='linkrel' align="center" style="font-size:3vw"></p>
+            <div id="link_properties" style="display: block;">
+                <label for="link_name">link_name: </label><input type="text" id="link_name"><button class="save_linkname" id="savelinkname">savelinkname</button>
+              </div>
+              <div id="link_properties1" style="display: block;">
+                <label for="link_name1">link_name: </label><input type="text" id="link_name1"><button class="save_linkname1" id="savelinkname1">savelinkname</button>
+              </div>
+              <button class="delete_selected_button" id ='ds1'>Delete selected operator / link</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+
+<div class="flowchart-example-container" id="example_1"></div>
+    <h1>..................................................</h1>
+  <div class="flowchart-example-container" id="example_5"></div>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    var data ={};// '{{dragdata}}';
+    $('#example_1').hide()
+    var $flowchart = $('#example_5');
+    var $container = $flowchart.parent();
+    var $linkProperties = $('#link_properties');
+    var $linkProperties1 = $('#link_properties1');
+    $linkProperties.hide();
+    $linkProperties1.hide();
+    var $linkname = $('#link_name');
+    var $linkname1 = $('#link_name1');
+    $flowchart.flowchart({
+      data: data,
+      multipleLinksOnOutput: true,
+      onLinkSelect: function(linkId) {
+        $linkProperties.show();
+        var data = $flowchart.flowchart('getData');
+        var rname = 'link';
+        if (typeof data.links[linkId].relationame != 'undefined') {
+                rname = data.links[linkId].relationame;
+            }
+        $linkname.val(rname);
+        $("#myModal").modal();
+        $('#linkrel').text(rname);
+        return true;
+      },
+      onLinkUnselect: function() {
+        $linkProperties.hide();
+        return true;
+      }
+    });
+    $('#example_1').flowchart({
+      data: {},
+      multipleLinksOnOutput: true,
+      onLinkSelect: function(linkId) {
+        $linkProperties1.show();
+        var data = $('#example_1').flowchart('getData');
+        var rname = 'link';
+        if (typeof data.links[linkId].relationame != 'undefined') {
+                rname = data.links[linkId].relationame;
+            }
+        $linkname1.val(rname);        
+        $("#myModal").modal();
+        $('#linkrel').text(rname);
+        return true;
+      },
+      onLinkUnselect: function() {
+        $linkProperties1.hide();
+        return true;
+      }
+    });
+    
+    $('#hide').click(function() {
+      $('#example_1').hide()
+    });
+    $('#savelinkname1').click(function() {
+      var selectedLinkId = $('#example_1').flowchart('getSelectedLinkId');
+      if (selectedLinkId != null) {
+        var data = $('#example_1').flowchart('getData');
+        data.links[selectedLinkId].relationame = $linkname1.val();
+        $('#example_1').flowchart('setData', data);
+        $('#linkrel').text($linkname1.val()).fadeIn('slow');
+      }
+    });
+    $('#savelinkname').click(function() {
+      var selectedLinkId = $flowchart.flowchart('getSelectedLinkId');
+      if (selectedLinkId != null) {
+        var data = $flowchart.flowchart('getData');
+        data.links[selectedLinkId].relationame = $linkname.val();
+        $flowchart.flowchart('setData', data);
+        $('#linkrel').text($linkname.val()).fadeIn('slow');
+      }
+    });
+    $flowchart.siblings('.show1').click(function() {
+      $('#example_1').show();
+      var data = JSON.parse('{{dragdata}}'.replace(/(&quot\;)/g,"\""));
+      
+      var i = 0 ;
+      for(var key in data) {
+          
+            data[key].left = 20+i;
+            data[key].top = 20+i;
+            i = i+20;
+                
+            $('#example_1').flowchart('createOperator', key, data[key]);
+            
+        }; 
+    });
+    $flowchart.siblings('.show2').click(function() {
+        var links = JSON.parse('{{links}}'.replace(/(&quot\;)/g,"\""));
+        var data1 = $('#example_1').flowchart('getData');
+        data1['links'] = links;
+        $('#example_1').flowchart('setData',data1); 
+    });
+    var operatorI = 0;
+    $flowchart.siblings('.create_operator').click(function() {
+      var operatorId = 'created_operator_' + operatorI;
+      var operatorData = {
+        top: 60,
+        left: 500,
+        properties: {
+          title: 'Operator ' + (operatorI + 3),
+          inputs: {
+            input_1: {
+              label: 'Input 1',
+            }
+          },
+          outputs: {
+            output_1: {
+              label: 'Output 1',
+            }
+          }
+        }
+      };
+      
+      operatorI++;
+      
+      $flowchart.flowchart('createOperator', operatorId, operatorData);
+    });
+    
+    $flowchart.siblings('.delete_selected_button').click(function() {
+      $flowchart.flowchart('deleteSelected');
+      $('#example_1').flowchart('deleteSelected');
+    });
+    $('#ds1').click(function() {
+      $flowchart.flowchart('deleteSelected');
+      $('#example_1').flowchart('deleteSelected');
+      $('#linkrel').text('...');
+      $('#myModal').fadeOut('slow').modal('hide');
+    });
+    $flowchart.siblings('.get_data').click(function() {
+      function download(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+      // Start file download.
+      
+      var sentid='{{sentid}}'
+      $.ajax(
+      {
+          type:"POST",
+          url: "ajax/get_data/",
+          data:{  
+                  'sentid' : sentid
+          },
+          success: function( data ) 
+          {
+             var tbody = document.getElementById('tbody');
+             var data1 =  JSON.parse(data.replace(/(&quot\;)/g,"\""));
+             var text = '';
+             for ( var key in data1) {
+              var tr = "<tr>";
+              var rel = '_';
+              if(data1[key][5]!=''){
+                rel = data1[key][5]
+              }
+              text = text + data1[key][0]+'\t'+ data1[key][2]+'\t'+ data1[key][4]+'\t'+data1[key][3].replace(/ /g,'')+'\t'+'_'+'\t'+'_'+'\t'+ data1[key][6]+'\t'+ rel+'\t'+'_'+'\t'+'_'
+              text = text + '\n'
+              tr += "<td>" +data1[key][0]+ "</td>" +
+                "<td>" +data1[key][1]+ "</td>" + 
+                "<td>" +data1[key][2]+ "</td>" + 
+                "<td>" +data1[key][3]+ "</td>" + 
+                "<td>" +data1[key][4]+ "</td>" + 
+                "<td>" +data1[key][5]+ "</td>" + 
+                 "<td>" + data1[key][6] + "</td></tr>";
+              /* We add the table row to the table body */
+              tbody.innerHTML += tr;
+             }
+             download(sentid+".txt",text)
+            
+            
+          }
+       })
+      
+    });
+	
+    $flowchart.siblings('.save_data').click(function() {
+      var dragdata = $flowchart.flowchart('getData');
+      var links = dragdata.links ;
+      var link ={};
+      var wordidparent={};
+      var c=[];
+      var l =[];
+      var f=0;
+      var t=0;
+      var wordidchilds={};
+      var wordidrel={}
+      var sentid='{{sentid}}'
+      var rname =''
+      for(var key in links){ 
+          if (typeof links[key].relationame != 'undefined') {
+                  rname = links[key].relationame;
+              }
+          
+          t=links[key].toConnector.substr(3);
+          f=links[key].fromConnector.substr(4);
+          
+          wordidrel[t]=rname;
+          if(c.includes(f)) {
+            wordidchilds[f] = wordidchilds[f]+'-'+t;
+          }else {wordidchilds[f] = '-'+t;c.push(f)}
+          wordidparent[t]=f;
+		  
+      };
+      $.ajax(
+      {
+          type:"POST",
+          url: "ajax/save_data/",
+          data:{  
+                  'wp' : JSON.stringify(wordidparent),
+                  'wc' : JSON.stringify(wordidchilds),
+                  'wr' : JSON.stringify(wordidrel),
+                  'sentid' : sentid
+          },
+          success: function( data ) 
+          {
+              alert('ok');
+          }
+       })
+      
+    });
+        // CSRF code
+    function getCookie(name) {
+        var cookieValue = null;
+        var i = 0;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (i; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        crossDomain: false, // obviates need for sameOrigin test
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    }); 
+$('#example_1').siblings('.save_data1').click(function() {
+      var dragdata = $('#example_1').flowchart('getData');
+      var links = dragdata.links ;
+      var link ={};
+      var wordidparent={};
+      var c=[];
+      var l =[];
+      var f=0;
+      var t=0;
+      var wordidchilds={};
+      var wordidrel={}
+      var sentid='{{sentid}}'
+      var rname =''
+      for(var key in links){ 
+          if (typeof links[key].relationame != 'undefined') {
+                  rname = links[key].relationame;
+              }
+          
+          t=links[key].toConnector.substr(3);
+          f=links[key].fromConnector.substr(4);
+          
+          wordidrel[t]=rname;
+          if(c.includes(f)) {
+            wordidchilds[f] = wordidchilds[f]+'-'+t;
+          }else {wordidchilds[f] = '-'+t;c.push(f)}
+          wordidparent[t]=f;
+      };
+      $.ajax(
+      {
+          type:"POST",
+          url: "ajax/save_data/",
+          data:{  
+                  'wp' : JSON.stringify(wordidparent),
+                  'wc' : JSON.stringify(wordidchilds),
+                  'wr' : JSON.stringify(wordidrel),
+                  'sentid' : sentid
+          },
+          success: function( data ) 
+          {
+              alert('ok');
+          }
+       })
+      
+    });
+        // CSRF code
+    function getCookie(name) {
+        var cookieValue = null;
+        var i = 0;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (i; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        crossDomain: false, // obviates need for sameOrigin test
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    }); 
+    var $draggableOperators = $('.draggable_operator');
+    var dwor = [];
+    function getOperatorData($element) {
+      var nbInputs = parseInt($element.data('nb-inputs'));
+      var nbOutputs = nbInputs;
+      var str = $element.data('nb-lemmas').toString();
+      var status = $element.data('nb-status');
+      var ids = $element.data('nb-ids').toString().split('-');
+      var showlabels =str.split('\n');
+      var dic = {};
+      var data =[];
+      var wordtext =  $element.text();
+      if (status == 'lemma') {
+          var i = 0;
+          for (i = 0; i < nbInputs; i++) {
+            var data1 = {
+        
+              properties: {
+                title:ids[i] +' : '+ $element.text(),
+                inputs: {
+                  ins: {
+                      label: showlabels[i],
+                      multiple: false
+                    }
+                },
+                outputs: {
+                  outs: {
+                      label: '(:i)',
+                      multiple: false
+                  }
+                }
+              } 
+            };
+            dic['lemma_'+ids[i]] = data1
+            data.push(data1)
+          }
+      }
+      else {
+        
+        var data1 = {
+            properties: {
+                title: ids[0]+' : ' +$element.text(),
+                inputs: {
+                  ins: {
+                      label: '(:i)',
+                      multiple: false
+                    }
+                },
+                outputs: {
+                  outs: {
+                      label: '(:i)',
+                      multiple: true
+                  }
+                }
+              } 
+          };
+        dic['word_'+ids[0]] = data1
+        data.push(data1)
+      }
+      return dic;
+    }
+    
+    var operatorId = 0;
+	
+  $draggableOperators.hover(function() {
+      $(this).css('cursor','pointer');
+      $('#show_lemma').text($(this).attr('title').replace(/@/g,' ')).fadeIn("slow");
+  }, function() {
+      $(this).css('cursor','auto');
+      $('#show_lemma').text('...');
+  });
+
+  $draggableOperators.click(function(){
+    var pid = $(this).attr('id');
+    var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
+    var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
+    if($(this).attr('datastatus') == 'off') {
+      var $element = $(this);
+      var nbInputs = parseInt($element.data('nb-inputs'));
+      var nbOutputs = nbInputs;
+      var str = $element.data('nb-lemmas').toString();
+      var status = $element.data('nb-status');
+      var ids = $element.data('nb-ids').toString().split('-');
+      var showlabels =str.split('\n');
+      var wordtext =  $element.text();
+      var data = {
+        top: parseInt(pid.split('-')[0])*10,
+        left: parseInt(pid.split('-')[1])*5,
+        properties: {
+          title: $element.text()+ '<br>'+showlabels[0].split('@')[1],
+          inputs: {},
+          outputs: {}
+        } 
+      };
+      
+      var i = 0;
+      for (i = 0; i < nbInputs; i++) {
+        data.properties.inputs['in-'+ids[i]] = {
+        label: showlabels[i].split('@')[0].slice(1,-1)
+        };
+      }
+      for (i = 0; i < nbInputs; i++) {
+        data.properties.outputs['out-'+ids[i]] = {
+          label: '.'
+        };
+      }
+      $flowchart.flowchart('createOperator', pid, data);
+      
+      $(this).parent().append("<p class = 'tick'>?</p>");
+      for (i = 0; i < cids[pid].length; i++) {
+        $('#'+cids[pid][i]).fadeOut();
+        $('#'+cids[pid][i]).parent().attr('class','w_back');
+      }
+      $(this).attr("datastatus", "on");
+    }
+    else if($(this).attr('datastatus') == 'on') {
+      $(this).siblings('p').remove(".tick");
+      $flowchart.flowchart('deleteOperator', pid);
+      for (var i = 0; i < cids[pid].length; i++) {
+        $('#'+cids[pid][i]).fadeIn('slow');
+        $('#'+cids[pid][i]).parent().attr('class',colorlp[cids[pid][i]]);
+        
+      }
+      $(this).attr("datastatus", "off");
+    }
+  });
+  });
+</script>
+</div>
+{% endblock %}
