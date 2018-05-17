@@ -5,6 +5,9 @@ Download the zip file and extract it to a local directory.
 ## The modules and libraries required to run the app
 ```
 python 3.6
+pandas
+bs4
+requests
 django
 django-datatable
 django_datatables_view
