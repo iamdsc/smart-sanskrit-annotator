@@ -2,7 +2,6 @@ from .models import Sentences,WordOptions,Wordsinsentence
 from table import Table
 from table.columns import Column
 
-
 class WordOptionsTable(Table):
 	id = Column(field='id',header='#')
 	word = Column(field='word',header='word')
