@@ -31,14 +31,18 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-	'annotatorapp.apps.AnnotatorappConfig',
+    'annotatorapp.apps.AnnotatorappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
 	'table'
+=======
+    'table'
+>>>>>>> f2391f19ed892a55e69cf6071e722279bc118ad8
 ]
 
 MIDDLEWARE = [

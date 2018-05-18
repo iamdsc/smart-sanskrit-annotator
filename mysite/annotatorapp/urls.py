@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from django.urls import path, re_path
+=======
+from django.urls import path,re_path
+>>>>>>> f2391f19ed892a55e69cf6071e722279bc118ad8
 from . import views
 
 
