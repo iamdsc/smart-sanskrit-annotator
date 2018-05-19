@@ -3,7 +3,7 @@ from table import Table
 from table.columns import Column
 
 class WordOptionsTable(Table):
-	id = Column(field='id',header='#')
+	id = Column(field='id',header='id')
 	word = Column(field='word',header='word')
 	lemma = Column(field='lemma',header='Lemma')
 	morph = Column(field='morph',header='Morph')
@@ -11,11 +11,11 @@ class WordOptionsTable(Table):
 	pre_verb = Column(field='pre_verb',header='pre_verb')
 
 class SentencesTable(Table):
-	id = Column(field='id',header='#')
+	id = Column(field='id',header='id')
 	line = Column(field='line',header='Sentence')
 
 class WordsinsentenceTable(Table):
-	id = Column(field='id',header='#')
+	id = Column(field='id',header='id')
 	word = Column(field='word',header='word')
 	parent = Column(field='parent',header='parent')
 	children = Column(field='children',header='children')

@@ -1,0 +1,24 @@
+.navbar{
+	background-color:#ff9600e6;
+	border: 1px solid transparent;
+	min-height: 70px;
+	margin-bottom: 10px;
+	color:#fff;
+	
+}
+.navbar-brand{
+	line-height: inherit;
+	text-shadow: 0px 4px 3px rgba(0,0,0,0.4),
+				 0px 8px 13px rgba(0,0,0,0.1),
+				 0px 18px 23px rgba(0,0,0,0.1);
+}
+.navbar-nav>li>a{
+	line-height: inherit;
+	margin-top:7px;
+}
+.navbar-inverse .navbar-nav>li>a {
+    color: #615d5d;
+} 
+.navbar-inverse .navbar-toggle{
+	margin-top: 17px;
+}
