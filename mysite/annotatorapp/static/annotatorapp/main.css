@@ -22,3 +22,11 @@
 .navbar-inverse .navbar-toggle{
 	margin-top: 17px;
 }
+#form{
+	box-shadow: 5px 5px #888888;
+}
+#footer{
+	font-size: 12px;
+	margin-top:200px;
+	text-align: center;
+}
