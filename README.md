@@ -12,6 +12,10 @@ django
 django-datatable
 django_datatables_view
 ```
+## Apply Migrations for the database with following command
+```
+python manage.py migrate
+```
 ## To run the app run the following command inside outer mysite directory:
 ```
 python manage.py runserver
