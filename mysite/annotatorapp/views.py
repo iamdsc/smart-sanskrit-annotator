@@ -91,7 +91,7 @@ def save_dragdata(request):
 		raise Http404
 		
 def presentdataview(request) :
-	if request.method == "POST" :
+	if request.method == "POST":
 		Inputlineform = forms.inputlineform(request.POST)
 		saveline = True
 		if Inputlineform.is_valid():

@@ -1,17 +1,18 @@
 {% extends "annotatorapp/base.html" %}
-
 {%block title%}Presentdata{%endblock%}
-
 {%block content%}
 {% load poll_extras %}
-
 <p id = 'show_lemma'> <br> </p>
-
 <div class="panel-group">
   <ul class="pager">
-  <li class="next"><a  href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="refresh option">Reset</a></li>
+      <strong>Recommendation </strong>
+    <li><label class="switch">
+    <input type="checkbox" id="recommend">
+    <span class="slider round"></span>
+  </label></li>
+  <li class="next"><a href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="refresh option">Reset</a></li>
   </ul>
-  <div class="panel panel-default">
+  <div class="panel panel-info">
       
         <div class="panel-heading" >
           
@@ -30,7 +31,6 @@
                       <th>auxi</th>
                       <th>preverb</th>
                       <th></th>
-                      <th></th>
                   </tr>
               </thead>
              
@@ -44,7 +44,8 @@
                           <th>{{wd.morph}} </th>
                           <th>{{wd.aux_info}}</th>
                           <th>{{wd.pre_verb}}</th>
-                          <th>{% if wd.isSelected %}
+                          <th>
+                        {% if wd.isSelected %}
                             
                             <a class="btn btn-success btn-xs" title="Select option and eliminate others">Selected</a>
                           
@@ -53,45 +54,28 @@
                       </tr>
                      {%endif%} 
    
-                    
                 {%endfor%}
               </tbody>
-    </table>
-
-   
-      
+    </table>  
     </div>
 
 
    <div class="panel-body"> 
 
 
-    <table class="table table-hover">
+    <table class="table-responsive">
       <tbody>
-        
         {%for l in levelrange%}
-        
         <tr>
-          
           {%for p in positionrange%}
-              
-
-            {%with lp1=levelpos|getdicvalue:l lp2=levelwordpos|getdicvalue:l x=l|getstring:p%}
-              
+            {%with lp1=levelpos|getdicvalue:l lp2=levelwordpos|getdicvalue:l x=l|getstring:p%} 
             {%if p|checkpos:lp1 == 'ok'%}
               <td></td>
             {%elif p|checkpos:lp2 == 'ok'%}
-
               {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
-
                 <td colspan={{wd1.colspan}} align="left"  class={{wd1.color_class}} > 
-
                      <div class="draggable_operator ui-draggable ui-draggable-handle" title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off'>{{wd1.word}} </div>
-                  
-                  
                 </td>
-
-              
                 {%endwith%}
               {%else%}
             {%endif%}
@@ -106,15 +90,16 @@
 </div>
 {%endblock%}
 {% block javascript %}
+
 <div class="container-fluid" >
-  <h1>demo</h1>
-  <button class="delete_selected_button">Delete selected operator / link</button>
-  <button class="get_data">Get data</button>
-  <table>
-    <tbody id="tbody"></tbody>
-  </table>
-  <button class="save_data">save_data</button>
-  <button class="show1">showwords</button><button class="show2">showlinks</button><button id="hide">hide</button><button class="save_data1">save_shown_data</button>
+  <h1>Flowchart</h1>
+  <button class="btn btn-info delete_selected_button">Delete Selected Operator/Link</button>
+  <button class="btn btn-info get_data">Get Data</button>
+  <button class="btn btn-info save_data">Save Data</button>
+  <button class="btn btn-info show1">Show Words</button>
+  <button class="btn btn-info show2">Show Links</button>
+  <button class ="btn btn-info" id="hide">Hide</button>
+  <button class="btn btn-info save_data1">Save Shown Data</button>
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
@@ -128,15 +113,20 @@
         <div class="modal-body">
           <p id='linkrel' align="center" style="font-size:3vw"></p>
             <div id="link_properties" style="display: block;">
-                <label for="link_name">link_name: </label><input type="text" id="link_name"><button class="save_linkname" id="savelinkname">savelinkname</button>
+                <label for="link_name">Link Name: </label>
+                <input type="text" id="link_name" class='inputfield'>
+                <button class="save_linkname btn btn-success" id="savelinkname">Save Link Name</button>
               </div>
               <div id="link_properties1" style="display: block;">
-                <label for="link_name1">link_name: </label><input type="text" id="link_name1"><button class="save_linkname1" id="savelinkname1">savelinkname</button>
+                <label for="link_name1">Link Name: </label>
+                <input type="text" id="link_name1" class='inputfield'>
+                <button class="save_linkname1 btn btn-success" id="savelinkname1">Save Link Name</button>
               </div>
-              <button class="delete_selected_button" id ='ds1'>Delete selected operator / link</button>
+              
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button class="delete_selected_button btn btn-danger" id ='ds1' style = "margin-right:285px">Delete Selected Operator/link</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
         </div>
       </div>
       
@@ -145,13 +135,19 @@
   
 
 <div class="flowchart-example-container" id="example_1"></div>
-    <h1>..................................................</h1>
+<br></br>
   <div class="flowchart-example-container" id="example_5"></div>
 
 
 <script type="text/javascript">
   $(document).ready(function() {
-
+    $("#recommend").change(function(){
+      var c = this.checked;
+      if(c)
+        console.log('checked');
+      else
+        console.log('unchecked');
+    })
     var data ={};// '{{dragdata}}';
     $('#example_1').hide()
     var $flowchart = $('#example_5');
