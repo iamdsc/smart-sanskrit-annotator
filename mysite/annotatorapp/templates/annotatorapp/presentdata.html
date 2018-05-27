@@ -100,21 +100,18 @@
 
 <div class="container-fluid" >
   <h1>Flowchart</h1> 
-  <ul class="pager">
-     <strong>Recommendation </strong>
-    <li><label class="switch">
-    <input type="checkbox" id="recommend_2">
-    <span class="slider round"></span>
-    </label></li><br><br>
   <button class="btn btn-info delete_selected_button"> Delete Selected Operator/link </button>
   <button class="btn btn-info get_data"> Get data </button>
   <table>
-    <tbody id="tbody"></tbody>
+    <tbody id="datastore"></tbody>
   </table>
-  <br> 
+  <br></br> 
   <button class="btn btn-info save_data"> Save Data </button>
-  <button class="btn btn-info show1"> Show Words </button>  <button class="btn btn-info show2"> Show Links </button>  <button class="btn btn-info "id="hide"> Hide< /button  >  <button class="btn btn-info save_data1"> Save Shown data </button>
-  <br>
+  <button class="btn btn-info show1"> Show Words </button>  
+  <button class="btn btn-info show2"> Show Links </button> 
+  <button class="btn btn-info "id="hide"> Hide </button>
+  <button class="btn btn-info save_data1"> Save Shown data </button>
+  <br></br>
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
     
@@ -162,19 +159,7 @@
         $('#word-table > tbody > tr').not(':first').show();
       }
     });
- 
-/*     $("#recommend_2").change(function(){
-      var c = this.checked;
-      if(c){
-        $('#word-table > tbody > tr').not(':first').hide();
-      }
-        
-      else{
-        $('#word-table > tbody > tr').not(':first').show();
-      }
-    });
-*/ 
-    $('#example_1').hide();
+ $('#example_1').hide();
 
     var $flowchart = $('#example_5');
     var $container = $flowchart.parent();
@@ -369,7 +354,7 @@
           success: function( data ) 
           {
             
-             var tbody = document.getElementById('tbody');
+             var tbody = document.getElementById('datastore');
              var data1 =  JSON.parse(data.replace(/(&quot\;)/g,"\""));
              var text = '';
 
