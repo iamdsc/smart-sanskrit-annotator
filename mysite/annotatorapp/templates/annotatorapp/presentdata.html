@@ -57,7 +57,7 @@
     </table>
     </div>
    <div class="panel-body"> 
-    <table class="table table-hover">
+    <table class="table-responsive" id='word-table'>
       <tbody>
         {%for l in levelrange%}
         <tr>
@@ -84,7 +84,6 @@
             {%endwith%}
           {%endfor%}
         </tr>
-        
         {%endfor%}
 
       </tbody>
@@ -153,10 +152,13 @@
     var data ={};
     $("#recommend").change(function(){
       var c = this.checked;
-      if(c)
-        console.log('checked');
-      else
-        console.log('unchecked');
+      if(c){
+        $('#word-table > tbody > tr').not(':first').hide();
+      }
+        
+      else{
+        $('#word-table > tbody > tr').not(':first').show();
+      }
     });
     $('#example_1').hide();
     var $flowchart = $('#example_5');
