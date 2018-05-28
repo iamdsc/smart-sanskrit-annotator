@@ -123,11 +123,14 @@ table{
 }
 td{
   border:none;
+  padding:0;
+  margin:0;
 
 }
 #words{
-  padding-left:15px;
-  padding-right: 15px;
-  margin:2px;
+  border-radius:8px;
+  width:100%;
+  padding:5px;
+  margin:0;
   font-size:15px;
 }

@@ -22,13 +22,12 @@
           <table class="table table-hover">
               <thead>
                   <tr>
-                      <th>word</th>
-                      <th>lemma </th>
-                      <th>morph </th>
-                      <th>auxi</th>
-                      <th>preverb</th>
-                      <th></th>
-                      <th></th>
+                      <td>word</td>
+                      <td>lemma </td>
+                      <td>morph </td>
+                      <td>auxi</td>
+                      <td>preverb</td>
+                      <td></td>
                   </tr>
               </thead>
              
@@ -37,21 +36,16 @@
                    
                     {% if not wd.isEliminated %}
                      <tr>
-                          <th>{{wd.word}}</th>
-                          <th>{{wd.lemma}} </th>
-                          <th>{{wd.morph}} </th>
-                          <th>{{wd.aux_info}}</th>
-                          <th>{{wd.pre_verb}}</th>
-                          <th>{% if wd.isSelected %}
-                            
+                          <td>{{wd.word}}</td>
+                          <td>{{wd.lemma}} </td>
+                          <td>{{wd.morph}} </td>
+                          <td>{{wd.aux_info}}</td>
+                          <td>{{wd.pre_verb}}</td>
+                          <td>{% if wd.isSelected %}
                             <a class="btn btn-success btn-xs" title="Select option and eliminate others">Selected</a>
-                          
-                          {% endif %}</th>
-                      
+                          {% endif %}</td>
                       </tr>
-                     {%endif%} 
-   
-                    
+                     {%endif%}
                 {%endfor%}
               </tbody>
     </table>
@@ -71,7 +65,7 @@
               {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
 
                 <td colspan={{wd1.colspan}} align="left">
-                        <div  title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle"><button id='words' class= {{wd1.color_class}} >{{wd1.word}}</button></div>
+                        <div  title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle"><button id='words' class={{wd1.color_class}} >{{wd1.word}}</button></div>
                 </td>
 
               
@@ -101,7 +95,7 @@
   <button class="btn btn-info delete_selected_button"> Delete Selected Operator/link </button>
   <button class="btn btn-info get_data"> Get data </button>
   <table>
-    <tbody id="datastore"></tbody>
+    <tbody id="tbody"></tbody>
   </table>
   <br></br> 
   <button class="btn btn-info save_data"> Save Data </button>
@@ -353,7 +347,7 @@
           success: function( data ) 
           {
             
-             var tbody = document.getElementById('datastore');
+             var tbody = document.getElementById('tbody');
              var data1 =  JSON.parse(data.replace(/(&quot\;)/g,"\""));
              var text = '';
 
