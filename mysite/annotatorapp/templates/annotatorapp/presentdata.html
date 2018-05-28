@@ -70,10 +70,11 @@
 
               {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
 
-                <td colspan={{wd1.colspan}} align="left"  class={{wd1.color_class}} > 
+                <td colspan={{wd1.colspan}} align="left">
 
-                     <div class="draggable_operator ui-draggable ui-draggable-handle" title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off'>{{wd1.word}} </div>
-                  
+                        <div  title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle"><button class= {{wd1.color_class}} >{{wd1.word}}</button></div>
+
+
                   
                 </td>
 
