@@ -2,7 +2,7 @@
 {%block title%}Presentdata{%endblock%}
 {%block content%}
 {% load poll_extras %}
-<p id = 'show_lemma'> <br> </p>
+<p id = 'show_lemma' class='label other'></p>
 <div class="panel-group">
   <ul class="pager">
      <strong>Recommendation </strong>
@@ -98,7 +98,8 @@
 
 {% block javascript %}
 
-<div class="container-fluid" >
+<div class="container" >
+
   <h1>Flowchart</h1> 
   <button class="btn btn-info delete_selected_button"> Delete Selected Operator/link </button>
   <button class="btn btn-info get_data"> Get data </button>
@@ -285,7 +286,7 @@
     $flowchart.siblings('.create_operator').click(function() {
       var operatorId = 'created_operator_' + operatorI;
       var operatorData = {
-        top: 600,
+        top: 60,
         left: 500,
         properties: {
           title: 'Operator ' + (operatorI + 3),
@@ -656,8 +657,8 @@ $('#example_1').siblings('.save_data1').click(function() {
       var div_width = document.getElementById("example_5").clientWidth;
       var data = {
         
-        left: ( parseInt(pid.split('-')[1])*40 ) %   div_width ,
-    	top : ( (parseInt(pid.split('-')[1])*40  / div_width ) | 0 ) * 200 + 20,
+        left: ( parseInt(pid.split('-')[1])*40 ) %  (0.875 * div_width) ,
+    	top : ( (parseInt(pid.split('-')[1])*40  / (0.875*div_width)) | 0 ) * 200 + 20,
 	
 	properties: {
           title: $element.text()+ '<br>'+showlabels[0].split('@')[1],

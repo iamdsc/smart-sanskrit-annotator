@@ -112,3 +112,9 @@ strong{
 	padding-right: 10px;
 	font-size: 18px;
 }
+.label{
+  color:white;
+  padding:8px;
+  font-size: 15px;
+}
+.other {background-color: #e7e7e7; color: black;}
