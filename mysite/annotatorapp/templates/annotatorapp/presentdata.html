@@ -71,11 +71,7 @@
               {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
 
                 <td colspan={{wd1.colspan}} align="left">
-
-                        <div  title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle"><button class= {{wd1.color_class}} >{{wd1.word}}</button></div>
-
-
-                  
+                        <div  title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle"><button id='words' class= {{wd1.color_class}} >{{wd1.word}}</button></div>
                 </td>
 
               
@@ -147,7 +143,8 @@
   <div class="flowchart-example-container" id="example_5"></div>
 
 <script type="text/javascript">
-  
+  var nop = 0;
+  var line = 20;
   $(document).ready(function() {
 
     var data ={};
@@ -658,8 +655,8 @@ $('#example_1').siblings('.save_data1').click(function() {
       var div_width = document.getElementById("example_5").clientWidth;
       var data = {
         
-        left: ( parseInt(pid.split('-')[1])*40 ) %  (0.875 * div_width) ,
-    	top : ( (parseInt(pid.split('-')[1])*40  / (0.875*div_width)) | 0 ) * 200 + 20,
+        left: 0,
+    	  top : 0,
 	
 	properties: {
           title: $element.text()+ '<br>'+showlabels[0].split('@')[1],
@@ -668,6 +665,20 @@ $('#example_1').siblings('.save_data1').click(function() {
         } 
       };
   
+      if (( nop > (div_width/200) )  && (nop%2 == 0)) {
+        nop = 0;
+        line += 400;
+      }
+
+      data.left = ( nop*150 ) % div_width + 20;
+
+      if ( nop%2 ==0 ) {
+        data.top = 20+line;
+      }
+      else {
+        data.top = 200+line;
+      }
+
       var i = 0;
       var c = document.getElementById("recommend").checked;	// switch Id to recommend_2/ recommend as per convenience
       if ( c ) {
@@ -692,7 +703,7 @@ $('#example_1').siblings('.save_data1').click(function() {
 	      }
       }
       $flowchart.flowchart('createOperator', pid, data);
-      
+      nop += 1;
 
       $(this).parent().append("<p class = 'tick'>✓</p>");
       for (i = 0; i < cids[pid].length; i++) {
@@ -712,7 +723,7 @@ $('#example_1').siblings('.save_data1').click(function() {
         
       }
       $(this).attr("datastatus", "off");
-
+      nop -= 1;
     }
 
   });

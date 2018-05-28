@@ -118,3 +118,16 @@ strong{
   font-size: 15px;
 }
 .other {background-color: #e7e7e7; color: black;}
+table{
+  border:none;
+}
+td{
+  border:none;
+
+}
+#words{
+  padding-left:15px;
+  padding-right: 15px;
+  margin:2px;
+  font-size:15px;
+}
