@@ -457,37 +457,6 @@ button.spacing20 {border-collapse:separate; border-spacing:20pt}
 button.light_blue_back {background-color:#ADD8E6}
 button.lavender_back {background-color:#E6E6FA}
 button.lawngreen_back {background-color:#7CFC00}
-td.yellow_back {background-color:#FFFF00}
-td.yellow_cent {background-color:#FFFF00; margin:0 auto; border: outset 5pt; padding:10pt}
-td.deep_sky_cent {background-color:#00C0FF; margin:0 auto; border: outset 5pt; padding:10pt}
-td.salmon_back {background-color:#F08070}
-td.aquamarine_back {background-color:#6FFFC3}
-td.mauve_back {background-color:#FF99FF}
-td.magenta_back {background-color:#FF00FF}
-td.mauve_cent {background-color:#FF99FF; margin:0 auto; border: outset 8pt; padding:10pt}
-td.cyan_back {background-color:#00FFFF}
-td.cyan_cent {background-color:#00FFFF; margin:0 auto; border: outset 5pt; padding:10pt}
-td.lavender_cent {background-color:#E6E6FA; margin:0 auto; border: outset 5pt; padding:10pt}
-td.gold_back {background-color:#A58959}
-td.gold_cent {background-color:#A58959; margin:0 auto; border: outset 0pt; padding:10pt}
-td.inflexion {background-color:#FFFF00; margin:0 auto; border: outset 2pt; padding:5pt}
-td.chamois_back {background-color:#F5F5DC; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt; width:100%}
-td.blue_back {background-color:#0000FF}
-td.green_back {background-color:#008000}
-td.brown_back {background-color:#A02820; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt; padding:10pt; width:100%}
-td.lime_back {background-color:#00FF00}
-td.deep_sky_back {background-color:#00C0FF}
-td.carmin_back {background-color:#FF1975}
-td.orange_back {background-color:#FFA000}
-td.red_back {background-color:#FF0000}
-td.grey_back {background-color:#B8B8B8}
-td.pink_back {background-color:#FFDDDD; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt}
-td.spacing20 {border-collapse:separate; border-spacing:20pt}
-td.light_blue_back {background-color:#ADD8E6}
-td.lavender_back {background-color:#E6E6FA}
-td.lawngreen_back {background-color:#7CFC00}
-td.w_back {background-color:#fff}
-td.w_back {background-color:#fff}
 
 /* Popup container */
 .popup {
@@ -533,11 +502,11 @@ td.w_back {background-color:#fff}
 
 /* Add animation (fade in the popup) */
 @-webkit-keyframes fadeIn {
-    from {opacity: 0;} 
+    from {opacity: 0;}
     to {opacity: 1;}
 }
 
-@keyframes fadeIn {
+@keyframes fadeIn {11
     from {opacity: 0;}
     to {opacity:1 ;}
 }
@@ -994,4 +963,3 @@ footer a:hover {
 
 /* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
 @media only screen and (max-width: 479px) { }
-
