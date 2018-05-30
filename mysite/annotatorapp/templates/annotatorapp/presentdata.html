@@ -589,9 +589,9 @@ $('#example_1').siblings('.save_data1').click(function() {
       var wordtext =  $element.text();
       var div_width = document.getElementById("example_5").clientWidth;
       var data = {
-
         left: 0,
     	  top : 0,
+
 
 	properties: {
           title: $element.text()+ '<br>'+showlabels[0].split('@')[1],
@@ -604,13 +604,18 @@ $('#example_1').siblings('.save_data1').click(function() {
         nop = 0;
         line += 400;
       }
+
+
       data.left = ( nop*150 ) % div_width + 20;
+
+
       if ( nop%2 ==0 ) {
         data.top = 20+line;
       }
       else {
         data.top = 200+line;
       }
+
       var i = 0;
       var c = document.getElementById("recommend").checked;	// switch Id to recommend_2/ recommend as per convenience
       if ( c ) {
@@ -635,6 +640,7 @@ $('#example_1').siblings('.save_data1').click(function() {
       }
       $flowchart.flowchart('createOperator', pid, data);
       nop += 1;
+
       $(this).parent().append("<p class = 'tick'>✓</p>");
       for (i = 0; i < cids[pid].length; i++) {
         $('#'+cids[pid][i]).fadeOut();
