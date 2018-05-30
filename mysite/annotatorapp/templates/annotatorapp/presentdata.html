@@ -102,7 +102,6 @@
   <button class="btn btn-info show1"> Show Words </button>
   <button class="btn btn-info show2"> Show Links </button>
   <button class="btn btn-info "id="hide"> Hide </button>
-  <button class="btn btn-info save_data1"> Save Shown data </button>
   <br></br>
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
@@ -387,91 +386,11 @@
           },
           success: function( data )
           {
-               $(".save_data").click(function()
-                {
-                    $(this).css("background-color" , "green");
-                });
+            alert('Flowchart Saved Successfully');
           }
        })
 
     });
-        // CSRF code
-    function getCookie(name) {
-        var cookieValue = null;
-        var i = 0;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (i; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    var csrftoken = getCookie('csrftoken');
-    function csrfSafeMethod(method) {
-        // these HTTP methods do not require CSRF protection
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-    }
-    $.ajaxSetup({
-        crossDomain: false, // obviates need for sameOrigin test
-        beforeSend: function(xhr, settings) {
-            if (!csrfSafeMethod(settings.type)) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        }
-    });
-$('#example_1').siblings('.save_data1').click(function() {
-      var dragdata = $('#example_1').flowchart('getData');
-      var links = dragdata.links ;
-      var link ={};
-      var wordidparent={};
-      var c=[];
-      var l =[];
-      var f=0;
-      var t=0;
-      var wordidchilds={};
-      var wordidrel={}
-      var sentid='{{sentid}}'
-      var rname =''
-      for(var key in links){
-          if (typeof links[key].relationame != 'undefined') {
-                  rname = links[key].relationame;
-              }
-
-          t=links[key].toConnector.substr(3);
-          f=links[key].fromConnector.substr(4);
-
-          wordidrel[t]=rname;
-          if(c.includes(f)) {
-            wordidchilds[f] = wordidchilds[f]+'-'+t;
-          }else {wordidchilds[f] = '-'+t;c.push(f)}
-          wordidparent[t]=f;
-      };
-      $.ajax(
-      {
-          type:"POST",
-          url: "ajax/save_data1/",
-          data:{
-                  'wp' : JSON.stringify(wordidparent),
-                  'wc' : JSON.stringify(wordidchilds),
-                  'wr' : JSON.stringify(wordidrel),
-                  'sentid' : sentid
-
-          },
-          success: function( data )
-          {
-                $(".save_data1").click(function()
-                {
-                    $(this).css("background-color" , "green");
-                });
-          }
-      })
- });
         // CSRF code
     function getCookie(name) {
         var cookieValue = null;
