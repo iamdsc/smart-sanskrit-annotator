@@ -5,11 +5,16 @@
 <p id = 'show_lemma' class='label other'></p>
 <div class="panel-group">
   <ul class="pager">
-     <strong>Recommendation </strong>
+    <strong>Segmentation </strong>
     <li><label class="switch">
-    <input type="checkbox" id="recommend">
+    <input type="checkbox" id="recommend1">
     <span class="slider round"></span>
-  </label></li>
+    </label></li>
+    <strong>FlowChart </strong>
+    <li><label class="switch">
+    <input type="checkbox" id="recommend2">
+    <span class="slider round"></span>
+    </label></li>
   <li class="next"><a  href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="refresh option">Reset</a></li>
   </ul>
   <div class="panel panel-info">
@@ -140,14 +145,18 @@
   var line = 20;
   $(document).ready(function() {
     var data ={};
-    $("#recommend").change(function(){
+    $('#recommend1').prop('checked',false);
+    $('#recommend2').prop('checked',false);
+    $("#recommend1").change(function(){
       var c = this.checked;
       if(c){
         $('#word-table > tbody > tr').not(':first').hide();
+        $('#word-table > tbody > tr:first > td > div > button').click();
       }
 
       else{
-        $('#word-table > tbody > tr').not(':first').show();
+        // $('#word-table > tbody > tr').not(':first').show();
+       $('#word-table > tbody > tr:first > td > div > button').click();
       }
     });
  $('#example_1').hide();
@@ -491,9 +500,10 @@
       $('#show_lemma').text($(this).attr('title').replace(/@/g,' ')).fadeIn("slow");
   }, function() {
       $(this).css('cursor','auto');
-      $('#show_lemma').text('...');
+      $('#show_lemma').text(' ');
   });
   $draggableOperators.click(function(){
+    $('#word-table > tbody > tr').not(':first').show();
     var pid = $(this).attr('id');
     var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
     var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
@@ -510,8 +520,6 @@
       var data = {
         left: 0,
     	  top : 0,
-
-
 	properties: {
           title: $element.text()+ '<br>'+showlabels[0].split('@')[1],
           inputs: {},
@@ -536,7 +544,7 @@
       }
 
       var i = 0;
-      var c = document.getElementById("recommend").checked;	// switch Id to recommend_2/ recommend as per convenience
+      var c = document.getElementById("recommend2").checked;
       if ( c ) {
 		data.properties.inputs['in-'+ids[i]] = {
 		label: showlabels[i].split('@')[0].slice(1,-1)
