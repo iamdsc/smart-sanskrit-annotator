@@ -559,7 +559,7 @@
       }
 
       var i = 0;
-      var c = $("#recommend2").checked;
+      var c = document.getElementById('recommend2').checked;
       if ( c ) {
 		data.properties.inputs['in-'+ids[i]] = {
 		label: showlabels[i].split('@')[0].slice(1,-1)
