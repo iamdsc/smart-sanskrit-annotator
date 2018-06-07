@@ -11,7 +11,7 @@ from .models import Sentences,WordOptions,Wordsinsentence
 import json
 
 
-def getdatafromsite(inputsent) :
+def getdatafromsite(inputsent) : # Scrapping data from site
 	inputline = inputsent.line
 	inputtype = inputsent.linetype
 	problem = []

@@ -10,7 +10,7 @@
     <input type="checkbox" id="recommend1">
     <span class="slider round"></span>
     </label></li>
-    <strong>FlowChart </strong>
+    <strong>Segmentation + FlowChart </strong>
     <li><label class="switch">
     <input type="checkbox" id="recommend2">
     <span class="slider round"></span>
@@ -147,16 +147,30 @@
     var data ={};
     $('#recommend1').prop('checked',false);
     $('#recommend2').prop('checked',false);
-    $("#recommend1").change(function(){
-      var c = this.checked;
-      if(c){
+    $('#recommend1').change(function(){
+      var c1 = this.checked;
+      if(c1){
+        nop = 0;
+        line = 20;
         $('#word-table > tbody > tr').not(':first').hide();
         $('#word-table > tbody > tr:first > td > div > button').click();
       }
-
       else{
         // $('#word-table > tbody > tr').not(':first').show();
-       $('#word-table > tbody > tr:first > td > div > button').click();
+            $('#word-table > tbody > tr:first > td > div > button').click();
+      }
+    });
+    $('#recommend2').change(function(){
+      var c2 = this.checked;
+      if(c2){
+        nop = 0;
+        line = 20;
+        $('#word-table > tbody > tr').not(':first').hide();
+        $('#word-table > tbody > tr:first > td > div > button').click();
+      }
+      else{
+        // $('#word-table > tbody > tr').not(':first').show();
+        $('#word-table > tbody > tr:first > td > div > button').click();
       }
     });
  $('#example_1').hide();
@@ -502,6 +516,7 @@
       $(this).css('cursor','auto');
       $('#show_lemma').text(' ');
   });
+
   $draggableOperators.click(function(){
     $('#word-table > tbody > tr').not(':first').show();
     var pid = $(this).attr('id');
@@ -544,7 +559,7 @@
       }
 
       var i = 0;
-      var c = document.getElementById("recommend2").checked;
+      var c = $("#recommend2").checked;
       if ( c ) {
 		data.properties.inputs['in-'+ids[i]] = {
 		label: showlabels[i].split('@')[0].slice(1,-1)

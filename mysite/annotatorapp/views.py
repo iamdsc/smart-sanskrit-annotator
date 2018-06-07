@@ -100,8 +100,9 @@ def presentdataview(request) :
 				Sentence = Sentences(
 										line = Inputlineform.cleaned_data['line'],
 										linetype = Inputlineform.cleaned_data['linetype'],
-							)
-				if not codeforline.checksent(Sentence) :
+									)
+
+				if not codeforline.checksent(Sentence) : # if new sentence appears
 					df = codeforline.getdatafromsite(Sentence)
 					if saveline :
 						Sentence.save()
@@ -119,6 +120,7 @@ def presentdataview(request) :
 					sent_id = Sentence1.id
 					pos = 0
 					context  = codeforline.contestofwordsdata(sent_id)
+					# print(context)
 					return render(request,'annotatorapp/presentdata.html',context)
 				else :
 					wordsdata = codeforline.worddataofsentence(df,Sentence)
