@@ -203,8 +203,9 @@
 	  $('#finish').hide();
   	  var date = new Date();
 	  end_time = date.getTime();
-	  time_spent = end_time - start_time;
+	  time_spent = end_time - init_time;
 	  if_finish = 1;
+	  console.log(time_spent/1000);
 	});
 
  $('#example_1').hide();
