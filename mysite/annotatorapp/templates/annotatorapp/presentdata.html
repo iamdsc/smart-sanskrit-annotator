@@ -164,27 +164,27 @@
 	  
     function btnHigh(){
     if(c){
-      btn.css('border','2px solid blue');
+      btn.css({'border':'2px solid yellow','box-shadow': '0px 3px 10px #f4d641'});
     }
     else{
-      btn.css('border','2px solid #adabab');
+      btn.css({'border':'2px solid #adabab','box-shadow':'none'});
     }
     c = !c;
     }
-    
+
 	$('#recommend1').change(function(){
       var nop = 0;
       var line = 20;
       var c1 = this.checked;
-      if(c1){      
+      if(c1){
         id = setInterval(btnHigh,800);
       }
       else{
         clearInterval(id);
-        btn.css("border","2px solid #adabab");
+        btn.css({'border':'2px solid #adabab','box-shadow':'none'});
       }
     });
-    
+
 	$('#recommend2').change(function(){
       var nop = 0;
       var line = 20;
@@ -194,20 +194,18 @@
      }
       else{
         clearInterval(id);
-        btn.css("border","2px solid #adabab");
+        btn.css({'border':'2px solid #adabab','box-shadow':'none'});
       }
     });
-
     $('#finish').click( function() {
 	  $('#whole').show();
 	  $('#finish').hide();
   	  var date = new Date();
 	  end_time = date.getTime();
-	  time_spent = end_time - init_time;
-	  if_finish = 1;
-	  console.log(time_spent/1000);
+    if_finish=1;
+    console.log(new Date(init_time)+' '+ new Date(end_time));
+    console.log(clickSequence);
 	});
-
  $('#example_1').hide();
     var $flowchart = $('#example_5');
     var $container = $flowchart.parent();
@@ -228,14 +226,12 @@
                 rname = data.links[linkId].relationame;
             }
         $linkname.val(rname);
-
         $("#myModal").modal();
         $('#linkrel').text(rname);
         return true;
       },
       onLinkUnselect: function() {
         $linkProperties.hide();
-
         return true;
       }
     });
@@ -250,19 +246,15 @@
                 rname = data.links[linkId].relationame;
             }
         $linkname1.val(rname);
-
-
         $("#myModal").modal();
         $('#linkrel').text(rname);
         return true;
       },
       onLinkUnselect: function() {
         $linkProperties1.hide();
-
         return true;
       }
     });
-
     $('#hide').click(function() {
       $('#example_1').hide()
     });
@@ -273,7 +265,6 @@
         data.links[selectedLinkId].relationame = $linkname1.val();
         $('#example_1').flowchart('setData', data);
         $('#linkrel').text($linkname1.val()).fadeIn('slow');
-
       }
     });
     $('#savelinkname').click(function() {
@@ -283,21 +274,17 @@
         data.links[selectedLinkId].relationame = $linkname.val();
         $flowchart.flowchart('setData', data);
         $('#linkrel').text($linkname.val()).fadeIn('slow');
-
       }
     });
     $flowchart.siblings('.show1').click(function() {
       $('#example_1').show();
       var data = JSON.parse('{{dragdata}}'.replace(/(&quot\;)/g,"\""));
-
       var i = 10 ;
       var top = 50;
       for(var key in data) {
-
             data[key].left = i;
             data[key].top = top;
             i += 250;
-
             $('#example_1').flowchart('createOperator', key, data[key]);
 	    if ( i > (document.getElementById("example_1").clientWidth - 250) ) {
 		      i = 10;
@@ -309,10 +296,7 @@
         var links = JSON.parse('{{links}}'.replace(/(&quot\;)/g,"\""));
         var data1 = $('#example_1').flowchart('getData');
         data1['links'] = links;
-
         $('#example_1').flowchart('setData',data1);
-
-
     });
     var operatorI = 0;
     $flowchart.siblings('.create_operator').click(function() {
@@ -334,12 +318,9 @@
           }
         }
       };
-
       operatorI++;
-
       $flowchart.flowchart('createOperator', operatorId, operatorData);
     });
-
     $flowchart.siblings('.delete_selected_button').click(function() {
       $flowchart.flowchart('deleteSelected');
       $('#example_1').flowchart('deleteSelected');
@@ -361,25 +342,20 @@
         document.body.removeChild(element);
       }
       // Start file download.
-
       var sentid='{{sentid}}'
       $.ajax(
       {
           type:"POST",
           url: "ajax/get_data/",
           data:{
-
                   'sentid' : sentid
-
           },
           success: function( data )
           {
-
              var tbody = document.getElementById('tbody');
              var data1 =  JSON.parse(data.replace(/(&quot\;)/g,"\""));
              var text = '';
              for ( var key in data1) {
-
               var tr = "<tr>";
               var rel = '_';
               if(data1[key][5]!=''){
@@ -398,11 +374,8 @@
               tbody.innerHTML += tr;
              }
              download(sentid+".txt",text)
-
-
           }
        })
-
     });
     $flowchart.siblings('.save_data').click(function() {
       var dragdata = $flowchart.flowchart('getData');
@@ -421,10 +394,8 @@
           if (typeof links[key].relationame != 'undefined') {
                   rname = links[key].relationame;
               }
-
           t=links[key].toConnector.substr(3);
           f=links[key].fromConnector.substr(4);
-
           wordidrel[t]=rname;
           if(c.includes(f)) {
             wordidchilds[f] = wordidchilds[f]+'-'+t;
@@ -440,14 +411,12 @@
                   'wc' : JSON.stringify(wordidchilds),
                   'wr' : JSON.stringify(wordidrel),
                   'sentid' : sentid
-
           },
           success: function( data )
           {
             alert('Flowchart Saved Successfully');
           }
        })
-
     });
         // CSRF code
     function getCookie(name) {
@@ -482,7 +451,6 @@
     var $draggableOperators = $('.draggable_operator');
     var dwor = [];
     function getOperatorData($element) {
-
       var nbInputs = parseInt($element.data('nb-inputs'));
       var nbOutputs = nbInputs;
       var str = $element.data('nb-lemmas').toString();
@@ -496,7 +464,6 @@
           var i = 0;
           for (i = 0; i < nbInputs; i++) {
             var data1 = {
-
               properties: {
                 title:ids[i] +' : '+ $element.text(),
                 inputs: {
@@ -516,10 +483,8 @@
             dic['lemma_'+ids[i]] = data1
             data.push(data1)
 	}
-
       }
       else {
-
         var data1 = {
             properties: {
                 title: ids[0]+' : ' +$element.text(),
@@ -542,7 +507,6 @@
       }
       return dic;
     }
-
     var operatorId = 0;
   $draggableOperators.hover(function() {
       $(this).css('cursor','pointer');
@@ -551,54 +515,51 @@
       $(this).css('cursor','auto');
       $('#show_lemma').text(' ');
   });
-
   var btnClicks = [];
+  var clickSequence = [];
   $draggableOperators.click(function(){
-    
 	var flag = 0;
 	if ( if_finish == 0) {
 	  flag = 1;
 	  $('#whole').show();
 	}
-		
 	var pid = $(this).attr('id');
-    btnClicks.push(pid);
-    var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
-    var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
-    if($(this).attr('datastatus') == 'off') {
-      var $element = $(this);
-      var nbInputs = parseInt($element.data('nb-inputs'));
-      var nbOutputs = nbInputs;
-      var str = $element.data('nb-lemmas').toString();
-      var status = $element.data('nb-status');
-      var ids = $element.data('nb-ids').toString().split('-');
-      var showlabels =str.split('\n');
-      var wordtext =  $element.text();
-      var div_width = document.getElementById("example_5").clientWidth;
-      var data = {
-        left: 0,
-    	  top : 0,
+  btnClicks.push(pid);
+  if(clickSequence[(clickSequence.length)-1] != (pid+'S')){
+    clickSequence.push(pid+'S');
+  }
+  var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
+  var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
+  if($(this).attr('datastatus') == 'off') {
+    var $element = $(this);
+    var nbInputs = parseInt($element.data('nb-inputs'));
+    var nbOutputs = nbInputs;
+    var str = $element.data('nb-lemmas').toString();
+    var status = $element.data('nb-status');
+    var ids = $element.data('nb-ids').toString().split('-');
+    var showlabels =str.split('\n');
+    var wordtext =  $element.text();
+    var div_width = document.getElementById("example_5").clientWidth;
+    var data = {
+      left: 0,
+  	  top : 0,
 	properties: {
           title: $element.text()+ '<br>'+showlabels[0].split('@')[1],
           inputs: {},
           outputs: {}
         }
       };
-
       if (( nop > (div_width/200) )  && (nop%2 == 0)) {
         nop = 0;
         line += 400;
       }
-
       data.left = ( nop*150 ) % div_width + 20;
-
       if ( nop%2 ==0 ) {
         data.top = 20+line;
       }
       else {
         data.top = 200+line;
       }
-
       var i = 0;
       var c = document.getElementById('recommend2').checked;
       if ( c ) {
@@ -623,12 +584,11 @@
 		if ( if_finish==0 ) {
 		  $('#whole').hide();
 		  flag = 0;
-	 	} 
+	 	}
 	 }
-		
+
 	  $flowchart.flowchart('createOperator', pid, data);
       nop += 1;
-
       $(this).parent().append("<p class = 'tick'>✓</p>");
       for (i = 0; i < cids[pid].length; i++) {
         $('#'+cids[pid][i]).fadeOut();
@@ -644,7 +604,6 @@
       for (var i = 0; i < cids[pid].length; i++) {
         $('#'+cids[pid][i]).fadeIn('slow');
         $('#'+cids[pid][i]).parent().attr('class',colorlp[cids[pid][i]]);
-
       }
       $(this).attr("datastatus", "off");
       nop -= 1;
@@ -653,9 +612,10 @@
   $('#undo').click(function(){
     var wordId = String(btnClicks.pop());
     $("#"+wordId).click();
+    clickSequence.push(wordId+'U');
     btnClicks.pop();
+    console.log(btnClicks);
   })
-
   });
 </script>
 </div>
