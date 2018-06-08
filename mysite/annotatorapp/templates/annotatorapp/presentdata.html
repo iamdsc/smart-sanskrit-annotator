@@ -164,10 +164,10 @@
 	  
     function btnHigh(){
     if(c){
-      btn.css('border','2px solid blue');
+      btn.css({'border':'2px solid yellow','box-shadow': '0px 3px 10px #f4d641'});
     }
     else{
-      btn.css('border','2px solid #adabab');
+      btn.css({'border':'2px solid #adabab','box-shadow':'none'});
     }
     c = !c;
     }
@@ -181,7 +181,7 @@
       }
       else{
         clearInterval(id);
-        btn.css("border","2px solid #adabab");
+        btn.css({'border':'2px solid #adabab','box-shadow':'none'});
       }
     });
     
@@ -194,7 +194,7 @@
      }
       else{
         clearInterval(id);
-        btn.css("border","2px solid #adabab");
+        btn.css({'border':'2px solid #adabab','box-shadow':'none'});
       }
     });
 
@@ -203,9 +203,9 @@
 	  $('#finish').hide();
   	  var date = new Date();
 	  end_time = date.getTime();
-	  time_spent = end_time - init_time;
-	  if_finish = 1;
-	  console.log(time_spent/1000);
+    if_finish=1;
+    console.log(new Date(init_time)+' '+ new Date(end_time));
+    console.log(clickSequence);
 	});
 
  $('#example_1').hide();
@@ -553,31 +553,33 @@
   });
 
   var btnClicks = [];
-  $draggableOperators.click(function(){
-    
+  var clickSequence = [];
+  $draggableOperators.click(function(){  
 	var flag = 0;
 	if ( if_finish == 0) {
 	  flag = 1;
 	  $('#whole').show();
-	}
-		
+	}		
 	var pid = $(this).attr('id');
-    btnClicks.push(pid);
-    var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
-    var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
-    if($(this).attr('datastatus') == 'off') {
-      var $element = $(this);
-      var nbInputs = parseInt($element.data('nb-inputs'));
-      var nbOutputs = nbInputs;
-      var str = $element.data('nb-lemmas').toString();
-      var status = $element.data('nb-status');
-      var ids = $element.data('nb-ids').toString().split('-');
-      var showlabels =str.split('\n');
-      var wordtext =  $element.text();
-      var div_width = document.getElementById("example_5").clientWidth;
-      var data = {
-        left: 0,
-    	  top : 0,
+  btnClicks.push(pid);
+  if(clickSequence[(clickSequence.length)-1] != (pid+'S')){
+    clickSequence.push(pid+'S');
+  }
+  var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
+  var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
+  if($(this).attr('datastatus') == 'off') {
+    var $element = $(this);
+    var nbInputs = parseInt($element.data('nb-inputs'));
+    var nbOutputs = nbInputs;
+    var str = $element.data('nb-lemmas').toString();
+    var status = $element.data('nb-status');
+    var ids = $element.data('nb-ids').toString().split('-');
+    var showlabels =str.split('\n');
+    var wordtext =  $element.text();
+    var div_width = document.getElementById("example_5").clientWidth;
+    var data = {
+      left: 0,
+  	  top : 0,
 	properties: {
           title: $element.text()+ '<br>'+showlabels[0].split('@')[1],
           inputs: {},
@@ -653,7 +655,9 @@
   $('#undo').click(function(){
     var wordId = String(btnClicks.pop());
     $("#"+wordId).click();
+    clickSequence.push(wordId+'U');
     btnClicks.pop();
+    console.log(btnClicks);
   })
 
   });
