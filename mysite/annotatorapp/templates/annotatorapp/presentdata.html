@@ -150,7 +150,7 @@
     $('#recommend1').prop('checked',false);
     $('#recommend2').prop('checked',false);
     var id = 0;
-    var btn = $('#word-table > tbody > tr:first > td > div > button');
+    var btn = $('#word-table > tbody > tr:first > td > button');
     var c = true;
     function btnHigh(){
     if(c){
@@ -185,13 +185,6 @@
         btn.css("border","1px solid #adabab");
       }
     });
- 
-
-
-
-
-
-
 
  $('#example_1').hide();
     var $flowchart = $('#example_5');
@@ -628,10 +621,8 @@
     $("#"+wordId).click();
     btnClicks.pop();
   })
-
+  
   });
 </script>
-
 </div>
-
 {% endblock %}
