@@ -61,3 +61,12 @@ class WordOptions(models.Model):
 	class Meta:
 		unique_together = (("sentence","level","color_class","position","chunk_no","lemma","pre_verb","morph","colspan","wordlength","aux_info"),)		
 		db_table  = "WordOptions"
+
+class User(models.Model):
+	user_id = models.IntegerField(default=0)
+	sentence = models.CharField(max_length=100)
+	clickSequence = models.CharField(max_length=100)
+	init_time = models.TimeField(auto_now_add=True)
+	end_time = models.TimeField(auto_now_add=True)
+
+
