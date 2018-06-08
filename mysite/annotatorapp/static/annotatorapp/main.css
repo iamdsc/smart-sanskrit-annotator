@@ -40,9 +40,6 @@
 .table-responsive{
 	min-height: 300px;
 }
-.btn-default{
-	background-color:#42f4f4;
-}
 .inputfield{
 	margin:0;
 	padding:5px;
@@ -128,10 +125,20 @@ td{
   margin:0;
 
 }
-#words{
+.words{
+  border:1px solid #adabab;
   border-radius:8px;
+  box-shadow: 0px 4px 3px rgba(0,0,0,0.4),
+       0px 8px 13px rgba(0,0,0,0.1),
+       0px 18px 23px rgba(0,0,0,0.1);
   width:100%;
   padding:5px;
   margin:0;
   font-size:15px;
+}
+#undo{
+  margin-left:20px;
+  border-radius: 15px;
+  color:#2268b2;
+  float: right;
 }

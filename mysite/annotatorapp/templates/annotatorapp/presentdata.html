@@ -4,6 +4,7 @@
 {% load poll_extras %}
 <p id = 'show_lemma' class='label other'></p>
 <div class="panel-group">
+  <p><strong>RECOMMENDATION : </strong></p>
   <ul class="pager">
     <strong>Segmentation </strong>
     <li><label class="switch">
@@ -15,6 +16,7 @@
     <input type="checkbox" id="recommend2">
     <span class="slider round"></span>
     </label></li>
+    <li><button class='btn btn-default' id='undo'>Undo</button></li>
   <li class="next"><a  href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="refresh option">Reset</a></li>
   </ul>
   <div class="panel panel-info">
@@ -70,7 +72,7 @@
               {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
 
                 <td colspan={{wd1.colspan}} align="left">
-                        <div  title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle"><button id='words' class={{wd1.color_class}} >{{wd1.word}}</button></div>
+                        <button  title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words">{{wd1.word}}</button>
                 </td>
 
 
@@ -147,32 +149,50 @@
     var data ={};
     $('#recommend1').prop('checked',false);
     $('#recommend2').prop('checked',false);
+    var id = 0;
+    var btn = $('#word-table > tbody > tr:first > td > div > button');
+    var c = true;
+    function btnHigh(){
+    if(c){
+      btn.css('border','2px solid blue');
+    }
+    else{
+      btn.css('border','2px solid #adabab');
+    }
+    c = !c;
+    }
     $('#recommend1').change(function(){
+      var nop = 0;
+      var line = 20;
       var c1 = this.checked;
-      if(c1){
-        nop = 0;
-        line = 20;
-        $('#word-table > tbody > tr').not(':first').hide();
-        $('#word-table > tbody > tr:first > td > div > button').click();
+      if(c1){      
+        id = setInterval(btnHigh,800);
       }
       else{
-        // $('#word-table > tbody > tr').not(':first').show();
-            $('#word-table > tbody > tr:first > td > div > button').click();
+        clearInterval(id);
+        btn.css("border","1px solid #adabab");
       }
     });
     $('#recommend2').change(function(){
+      var nop = 0;
+      var line = 20;
       var c2 = this.checked;
       if(c2){
-        nop = 0;
-        line = 20;
-        $('#word-table > tbody > tr').not(':first').hide();
-        $('#word-table > tbody > tr:first > td > div > button').click();
-      }
+        id = setInterval(btnHigh,800);
+     }
       else{
-        // $('#word-table > tbody > tr').not(':first').show();
-        $('#word-table > tbody > tr:first > td > div > button').click();
+        clearInterval(id);
+        btn.css("border","1px solid #adabab");
       }
     });
+ 
+
+
+
+
+
+
+
  $('#example_1').hide();
     var $flowchart = $('#example_5');
     var $container = $flowchart.parent();
@@ -517,9 +537,10 @@
       $('#show_lemma').text(' ');
   });
 
+  var btnClicks = [];
   $draggableOperators.click(function(){
-    $('#word-table > tbody > tr').not(':first').show();
     var pid = $(this).attr('id');
+    btnClicks.push(pid);
     var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
     var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
     if($(this).attr('datastatus') == 'off') {
@@ -602,6 +623,12 @@
       nop -= 1;
     }
   });
+  $('#undo').click(function(){
+    var wordId = String(btnClicks.pop());
+    $("#"+wordId).click();
+    btnClicks.pop();
+  })
+
   });
 </script>
 

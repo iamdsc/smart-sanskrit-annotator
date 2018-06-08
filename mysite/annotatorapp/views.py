@@ -120,11 +120,10 @@ def presentdataview(request) :
 					sent_id = Sentence1.id
 					pos = 0
 					context  = codeforline.contestofwordsdata(sent_id)
-					# print(context)
 					return render(request,'annotatorapp/presentdata.html',context)
 				else :
 					wordsdata = codeforline.worddataofsentence(df,Sentence)
-					return render(request,'annotatorapp/presentdata.html',{'wordsdata' : wordsdata,'words' : Sentence.line.split(' ') , 	})
+					return render(request,'annotatorapp/presentdata.html',{'wordsdata' : wordsdata,'words' : Sentence.line.split(' ')})
 			except Exception as e:  
 				print("Sentence not inserted : ")
 				print(e)
