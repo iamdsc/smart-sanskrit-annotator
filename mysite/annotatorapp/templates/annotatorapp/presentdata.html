@@ -90,13 +90,16 @@
 
   </div>
 
+  <p align='center'><br></br>
+  <button id='finish' align='centre'> Finish </button>  </p>
+
 </div>
 
 {%endblock%}
 
 {% block javascript %}
 
-<div class="container" >
+<div class="container" id="whole">
 
   <h1>Flowchart</h1>
   <button class="btn btn-info delete_selected_button"> Delete Selected Operator/link </button>
@@ -145,13 +148,20 @@
 <script type="text/javascript">
   var nop = 0;
   var line = 20;
+  var if_finish = 0;
+  var init_time = 0;
+  var end_time = 0;
   $(document).ready(function() {
     var data ={};
-    $('#recommend1').prop('checked',false);
+    var date = new Date();
+    init_time = date.getTime();
+	$('#whole').hide();	
+	$('#recommend1').prop('checked',false);
     $('#recommend2').prop('checked',false);
     var id = 0;
     var btn = $('#word-table > tbody > tr:first > td > button');
     var c = true;
+	  
     function btnHigh(){
     if(c){
       btn.css('border','2px solid blue');
@@ -161,7 +171,8 @@
     }
     c = !c;
     }
-    $('#recommend1').change(function(){
+    
+	$('#recommend1').change(function(){
       var nop = 0;
       var line = 20;
       var c1 = this.checked;
@@ -173,7 +184,8 @@
         btn.css("border","1px solid #adabab");
       }
     });
-    $('#recommend2').change(function(){
+    
+	$('#recommend2').change(function(){
       var nop = 0;
       var line = 20;
       var c2 = this.checked;
@@ -185,6 +197,15 @@
         btn.css("border","1px solid #adabab");
       }
     });
+
+    $('#finish').click( function() {
+	  $('#whole').show();
+	  $('#finish').hide();
+  	  var date = new Date();
+	  end_time = date.getTime();
+	  time_spent = end_time - start_time;
+	  if_finish = 1;
+	});
 
  $('#example_1').hide();
     var $flowchart = $('#example_5');
@@ -532,7 +553,14 @@
 
   var btnClicks = [];
   $draggableOperators.click(function(){
-    var pid = $(this).attr('id');
+    
+	var flag = 0;
+	if ( if_finish == 0) {
+	  flag = 1;
+	  $('#whole').show();
+	}
+		
+	var pid = $(this).attr('id');
     btnClicks.push(pid);
     var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
     var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
@@ -561,9 +589,7 @@
         line += 400;
       }
 
-
       data.left = ( nop*150 ) % div_width + 20;
-
 
       if ( nop%2 ==0 ) {
         data.top = 20+line;
@@ -593,8 +619,13 @@
 		  label: '.'
 		};
 	      }
-      }
-      $flowchart.flowchart('createOperator', pid, data);
+		if ( if_finish==0 ) {
+		  $('#whole').hide();
+		  flag = 0;
+	 	} 
+	 }
+		
+	  $flowchart.flowchart('createOperator', pid, data);
       nop += 1;
 
       $(this).parent().append("<p class = 'tick'>✓</p>");
@@ -607,6 +638,8 @@
     else if($(this).attr('datastatus') == 'on') {
       $(this).siblings('p').remove(".tick");
       $flowchart.flowchart('deleteOperator', pid);
+	  if (if_finish == 0)
+		$('#whole').hide();
       for (var i = 0; i < cids[pid].length; i++) {
         $('#'+cids[pid][i]).fadeIn('slow');
         $('#'+cids[pid][i]).parent().attr('class',colorlp[cids[pid][i]]);
