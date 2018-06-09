@@ -16,8 +16,8 @@
     <input type="checkbox" id="recommend2">
     <span class="slider round"></span>
     </label></li>
-    <li><button class='btn btn-default' id='undo'>Undo</button></li>
-  <li class="next"><a  href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="refresh option">Reset</a></li>
+    <li><button class='btn btn-default' id='undo' title='Undo Option'>Undo</button></li>
+  <li class="next"><a  href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="Refresh Option">Reset</a></li>
   </ul>
   <div class="panel panel-info">
         <div class="panel-heading" >
@@ -89,10 +89,7 @@
    </div>
 
   </div>
-
-  <p align='center'><br></br>
-  <button id='finish' align='centre'> Finish </button>  </p>
-
+  <button id='finish' align='centre' class='btn btn-success' style="margin: 15px 50% 0 50%;" title='Finish Segmentation'> Finish </button>
 </div>
 
 {%endblock%}
@@ -614,7 +611,6 @@
     $("#"+wordId).click();
     clickSequence.push(wordId+'U');
     btnClicks.pop();
-    console.log(btnClicks);
   })
   });
 </script>
