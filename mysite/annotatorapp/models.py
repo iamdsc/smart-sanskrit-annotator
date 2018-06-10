@@ -63,11 +63,11 @@ class WordOptions(models.Model):
 		db_table  = "WordOptions"
 
 class User(models.Model):
-	user_id = models.IntegerField(default=0)
-	sentence = models.CharField(max_length=100)
+	user_id = models.AutoField(primary_key=True)
+	savedSentence = models.CharField(max_length=100)
 	clickSequence = models.CharField(max_length=100)
-	init_time = models.TimeField(auto_now_add=True)
-	end_time = models.TimeField(auto_now_add=True)
+	init_time = models.CharField(max_length=100)
+	end_time = models.CharField(max_length=100)
 
 
 

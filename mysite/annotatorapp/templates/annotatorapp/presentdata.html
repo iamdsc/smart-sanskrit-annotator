@@ -212,11 +212,9 @@
 	  $('#whole').show();
 	  $('#finish').hide();
   	  var date = new Date();
-	  end_time = date.getTime();
+	    end_time = date.getTime();
       if_finish=1;
-      console.log(new Date(init_time)+' '+ new Date(end_time));
-      console.log(clickSequence);
-      console.log(savedSentence);
+      console.log(init_time, end_time);
       $.ajax(
       {
           type:"POST",
@@ -225,15 +223,17 @@
                   'it' : JSON.stringify(init_time),
                   'et' : JSON.stringify(end_time),
                   'cs' : JSON.stringify(clickSequence),
-                  'sentid' : sentid
+                  'ss' : JSON.stringify(savedSentence)
           },
           success: function( data )
           {
             alert('Added to DB');
           }
-       })
+        }
+         )
+      });
 
-
+  
 
  $('#example_1').hide();
     var $flowchart = $('#example_5');
@@ -556,11 +556,9 @@
 	var pid = $(this).attr('id');
   var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
   var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
-  console.log(colorlp[pid]);
   btnClicks.push(pid);
   (clickSequence[(clickSequence.length)-1] != (pid+'S')) ?  clickSequence.push(pid+'S') :  clickSequence.push(pid+'U');
   
-  if(colorlp[pid]!='gray_back'){
     if(!savedSentence.includes(pid)){
       savedSentence.push(pid);
     }
@@ -646,7 +644,6 @@
         $(this).attr("datastatus", "off");
         nop -= 1;
       }
-    }
   });
   $('#undo').click(function(){
     var wordId = String(btnClicks.pop());

@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect,HttpResponse
 from . import models,forms,codeforline
-from .models import Sentences,WordOptions,Wordsinsentence
+from .models import Sentences,WordOptions,Wordsinsentence,User
 from .tables import WordOptionsTable,SentencesTable,WordsinsentenceTable
 import json 
 from django_datatables_view.base_datatable_view import BaseDatatableView
@@ -182,9 +182,15 @@ def reset_allselectionview(request,sent_id)	:
 def save_data_to_db(request):
 	if request.is_ajax():
 		if request.method == 'POST':
+
 			it = json.loads(request.POST['it'])
 			et = json.loads(request.POST['et'])
 			cs = json.loads(request.POST['cs'])
-
+			ss = json.loads(request.POST['ss'])
+			user = User(savedSentence=ss,clickSequence=cs,init_time=it,end_time=et)
+			user.save()
+			return HttpResponse('Success')
+	else:
+		raise Http404
 
 	

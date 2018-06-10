@@ -15,5 +15,5 @@ urlpatterns = [
 	re_path(r'refresh/(?P<sent_id>[0-9]+)/$',views.reset_allselectionview,name='reset_allselection'),
 	path('presentdata/ajax/save_data/',views.save_dragdata,name='save_dragdata'),
 	path('presentdata/ajax/get_data/',views.get_dragdata,name='get_dragdata'),
-	path('presentdata/ajax/finish/',views.save_data_to_db,name='save_data_to_db'),
+	path('presentdata/ajax/save_data_to_db/',views.save_data_to_db,name='save_data_to_db'),
 	]
