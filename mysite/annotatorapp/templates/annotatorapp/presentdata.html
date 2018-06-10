@@ -89,7 +89,7 @@
    </div>
 
   </div>
-  <button id='finish' align='centre' class='btn btn-success' style="margin: 15px 50% 0 50%;" title='Finish Segmentation'> Finish </button>
+  <button id='finish' align='centre' class='btn btn-success' style="margin: 40px 50% 0 50%;" title='Finish Segmentation'> Finish </button>
 </div>
 
 {%endblock%}
@@ -148,6 +148,10 @@
   var if_finish = 0;
   var init_time = 0;
   var end_time = 0;
+  var btnClicks = [];
+  var clickSequence = [];
+  var savedSentence = [];
+
   $(document).ready(function() {
     var data ={};
     var date = new Date();
@@ -202,6 +206,7 @@
     if_finish=1;
     console.log(new Date(init_time)+' '+ new Date(end_time));
     console.log(clickSequence);
+    console.log(savedSentence);      
 	});
  $('#example_1').hide();
     var $flowchart = $('#example_5');
@@ -512,19 +517,26 @@
       $(this).css('cursor','auto');
       $('#show_lemma').text(' ');
   });
-  var btnClicks = [];
-  var clickSequence = [];
+
   $draggableOperators.click(function(){
-	var flag = 0;
+	
+  var flag = 0;
 	if ( if_finish == 0) {
 	  flag = 1;
 	  $('#whole').show();
 	}
+
 	var pid = $(this).attr('id');
   btnClicks.push(pid);
-  if(clickSequence[(clickSequence.length)-1] != (pid+'S')){
-    clickSequence.push(pid+'S');
+  (clickSequence[(clickSequence.length)-1] != (pid+'S')) ?  clickSequence.push(pid+'S') :  clickSequence.push(pid+'U');
+  
+  if(!savedSentence.includes(pid)){
+    savedSentence.push(pid);
   }
+  savedSentence.sort(function(a,b){
+    return Number(a[-1])-Number(b[-1]); 
+  });
+
   var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
   var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
   if($(this).attr('datastatus') == 'off') {
@@ -609,7 +621,6 @@
   $('#undo').click(function(){
     var wordId = String(btnClicks.pop());
     $("#"+wordId).click();
-    clickSequence.push(wordId+'U');
     btnClicks.pop();
   })
   });
