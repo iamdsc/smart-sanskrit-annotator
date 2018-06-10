@@ -2,20 +2,25 @@
 {%block title%}Presentdata{%endblock%}
 {%block content%}
 {% load poll_extras %}
+
+
+
 <p id = 'show_lemma' class='label other'></p>
 <div class="panel-group">
+    <!--applying recommendation options-->
   <p><strong>RECOMMENDATION : </strong></p>
   <ul class="pager">
-    <strong>Segmentation </strong>
+    <strong>Segmentation </strong> <!--segmentation only , performs highlighting of the first row-->
     <li><label class="switch">
     <input type="checkbox" id="recommend1">
     <span class="slider round"></span>
     </label></li>
-    <strong>Segmentation + FlowChart </strong>
+    <strong>Segmentation + FlowChart </strong><!--performs highlighting of first row as well as eliminates the noisy conflict segments-->
     <li><label class="switch">
     <input type="checkbox" id="recommend2">
     <span class="slider round"></span>
     </label></li>
+      <!--undo the last action-->
     <li><button class='btn btn-default' id='undo'>Undo</button></li>
   <li class="next"><a  href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="refresh option">Reset</a></li>
   </ul>
@@ -25,6 +30,7 @@
             <a data-toggle="collapse" href="#collapse{{sentid}}">{{line}}</a>
           </h3>
         </div>
+      <!--collapsible to list out words, lemma, morph, auxi and preverb for the entire user input-->
         <div id="collapse{{sentid}}" class="panel-collapse collapse">
           <table class="table table-hover">
               <thead>
@@ -197,14 +203,30 @@
         btn.css({'border':'2px solid #adabab','box-shadow':'none'});
       }
     });
-    $('#finish').click( function() {
+    $('#finish').click( function()
+    {
 	  $('#whole').show();
 	  $('#finish').hide();
   	  var date = new Date();
 	  end_time = date.getTime();
-    if_finish=1;
-    console.log(new Date(init_time)+' '+ new Date(end_time));
-    console.log(clickSequence);
+      if_finish=1;
+      console.log(new Date(init_time)+' '+ new Date(end_time));
+      console.log(clickSequence);
+      $.ajax(
+      {
+          type:"POST",
+          url: "ajax/save_data_to_db/",
+          data:{
+                  'it' : JSON.stringify(init_time),
+                  'et' : JSON.stringify(end_time),
+                  'cs' : JSON.stringify(clickSequence),
+                  'sentid' : sentid
+          },
+          success: function( data )
+          {
+            alert('Added to DB');
+          }
+       })
 	});
  $('#example_1').hide();
     var $flowchart = $('#example_5');

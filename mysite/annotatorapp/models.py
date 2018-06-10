@@ -70,3 +70,6 @@ class User(models.Model):
 	end_time = models.TimeField(auto_now_add=True)
 
 
+
+
+
