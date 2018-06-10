@@ -5,9 +5,10 @@ from .tables import WordOptionsTable,SentencesTable,WordsinsentenceTable
 import json 
 from django_datatables_view.base_datatable_view import BaseDatatableView
 
-
+#renders response for index page
 def index(request) :
 	return render(request,'annotatorapp/index.html',{})
+
 
 def lineview(request) :
 	return render(request,'annotatorapp/index.html',{})
@@ -24,6 +25,7 @@ def wordsinsentenceview(request) :
 	tabledata = WordsinsentenceTable(Wordsinsentence.objects.all())
 	return render(request,'annotatorapp/tables.html',{'tabledata' : tabledata})
 
+#for rendering response  upon obtaining data
 def get_dragdata(request):
 	if request.is_ajax() :
 		if request.method == 'POST':
@@ -36,6 +38,7 @@ def get_dragdata(request):
 	else:
 		raise Http404
 
+#for rendering response upon saving the selected data to database
 def save_dragdata(request):
 	if request.is_ajax() :
 		if request.method == 'POST':
@@ -153,6 +156,7 @@ def select_wordoptionview(request,sent_id,wordoption_id) :
 	wo.save()
 	return redirect('annotatorapp:presentdataview')			
 
+#for eliminating the conflicting segments
 def eliminate_wordoptionview(request,sent_id,wordoption_id) :
 	wo = WordOptions.objects.get(id=wordoption_id)
 	wo.isEliminated = True
@@ -160,6 +164,7 @@ def eliminate_wordoptionview(request,sent_id,wordoption_id) :
 	request.session['sent_id'] = sent_id
 	return redirect('annotatorapp:presentdataview')	
 
+#for resetting every selected segment back to the initial position
 def reset_allselectionview(request,sent_id)	:
 	Sentence1 = Sentences.objects.get(id = sent_id)
 	wordsdata = WordOptions.objects.all().filter(sentence = Sentence1	)
@@ -172,4 +177,14 @@ def reset_allselectionview(request,sent_id)	:
 		wo.save()
 	request.session['sent_id'] = sent_id
 	return redirect('annotatorapp:presentdataview')
+
+#rendering response for saving details of each data segment clicked by user
+def save_data_to_db(request):
+	if request.is_ajax():
+		if request.method == 'POST':
+			it = json.loads(request.POST['it'])
+			et = json.loads(request.POST['et'])
+			cs = json.loads(request.POST['cs'])
+
+
 	
