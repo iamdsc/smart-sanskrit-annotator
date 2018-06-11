@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 from . import views
-
+#urls are specified which are mapped to corresponding views over the path specified
 
 app_name = 'annotatorapp'
 
