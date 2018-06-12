@@ -1,3 +1,4 @@
+#landing page inputs taken as a form input.
 from django import forms
 from . import models
 

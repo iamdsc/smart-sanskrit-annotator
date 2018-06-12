@@ -16,6 +16,10 @@ django_datatables_view
 ```
 python manage.py migrate
 ```
+## Populate Database with morph information with custom management command
+```
+python manage.py scrap
+```
 ## To run the app run the following command inside outer mysite directory:
 ```
 python manage.py runserver
