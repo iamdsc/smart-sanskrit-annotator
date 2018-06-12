@@ -428,35 +428,35 @@ th {
   padding: 0;
 }
 
-button.yellow_back {background-color:#FFFF00}
-button.yellow_cent {background-color:#FFFF00; margin:0 auto; border: outset 5pt; padding:10pt}
-button.deep_sky_cent {background-color:#00C0FF; margin:0 auto; border: outset 5pt; padding:10pt}
-button.salmon_back {background-color:#F08070}
-button.aquamarine_back {background-color:#6FFFC3}
-button.mauve_back {background-color:#FF99FF}
-button.magenta_back {background-color:#FF00FF}
-button.mauve_cent {background-color:#FF99FF; margin:0 auto; border: outset 8pt; padding:10pt}
-button.cyan_back {background-color:#00FFFF}
-button.cyan_cent {background-color:#00FFFF; margin:0 auto; border: outset 5pt; padding:10pt}
-button.lavender_cent {background-color:#E6E6FA; margin:0 auto; border: outset 5pt; padding:10pt}
-button.gold_back {background-color:#A58959}
-button.gold_cent {background-color:#A58959; margin:0 auto; border: outset 0pt; padding:10pt}
-button.inflexion {background-color:#FFFF00; margin:0 auto; border: outset 2pt; padding:5pt}
-button.chamois_back {background-color:#F5F5DC; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt; width:100%}
-button.blue_back {background-color:#0000FF}
-button.green_back {background-color:#008000}
-button.brown_back {background-color:#A02820; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt; padding:10pt; width:100%}
-button.lime_back {background-color:#00FF00}
-button.deep_sky_back {background-color:#00C0FF}
-button.carmin_back {background-color:#FF1975}
-button.orange_back {background-color:#FFA000}
-button.red_back {background-color:#FF0000}
-button.grey_back {background-color:#B8B8B8}
-button.pink_back {background-color:#FFDDDD; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt}
-button.spacing20 {border-collapse:separate; border-spacing:20pt}
-button.light_blue_back {background-color:#ADD8E6}
-button.lavender_back {background-color:#E6E6FA}
-button.lawngreen_back {background-color:#7CFC00}
+div.yellow_back {background-color:#FFFF00}
+div.yellow_cent {background-color:#FFFF00; margin:0 auto; border: outset 5pt; padding:10pt}
+div.deep_sky_cent {background-color:#00C0FF; margin:0 auto; border: outset 5pt; padding:10pt}
+div.salmon_back {background-color:#F08070}
+div.aquamarine_back {background-color:#6FFFC3}
+div.mauve_back {background-color:#FF99FF}
+div.magenta_back {background-color:#FF00FF}
+div.mauve_cent {background-color:#FF99FF; margin:0 auto; border: outset 8pt; padding:10pt}
+div.cyan_back {background-color:#00FFFF}
+div.cyan_cent {background-color:#00FFFF; margin:0 auto; border: outset 5pt; padding:10pt}
+div.lavender_cent {background-color:#E6E6FA; margin:0 auto; border: outset 5pt; padding:10pt}
+div.gold_back {background-color:#A58959}
+div.gold_cent {background-color:#A58959; margin:0 auto; border: outset 0pt; padding:10pt}
+div.inflexion {background-color:#FFFF00; margin:0 auto; border: outset 2pt; padding:5pt}
+div.chamois_back {background-color:#F5F5DC; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt; width:100%}
+div.blue_back {background-color:#0000FF}
+div.green_back {background-color:#008000}
+div.brown_back {background-color:#A02820; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt; padding:10pt; width:100%}
+div.lime_back {background-color:#00FF00}
+div.deep_sky_back {background-color:#00C0FF}
+div.carmin_back {background-color:#FF1975}
+div.orange_back {background-color:#FFA000}
+div.red_back {background-color:#FF0000}
+div.grey_back {background-color:#B8B8B8}
+div.pink_back {background-color:#FFDDDD; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt}
+div.spacing20 {border-collapse:separate; border-spacing:20pt}
+div.light_blue_back {background-color:#ADD8E6}
+div.lavender_back {background-color:#E6E6FA}
+div.lawngreen_back {background-color:#7CFC00}
 /* Popup container */
 .popup {
     position: relative;

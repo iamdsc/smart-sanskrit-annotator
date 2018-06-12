@@ -81,7 +81,7 @@
               {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
 
                 <td colspan={{wd1.colspan}} align="left">
-                        <button  title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words">{{wd1.word}}</button>
+                        <div type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words">{{wd1.word}}<div>
                 </td>
 
 
@@ -98,6 +98,7 @@
    </div>
 
   </div>
+  <button id='get-sel'>Make Segment</button>
   <button id='finish' align='centre' class='btn btn-success' style="margin: 40px 50% 0 50%;" title='Finish Segmentation'> Finish </button>
 </div>
 
@@ -544,7 +545,6 @@
       $(this).css('cursor','auto');
       $('#show_lemma').text(' ');
   });
-
   $draggableOperators.click(function(){
 	
   var flag = 0;
@@ -558,93 +558,115 @@
   var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
   btnClicks.push(pid);
   (clickSequence[(clickSequence.length)-1] != (pid+'S')) ?  clickSequence.push(pid+'S') :  clickSequence.push(pid+'U');
-  
-    if(!savedSentence.includes(pid)){
-      savedSentence.push(pid);
-    }
-    savedSentence.sort(function(a,b){
-      return Number(a[-1])-Number(b[-1]); 
-    });
+  if(colorlp[pid] !='grey_back') 
+  {
 
-    if($(this).attr('datastatus') == 'off') {
-      var $element = $(this);
-      var nbInputs = parseInt($element.data('nb-inputs'));
-      var nbOutputs = nbInputs;
-      var str = $element.data('nb-lemmas').toString();
-      var status = $element.data('nb-status');
-      var ids = $element.data('nb-ids').toString().split('-');
-      var showlabels =str.split('\n');
-      var wordtext =  $element.text();
-      var div_width = document.getElementById("example_5").clientWidth;
-      var data = {
-        left: 0,
-    	  top : 0,
-  	properties: {
-            title: $element.text()+ '<br>'+showlabels[0].split('@')[1],
-            inputs: {},
-            outputs: {}
+        if(!savedSentence.includes(pid)){
+          savedSentence.push(pid);
+        }
+        savedSentence.sort(function(a,b){
+          return Number(a[-1])-Number(b[-1]); 
+        });
+
+        if($(this).attr('datastatus') == 'off') {
+          var $element = $(this);
+          var nbInputs = parseInt($element.data('nb-inputs'));
+          var nbOutputs = nbInputs;
+          var str = $element.data('nb-lemmas').toString();
+          var status = $element.data('nb-status');
+          var ids = $element.data('nb-ids').toString().split('-');
+          var showlabels =str.split('\n');
+          var wordtext =  $element.text();
+          var div_width = document.getElementById("example_5").clientWidth;
+          var data = {
+            left: 0,
+        	  top : 0,
+      	properties: {
+                title: $element.text()+ '<br>'+showlabels[0].split('@')[1],
+                inputs: {},
+                outputs: {}
+              }
+            };
+            if (( nop > (div_width/200) )  && (nop%2 == 0)) {
+              nop = 0;
+              line += 400;
+            }
+            data.left = ( nop*150 ) % div_width + 20;
+            if ( nop%2 ==0 ) {
+              data.top = 20+line;
+            }
+            else {
+              data.top = 200+line;
+            }
+            var i = 0;
+            var c = document.getElementById('recommend2').checked;
+            if ( c ) {
+      		data.properties.inputs['in-'+ids[i]] = {
+      		label: showlabels[i].split('@')[0].slice(1,-1)
+      		};
+      		data.properties.outputs['out-'+ids[i]] = {
+      		  label: '.'
+      		};
+            }
+            else {
+      	      for (i = 0; i < nbInputs; i++) {
+      		data.properties.inputs['in-'+ids[i]] = {
+      		label: showlabels[i].split('@')[0].slice(1,-1)
+      		};
+      	      }
+      	      for (i = 0; i < nbInputs; i++) {
+      		data.properties.outputs['out-'+ids[i]] = {
+      		  label: '.'
+      		};
+      	      }
+      		if ( if_finish==0 ) {
+      		  $('#whole').hide();
+      		  flag = 0;
+      	 	}
+      	 }
+
+      	  $flowchart.flowchart('createOperator', pid, data);
+            nop += 1;
+            $(this).parent().append("<p class = 'tick'>✓</p>");
+            for (i = 0; i < cids[pid].length; i++) {
+              $('#'+cids[pid][i]).fadeOut();
+              $('#'+cids[pid][i]).parent().attr('class','w_back');
+            }
+            $(this).attr("datastatus", "on");
           }
-        };
-        if (( nop > (div_width/200) )  && (nop%2 == 0)) {
-          nop = 0;
-          line += 400;
-        }
-        data.left = ( nop*150 ) % div_width + 20;
-        if ( nop%2 ==0 ) {
-          data.top = 20+line;
-        }
-        else {
-          data.top = 200+line;
-        }
-        var i = 0;
-        var c = document.getElementById('recommend2').checked;
-        if ( c ) {
-  		data.properties.inputs['in-'+ids[i]] = {
-  		label: showlabels[i].split('@')[0].slice(1,-1)
-  		};
-  		data.properties.outputs['out-'+ids[i]] = {
-  		  label: '.'
-  		};
-        }
-        else {
-  	      for (i = 0; i < nbInputs; i++) {
-  		data.properties.inputs['in-'+ids[i]] = {
-  		label: showlabels[i].split('@')[0].slice(1,-1)
-  		};
-  	      }
-  	      for (i = 0; i < nbInputs; i++) {
-  		data.properties.outputs['out-'+ids[i]] = {
-  		  label: '.'
-  		};
-  	      }
-  		if ( if_finish==0 ) {
-  		  $('#whole').hide();
-  		  flag = 0;
-  	 	}
-  	 }
+          else if($(this).attr('datastatus') == 'on') {
+            $(this).siblings('p').remove(".tick");
+            $flowchart.flowchart('deleteOperator', pid);
+      	  if (if_finish == 0)
+      		$('#whole').hide();
+            for (var i = 0; i < cids[pid].length; i++) {
+              $('#'+cids[pid][i]).fadeIn('slow');
+              $('#'+cids[pid][i]).parent().attr('class',colorlp[cids[pid][i]]);
+            }
+            $(this).attr("datastatus", "off");
+            nop -= 1;
+          }
+  }
 
-  	  $flowchart.flowchart('createOperator', pid, data);
-        nop += 1;
-        $(this).parent().append("<p class = 'tick'>✓</p>");
-        for (i = 0; i < cids[pid].length; i++) {
-          $('#'+cids[pid][i]).fadeOut();
-          $('#'+cids[pid][i]).parent().attr('class','w_back');
-        }
-        $(this).attr("datastatus", "on");
-      }
-      else if($(this).attr('datastatus') == 'on') {
-        $(this).siblings('p').remove(".tick");
-        $flowchart.flowchart('deleteOperator', pid);
-  	  if (if_finish == 0)
-  		$('#whole').hide();
-        for (var i = 0; i < cids[pid].length; i++) {
-          $('#'+cids[pid][i]).fadeIn('slow');
-          $('#'+cids[pid][i]).parent().attr('class',colorlp[cids[pid][i]]);
-        }
-        $(this).attr("datastatus", "off");
-        nop -= 1;
-      }
-  });
+  else if(colorlp[pid] == 'grey_back'){
+
+  //   if(f==0){
+  //   var w = $(this).css('width');
+  //   $(this).attr('type','text');
+  //   $(this).css({'width':w,'padding-left':'10px','padding-right':'10px'});
+  //   f=1;
+  // }
+  // else{
+  //   $(this).attr('value','done');
+  // }
+  }
+});
+    // $('#get-sel').on('click',function(){
+    //   var selectedText = $.selection();
+    //   alert(selectedText);
+    // });
+
+
   $('#undo').click(function(){
     var wordId = String(btnClicks.pop());
     $("#"+wordId).click();
