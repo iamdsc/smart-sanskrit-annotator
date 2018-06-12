@@ -9,7 +9,7 @@ from django_datatables_view.base_datatable_view import BaseDatatableView
 def index(request) :
 	return render(request,'annotatorapp/index.html',{})
 
-
+#rende
 def lineview(request) :
 	return render(request,'annotatorapp/index.html',{})
 
@@ -166,8 +166,10 @@ def eliminate_wordoptionview(request,sent_id,wordoption_id) :
 
 #for resetting every selected segment back to the initial position
 def reset_allselectionview(request,sent_id)	:
+	#collecting required values
 	Sentence1 = Sentences.objects.get(id = sent_id)
 	wordsdata = WordOptions.objects.all().filter(sentence = Sentence1	)
+	#iterating through the collected values and initializing them
 	for wo in wordsdata :
 		wo.isSelected = False
 		wo.isEliminated=False
@@ -182,7 +184,7 @@ def reset_allselectionview(request,sent_id)	:
 def save_data_to_db(request):
 	if request.is_ajax():
 		if request.method == 'POST':
-
+			#load the data to be saved into model
 			it = json.loads(request.POST['it'])
 			et = json.loads(request.POST['et'])
 			cs = json.loads(request.POST['cs'])

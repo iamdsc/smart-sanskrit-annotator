@@ -1,3 +1,6 @@
+#manage.py is automatically created in each Django project. manage.py is a thin wrapper around django-admin.py that takes care of two things before delegating to django-admin.py:
+#       >> It puts the project’s package on sys.path.
+#       >>It sets the DJANGO_SETTINGS_MODULE environment variable so that it points to the project’s settings.py file.
 #!/usr/bin/env python
 import os
 import sys

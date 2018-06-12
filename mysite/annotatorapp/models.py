@@ -21,6 +21,7 @@ class linetypes(models.Model):
 
 
 class Wordsinsentence(models.Model):
+	"""docstring for Wordsinsentence"""
 	sentence = models.ForeignKey(Sentences, on_delete=models.CASCADE,null=True)
 	word = models.CharField(max_length=100)
 	parent = models.IntegerField(default=0)
@@ -37,6 +38,7 @@ class Wordsinsentence(models.Model):
 		db_table = "Wordsinsentence"
 
 class WordOptions(models.Model):
+	"""docstring for WordOptions"""
 	sentence = models.ForeignKey(Sentences, on_delete=models.CASCADE,null=True)
 	level = models.IntegerField(default=0)
 	color_class = models.CharField(max_length=100)
@@ -63,13 +65,24 @@ class WordOptions(models.Model):
 		db_table  = "WordOptions"
 
 class User(models.Model):
+	"""docstring for User"""
 	user_id = models.AutoField(primary_key=True)
 	savedSentence = models.CharField(max_length=100)
 	clickSequence = models.CharField(max_length=100)
 	init_time = models.CharField(max_length=100)
 	end_time = models.CharField(max_length=100)
 
+class Noun(models.Model):
+	id_ = models.AutoField(primary_key=True)
+	sh = models.CharField(max_length=50)
 
+class Indeclinables(models.Model):
+	id_ = models.AutoField(primary_key=True)
+	sh = models.CharField(max_length=50)
+
+class Verbs(models.Model):
+	id_ = models.AutoField(primary_key=True)
+	sh = models.CharField(max_length=50)
 
 
 

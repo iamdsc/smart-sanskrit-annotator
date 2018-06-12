@@ -1,3 +1,5 @@
+<!--index page to take in input as sentence and submit option-->
+<!--this page is ridirected when clicked on input tab -->
 {% extends "annotatorapp/base.html" %}
 {%block title%}Input{%endblock%}
 {%block content%}
@@ -10,6 +12,7 @@
 
     <label for="linetype">Type</label>
     <select class="form-control"  id="linetype" name = 'linetype'>
+        <!--type options-->
         <option>WX</option>
         <option>SLP</option>
         <option>Velthuis</option>
