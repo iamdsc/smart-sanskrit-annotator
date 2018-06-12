@@ -73,15 +73,15 @@ class User(models.Model):
 	end_time = models.CharField(max_length=100)
 
 class Noun(models.Model):
-	id_ = models.AutoField(primary_key=True)
+	noun_id = models.AutoField(primary_key=True)
 	sh = models.CharField(max_length=50)
 
 class Indeclinables(models.Model):
-	id_ = models.AutoField(primary_key=True)
+	ind_id = models.AutoField(primary_key=True)
 	sh = models.CharField(max_length=50)
 
 class Verbs(models.Model):
-	id_ = models.AutoField(primary_key=True)
+	verb_id = models.AutoField(primary_key=True)
 	sh = models.CharField(max_length=50)
 
 
