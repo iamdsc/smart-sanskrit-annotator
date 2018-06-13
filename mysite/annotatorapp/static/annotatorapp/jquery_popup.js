@@ -1,5 +1,6 @@
 $(document).ready(function() {
 setTimeout(popup, 3000);
+//popup function for every action performed
 function popup() {
 $("#logindiv").css("display", "block");
 }
@@ -26,6 +27,7 @@ $("#contactdiv").css("display", "none");
 }else {
 alert('Invalid Email Address');
 }
+//function to validate email
 function validateEmail(email) {
 var filter = /^[w-.+]+@[a-zA-Z0-9.-]+.[a-zA-z0-9]{2,4}$/;
 if (filter.test(email)) {

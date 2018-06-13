@@ -1,3 +1,6 @@
+//information related to flowchart from jquery used
+//jquery.flowchart.js is an open source javascript jquery ui plugin that allows you to draw and edit a flow chart.
+
 {
   "name": "jquery.flowchart",
   "description": "JQuery UI plugin that allows you to draw a flow chart.",

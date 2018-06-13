@@ -1,4 +1,4 @@
-
+/*flowchart example containers handle the orientation of all the operators*/
 .flowchart-example-container {
   height: 2000px;
   border: 1px solid #BBB;
@@ -18,7 +18,7 @@
     position: relative;
     overflow: hidden;
 }
-
+/*linking the operators*/
 .flowchart-links-layer, .flowchart-operators-layer{
     position: absolute;
     top: 0px;
@@ -76,6 +76,7 @@
     font-size: small;
 }
 
+/*label that stores info on what is the details of the operator chosen*/
 .flowchart-operator-inputs .flowchart-operator-connector-label {
     margin-left: 14px;
 }
@@ -85,6 +86,7 @@
     margin-right: 5px;
 }
 
+/*connector arrows from each of the operators*/
 .flowchart-operator-connector-arrow {
     width: 0px;
     height: 0px;
@@ -184,6 +186,7 @@
     margin-bottom: 5px;
 }
 
+/*flowchart operator as inputs to next operator*/
 .flowchart-operator .flowchart-operator-inputs{
     display: table-cell;
     text-align: center;
@@ -192,6 +195,8 @@
     width: 100%;
     height: 50px;
 }
+
+/*flowchart operator as outputs from previous operator*/
 .flowchart-default-operator .flowchart-operator-outputs {
     display: table-cell;
     align-content: center;
