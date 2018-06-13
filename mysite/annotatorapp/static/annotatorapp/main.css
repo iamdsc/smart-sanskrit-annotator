@@ -1,3 +1,4 @@
+/*navigation bar styling*/
 .navbar{
 	background-color:#ff9600e6;
 	border: 1px solid transparent;
@@ -22,14 +23,19 @@
 .navbar-inverse .navbar-toggle{
 	margin-top: 17px;
 }
+/*input in form structure*/
 #form{
 	box-shadow: 5px 5px #888888;
 }
+
+/*styling the footer part*/
 #footer{
 	font-size: 12px;
 	margin-top:200px;
 	text-align: center;
 }
+
+/*styling the panels*/
 .panel-info{
 	width:100%;
 }
@@ -119,6 +125,8 @@ strong{
 table{
   border:none;
 }
+
+/*styling rows of tabular structures*/
 td{
   border:none;
   padding:0;
@@ -135,6 +143,8 @@ td{
   font-size:17px;
   letter-spacing: 4px;
 }
+
+/*the undo button*/
 #undo{
   margin-left:20px;
   border-radius: 15px;
