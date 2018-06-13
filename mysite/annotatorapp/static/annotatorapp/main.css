@@ -135,6 +135,15 @@ td{
   font-size:17px;
   letter-spacing: 4px;
 }
+.high{
+  display:inline-block;
+  border:2px solid yellow;
+  border-radius:8px;
+  box-shadow: 0px 3px 10px #f4d641;
+  margin:0;
+  font-size:17px;
+  letter-spacing: 4px;
+}
 #undo{
   margin-left:20px;
   border-radius: 15px;

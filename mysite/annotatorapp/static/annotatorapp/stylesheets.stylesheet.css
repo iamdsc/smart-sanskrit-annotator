@@ -457,6 +457,7 @@ input.spacing20 {border-collapse:separate; border-spacing:20pt}
 input.light_blue_back {background-color:#ADD8E6}
 input.lavender_back {background-color:#E6E6FA}
 input.lawngreen_back {background-color:#7CFC00}
+
 /* Popup container */
 .popup {
     position: relative;
