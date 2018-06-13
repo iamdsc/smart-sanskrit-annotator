@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect,HttpResponse
 from . import models,forms,codeforline
-from .models import Sentences,WordOptions,Wordsinsentence,User
+from .models import Sentences,WordOptions,Wordsinsentence,User,Noun,Indeclinables,Verbs
 from .tables import WordOptionsTable,SentencesTable,WordsinsentenceTable
 import json 
 from django_datatables_view.base_datatable_view import BaseDatatableView
@@ -194,5 +194,20 @@ def save_data_to_db(request):
 			return HttpResponse('Success')
 	else:
 		raise Http404
+def get_form_data(request):
+	if request.is_ajax() :
+		if request.method == 'POST':
+			table_id = json.loads(request.POST['table_id'])
+			if table_id == 'noun':
+				data = Noun.objects.values_list('sh');
+			elif table_id == 'verb':
+				data = Verbs.objects.values_list('sh');
+			elif table_id == 'ind':
+				data = Indeclinables.objects.values_list('sh');
+			return HttpResponse(data)
+	else:
+		raise Http404
+
+
 
 	

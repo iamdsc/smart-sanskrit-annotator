@@ -114,8 +114,12 @@
         <div class="modal-body">
 			<form autocomplete="off">
 				Word    : <input type="text" id="word_name"> <br><br>
-				Form    : Noun <input type="radio" name="word_form" id="noun"> Verb <input type="radio" name="word_form" id="verb"> 
-				Indeclinables <input type="radio" name="word_form" id="indec"> Compund <input type="radio" name="word_form" id="compound"> <br><br>
+				Form    :
+        Noun <input type="radio" name="word_form" value="noun">
+        Verb <input type="radio" name="word_form" value="verb"> 
+				Indeclinables <input type="radio" name="word_form" value="ind">
+        Compound <input type="radio" name="word_form" value="comp">
+        <br><br>
 				<div class="autocompete" style="width:300px"> Morph : 
 					<input id="morph" name="word_morph" type="text">
 				</div>
@@ -181,6 +185,7 @@
 
 
 <script type="text/javascript">
+  $(document).ready(function() {
   var nop = 0;
   var line = 20;
   var if_finish = 0;
@@ -190,7 +195,7 @@
   var clickSequence = [];//captures the ids which leads to the sequences that have been followed by user
   var savedSentence = [];
 
-  var auto_ar = ["NASDAQ","Sensex","Navy","Nicaragua","Army","America","Appreciation"] ;
+  var auto_ar = [] ;
   function autocomplete(inp, arr) {
   var currentFocus;
   inp.addEventListener("input", function(e) {
@@ -271,16 +276,15 @@
     }
   }
 }
-
 document.addEventListener("click", function (e) {
     closeAllLists(e.target);
 });
 } 
-autocomplete(document.getElementById("morph"), auto_ar);
+
 
   //function is made available after the document is loaded to initialize values to variables
 
-  $(document).ready(function() {
+
     var data ={};
     var date = new Date();
     init_time = date.getTime();
@@ -831,13 +835,35 @@ autocomplete(document.getElementById("morph"), auto_ar);
     var wordId = String(btnClicks.pop());
     $("#"+wordId).click();
     btnClicks.pop();
+  })
+  
+  $("input[type='radio']").click(function(){
+    var radioValue = $("input[name='word_form']:checked").val();
+    if(radioValue == 'comp'){
+       $('#morph').attr('value','compound');
+    }
+    else{
+       $('#morph').attr('value','');
+    $.ajax(
+      {
+        type:'POST',
+        url:'ajax/get_word_form/',
+        data:{
+          'table_id': JSON.stringify(radioValue)
+        },
+        success: function( data )
+        {
+
+          data=data.replace(/[,)(]/g,"").split("''");
+          data[0] = data[0].slice(1,);
+          data[data.length-1] = data[data.length-1].slice(0,-1);
+          auto_ar = data;
+          autocomplete(document.getElementById("morph"), auto_ar);
+
+        }
+      })
+  }
   });
-  $('#noun').change(function(){
-    console.log('hello');
-  });
-
-
-
   });
 </script>
 </div>
