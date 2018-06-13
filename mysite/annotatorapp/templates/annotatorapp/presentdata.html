@@ -78,14 +78,11 @@
               {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
                 <!--this will generate all possible segments from the input sentence-->
                 <td colspan={{wd1.colspan}} align="left">
-<<<<<<< HEAD
-                        <div type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words">{{wd1.word}}<div>
-					<a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" id="{{x}}-edit" class="edit">Edit</a>
-		</td>
-=======
-                        <input type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words" value='{{wd1.word}}'>
+
+                    <input type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words" value='{{wd1.word}}'>
+                    <a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" id="{{x}}-edit" class="edit">Edit</a>
                 </td>
->>>>>>> 29df82ed1f0d3db6a81dbe586aea7de7f6c05477
+
 
                 {%endwith%}
               {%else%}
@@ -191,14 +188,11 @@
   var btnClicks = [];
   var clickSequence = [];//captures the ids which leads to the sequences that have been followed by user
   var savedSentence = [];
-<<<<<<< HEAD
+
   var auto_ar = ["NASDAQ","Sensex","Navy","Nicaragua","Army","America","Appreciation"] ;
 
-  
-=======
-
   //function is made available after the document is loaded to initialize values to variables
->>>>>>> 29df82ed1f0d3db6a81dbe586aea7de7f6c05477
+
   $(document).ready(function() {
     var data ={};
     var date = new Date();
@@ -250,13 +244,9 @@
         btn.removeClass('high');
       }
     });
-<<<<<<< HEAD
- 
-    
-=======
 
     //once finish has been selected, the words selected along with data including timestamp, clickedsequence goes to the database
->>>>>>> 29df82ed1f0d3db6a81dbe586aea7de7f6c05477
+
     $('#finish').click( function()
     {
 	  $('#whole').show();
@@ -596,15 +586,15 @@
 
   //to orient the draggable operators and allow input of re
   $draggableOperators.hover(function() {
-      var eid= ($(this)[0].id).concat("","-edit");
-	  $('#'+eid).css("display","block");
+    var eid= ($(this)[0].id).concat("","-edit");
+    $('#'+eid).css("display","block");
 	  $(this).css('cursor','pointer');
-      $('#show_lemma').text($(this).attr('title').replace(/@/g,' ')).fadeIn("slow");
+    $('#show_lemma').text($(this).attr('title').replace(/@/g,' ')).fadeIn("slow");
   }, function() {
-      var eid= ($(this)[0].id).concat("","-edit");
-      $('#'+eid).css("display","none");
+    var eid= ($(this)[0].id).concat("","-edit");
+    $('#'+eid).css("display","none");
 	  $(this).css('cursor','auto');
-      $('#show_lemma').text(' ');
+    $('#show_lemma').text(' ');
   });
 
   $draggableOperators.click(function()
