@@ -25,11 +25,13 @@ def getdatafromsite(inputsent) : # Scrapping data from site
 	s_d = inputline
 
 	s_c = s_d.replace(" ","+")
+	#for utilising the sanskrit heritage app, the url has been specified
 	urlname = ("http://sanskrit.inria.fr/cgi-bin/SKT/sktgraph?lex=SH&st=t&us=f&cp=t&text=" +
            s_c + "&t="+s_type[inputtype]+"&topic=&mode=g&corpmode=&corpdir=&sentno=")
 
 	print(urlname)
 	page = requests.get(urlname)
+	#parsing using beautifulsoup
 	soup = bs(page.text, 'html.parser')
 	table = soup.table
 	tablebody = table.find('table',{'class' : 'center'})
@@ -39,7 +41,8 @@ def getdatafromsite(inputsent) : # Scrapping data from site
 	id_= 0
 	if not(tablebody) :      #### wronginputs
 	    print('no table body of given inputline')
-	    
+
+	#for valid entries corresponding to Wordsinsentence
 	for child in tablebody.children:
 	    if(child.name == 'tr') :
 	        if i< 1 : 
@@ -59,12 +62,14 @@ def getdatafromsite(inputsent) : # Scrapping data from site
 	            for ch in linechar[0:position_] :
 	                if(re.match('\xa0',ch)) : # or (re.match('_',ch))
 	                    c+=1
+				#if the contents exist in wordtable
+				#following assignings are carried out.
 	            if(wordtable.contents):
 	                color_ = wordtable.table.get('class')[0]
 	                colspan_= wordtable.get('colspan')
 	                word_ = wordtable.table.tr.td.string
 	                onclickdatas_ = wordtable.table.tr.td.get('onclick')
-	                for onclickdata_ in onclickdatas_.split("<br>") :
+	                for onclickdata_ in onclickdatas_.split("<br>") : #required splits carried out at positions stated
 	                    morphslist_ = re.findall(r'{ (.*?) }',onclickdata_)  #.split(' | ')
 	                    ldata = str(re.search(r'{.*?}\[(.*)\]',onclickdata_).group(1))
 	                    ldata = str(re.sub(r'</?a.*?>|</?i>',"",ldata))
@@ -92,7 +97,7 @@ def getdatafromsite(inputsent) : # Scrapping data from site
 	                        t.loc[id_] = [id_,i,color_,position_,c+1,word_,lemma_,preverb_,morph_,int(colspan_),len(word_),auxi_]
 	                        if(re.match(r'grey_back',color_)) :
 	                            if not (word_ == 'pop') :
-	                                problem.append(id_)
+	                                problem.append(id_)#filling entries to problem list
 	                            else :
 	                                id_ = id_ - 1
 	                        id_ += 1    

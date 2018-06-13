@@ -9,18 +9,24 @@ from django_datatables_view.base_datatable_view import BaseDatatableView
 def index(request) :
 	return render(request,'annotatorapp/index.html',{})
 
-#rende
+#returns an HttpResponse object with that rendered text.
 def lineview(request) :
 	return render(request,'annotatorapp/index.html',{})
 
+#Combines annotatorapp/tables.html with the given context tabledata and returns an HttpResponse object with that rendered text.
+#data is collected from the tables structure specified in tables.py
 def wordtableview(request) :
 	tabledata = WordOptionsTable(WordOptions.objects.all())
 	return render(request,'annotatorapp/tables.html',{'tabledata' : tabledata})
-		
+
+#Combines annotatorapp/tables.html with the given context tabledata and returns an HttpResponse object with that rendered text.
+#data is collected from the tables structure specified in tables.py
 def sentenceview(request) :
 	tabledata = SentencesTable(Sentences.objects.all())
 	return render(request,'annotatorapp/tables.html',{'tabledata' : tabledata})
 
+#Combines the template with the context and returns an HttpResponse object with that rendered text.
+#data is collected from the tables structure specified in tables.py
 def wordsinsentenceview(request) :
 	tabledata = WordsinsentenceTable(Wordsinsentence.objects.all())
 	return render(request,'annotatorapp/tables.html',{'tabledata' : tabledata})
