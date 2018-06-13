@@ -78,9 +78,10 @@
               {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
                 <!--this will generate all possible segments from the input sentence-->
                 <td colspan={{wd1.colspan}} align="left">
-
+                  <div class='edit_div' id = '{{x}}-edit_div'>
                     <input type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words" value='{{wd1.word}}'>
                     <a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" id="{{x}}-edit" class="edit">Edit</a>
+                  </div>
                 </td>
 
 
@@ -584,15 +585,22 @@
     }
     var operatorId = 0;
 
+  // to perform edit morph operation 
+  $('.edit_div').hover(function(){
+    var eid= ($(this)[0].id).replace('_div','');
+    $('#'+eid).css("display","block");
+  },function(){
+    var eid= ($(this)[0].id).replace('_div','');
+    $('#'+eid).css("display","none");
+  });
+
   //to orient the draggable operators and allow input of re
   $draggableOperators.hover(function() {
-    var eid= ($(this)[0].id).concat("","-edit");
-    $('#'+eid).css("display","block");
+
 	  $(this).css('cursor','pointer');
     $('#show_lemma').text($(this).attr('title').replace(/@/g,' ')).fadeIn("slow");
   }, function() {
-    var eid= ($(this)[0].id).concat("","-edit");
-    $('#'+eid).css("display","none");
+ 
 	  $(this).css('cursor','auto');
     $('#show_lemma').text(' ');
   });
@@ -709,6 +717,8 @@
     {
       clickSequence.push(pid+'G');
     }
+    var eid= ($(this)[0].id).concat('-edit');
+    $('#'+eid).remove();
     $(this).attr('type','text');
     $(this).attr('readonly','readonly');
     $(this).css('width',($(this).attr('value').length+1)*13 + 'px');
