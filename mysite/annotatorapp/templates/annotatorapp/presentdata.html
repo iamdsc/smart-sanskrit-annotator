@@ -78,7 +78,7 @@
               {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
                 <!--this will generate all possible segments from the input sentence-->
                 <td colspan={{wd1.colspan}} align="left">
-                        <div type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words">{{wd1.word}}<div>
+                        <input type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words" value='{{wd1.word}}'>
                 </td>
 
 
@@ -166,17 +166,15 @@
     var data ={};
     var date = new Date();
     init_time = date.getTime();
+
 	$('#whole').hide();
-	//add the given property 'checked' to the id recommend1
 	$('#recommend1').prop('checked',false);
 	//add the given property 'checked' to the id recommend2
     $('#recommend2').prop('checked',false);
     var id = 0;
     var btn = $('#word-table > tbody > tr:first > td > button');
     var c = true;
-
     //for applying shadows to buttons in the given table consisting of possible segments
-
     function btnHigh(){
     if(c){
       btn.css({'border':'2px solid yellow','box-shadow': '0px 3px 10px #f4d641'});
@@ -200,7 +198,9 @@
       }
     });
 
+
     //recommendation using segmentation and display of the single morphs in the list of all segements
+
 	$('#recommend2').change(function(){
       var nop = 0;
       var line = 20;
@@ -240,6 +240,8 @@
         }
          )
       });
+
+  
 
  $('#example_1').hide();
     var $flowchart = $('#example_5');
@@ -569,14 +571,18 @@
   var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
   btnClicks.push(pid);
   (clickSequence[(clickSequence.length)-1] != (pid+'S')) ?  clickSequence.push(pid+'S') :  clickSequence.push(pid+'U');
-  if(colorlp[pid] !='grey_back')
+  if(colorlp[pid] !='grey_back') 
   {
+          var flag = 0;
+          if ( if_finish == 0) {
+            flag = 1;
+            $('#whole').show();
+          }
+
         if(!savedSentence.includes(pid)){
           savedSentence.push(pid);
         }
-        savedSentence.sort(function(a,b){
-          return Number(a[-1])-Number(b[-1]);
-        });
+
         if($(this).attr('datastatus') == 'off') {
           var $element = $(this);
           var nbInputs = parseInt($element.data('nb-inputs'));
@@ -633,6 +639,7 @@
       		  flag = 0;
       	 	}
       	 }
+
       	  $flowchart.flowchart('createOperator', pid, data);
             nop += 1;
             $(this).parent().append("<p class = 'tick'>✓</p>");
@@ -655,22 +662,26 @@
             nop -= 1;
           }
   }
+
   else if(colorlp[pid] == 'grey_back'){
-  //   if(f==0){
-  //   var w = $(this).css('width');
-  //   $(this).attr('type','text');
-  //   $(this).css({'width':w,'padding-left':'10px','padding-right':'10px'});
-  //   f=1;
-  // }
-  // else{
-  //   $(this).attr('value','done');
-  // }
+    $(this).attr('type','text');
+    $(this).attr('readonly','readonly');
+    $(this).css('width',($(this).attr('value').length+1)*13 + 'px');
   }
 });
-    // $('#get-sel').on('click',function(){
-    //   var selectedText = $.selection();
-    //   alert(selectedText);
-    // });
+
+  $draggableOperators.select(function(){
+    // function for handling gray words
+    var i = $("<input type='text' class='words' readonly>");
+    i.attr('value',$(this).selection());
+    $(this).before(i);
+    i.css('width',(i.attr('value').length+1)*13+'px');    
+    $(this).attr('value',$(this).attr('value').replace(i.attr('value'),''));
+    $(this).css('width',($(this).attr('value').length+1)*13+'px');
+    var v = $(this).attr('value');
+    if(v===''|| v===' '){ $(this).hide();}
+  });
+
   $('#undo').click(function(){
     var wordId = String(btnClicks.pop());
     $("#"+wordId).click();

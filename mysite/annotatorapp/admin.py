@@ -12,4 +12,3 @@ admin.site.register(User)
 admin.site.register(Noun)
 admin.site.register(Indeclinables)
 admin.site.register(Verbs)
-
