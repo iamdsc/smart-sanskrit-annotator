@@ -2,9 +2,6 @@
 {%block title%}Presentdata{%endblock%}
 {%block content%}
 {% load poll_extras %}
-
-
-
 <p id = 'show_lemma' class='label other'></p>
 <div class="panel-group">
     <!--applying recommendation options-->
@@ -79,7 +76,7 @@
             {%elif p|checkpos:lp2 == 'ok'%}
 
               {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
-
+                <!--this will generate all possible segments from the input sentence-->
                 <td colspan={{wd1.colspan}} align="left">
                         <div type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words">{{wd1.word}}<div>
                 </td>
@@ -99,6 +96,7 @@
 
   </div>
   <button id='get-sel'>Make Segment</button>
+    <!--flowchart will be generated upon clicking the finish button-->
   <button id='finish' align='centre' class='btn btn-success' style="margin: 40px 50% 0 50%;" title='Finish Segmentation'> Finish </button>
 </div>
 
@@ -109,6 +107,7 @@
 <div class="container" id="whole">
 
   <h1>Flowchart</h1>
+    <!--display of flowchart and various options given herewith-->
   <button class="btn btn-info delete_selected_button"> Delete Selected Operator/link </button>
   <button class="btn btn-info get_data"> Get data </button>
   <table>
@@ -159,18 +158,24 @@
   var init_time = 0;
   var end_time = 0;
   var btnClicks = [];
-  var clickSequence = [];
+  var clickSequence = [];//captures the ids which leads to the sequences that have been followed by user
   var savedSentence = [];
+
+  //function is made available after the document is loaded to initialize values to variables
   $(document).ready(function() {
     var data ={};
     var date = new Date();
     init_time = date.getTime();
 	$('#whole').hide();
+	//add the given property 'checked' to the id recommend1
 	$('#recommend1').prop('checked',false);
+	//add the given property 'checked' to the id recommend2
     $('#recommend2').prop('checked',false);
     var id = 0;
     var btn = $('#word-table > tbody > tr:first > td > button');
     var c = true;
+
+    //for applying shadows to buttons in the given table consisting of possible segments
 
     function btnHigh(){
     if(c){
@@ -181,6 +186,7 @@
     }
     c = !c;
     }
+    //recommendation using segmentation only which highlights the first row
 	$('#recommend1').change(function(){
       var nop = 0;
       var line = 20;
@@ -193,6 +199,8 @@
         btn.css({'border':'2px solid #adabab','box-shadow':'none'});
       }
     });
+
+    //recommendation using segmentation and display of the single morphs in the list of all segements
 	$('#recommend2').change(function(){
       var nop = 0;
       var line = 20;
@@ -205,6 +213,8 @@
         btn.css({'border':'2px solid #adabab','box-shadow':'none'});
       }
     });
+
+    //once finish has been selected, the words selected along with data including timestamp, clickedsequence goes to the database
     $('#finish').click( function()
     {
 	  $('#whole').show();
@@ -402,6 +412,8 @@
           }
        })
     });
+
+    //function to save sentence that has been shown using links among the operators in the flowchart
     $flowchart.siblings('.save_data').click(function() {
       var dragdata = $flowchart.flowchart('getData');
       var links = dragdata.links ;
@@ -422,6 +434,7 @@
           t=links[key].toConnector.substr(3);
           f=links[key].fromConnector.substr(4);
           wordidrel[t]=rname;
+          //saving the data shown along with the relationname
           if(c.includes(f)) {
             wordidchilds[f] = wordidchilds[f]+'-'+t;
           }else {wordidchilds[f] = '-'+t;c.push(f)}
@@ -533,6 +546,8 @@
       return dic;
     }
     var operatorId = 0;
+
+  //to orient the draggable operators and allow input of re
   $draggableOperators.hover(function() {
       $(this).css('cursor','pointer');
       $('#show_lemma').text($(this).attr('title').replace(/@/g,' ')).fadeIn("slow");
@@ -540,10 +555,12 @@
       $(this).css('cursor','auto');
       $('#show_lemma').text(' ');
   });
-  $draggableOperators.click(function(){
 
-  var flag = 0;
-	if ( if_finish == 0) {
+  $draggableOperators.click(function()
+  {
+    var flag = 0;
+	if ( if_finish == 0)
+	{
 	  flag = 1;
 	  $('#whole').show();
 	}
