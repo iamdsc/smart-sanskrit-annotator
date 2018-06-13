@@ -82,7 +82,8 @@
 
                 <td colspan={{wd1.colspan}} align="left">
                         <div type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words">{{wd1.word}}<div>
-                </td>
+					<a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" id="{{x}}-edit" class="edit">Edit</a>
+		</td>
 
 
                 {%endwith%}
@@ -102,6 +103,32 @@
   <button id='finish' align='centre' class='btn btn-success' style="margin: 40px 50% 0 50%;" title='Finish Segmentation'> Finish </button>
 </div>
 
+  <div class="modal fade" id="edit-modal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" align='center'>Edit Word Properties</h4>
+        </div>
+        <div class="modal-body">
+			<form autocomplete="off">
+				Word    : <input type="text" id="word_name"> <br><br>
+				Form    : Noun <input type="radio" name="word_form" id="noun"> Verb <input type="radio" name="word_form" id="verb"> 
+				Indeclinables <input type="radio" name=<"word_form" id="indec"> Compund <input type="radio" name="word_form" id="compound"> <br><br>
+				<div class="autocompete" style="width:300px"> Morph : 
+					<input id="morph" name="word_morph" type="text">
+				</div>
+			  <div class="modal-footer">
+          		<button type="button" class="btn btn-primary" data-dismiss="modal" id="word_done">Done</button>
+        	  </div>
+			</form>
+		</div>
+	  </div>
+
+    </div>
+  </div>
 {%endblock%}
 
 {% block javascript %}
@@ -131,18 +158,18 @@
         </div>
         <div class="modal-body">
           <p id='linkrel' align="center" style="font-size:3vw"></p>
-            <div id="link_properties" style="display: block;">
-                <label for="link_name">Link Name: </label><input type="text" id="link_name" class='inputfield'><button class="save_linkname btn btn-success" id="savelinkname">Save Link Name</button>
-              </div>
-              <div id="link_properties1" style="display: block;">
-                <label for="link_name1">Link Name: </label><input type="text" id="link_name1"><button class="save_linkname1 btn btn-success" id="savelinkname1">Save Link Name</button>
-              </div>
-              <button class="delete_selected_button btn btn-danger" id ='ds1'>Delete selected operator/link</button>
+          <div id="link_properties" style="display: block;">
+              <label for="link_name">Link Name: </label><input type="text" id="link_name" class='inputfield'><button class="save_linkname btn btn-success" id="savelinkname">Save Link Name</button>
+          </div>
+          <div id="link_properties1" style="display: block;">
+            <label for="link_name1">Link Name: </label><input type="text" id="link_name1"><button class="save_linkname1 btn btn-success" id="savelinkname1">Save Link Name</button>
+          </div>
+          <button class="delete_selected_button btn btn-danger" id ='ds1'>Delete selected operator/link</button>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      	</div>
+	  </div>
 
     </div>
   </div>
@@ -151,6 +178,7 @@
 <div class="flowchart-example-container" id="example_1"></div>
 
   <div class="flowchart-example-container" id="example_5"></div>
+
 
 <script type="text/javascript">
   var nop = 0;
@@ -161,6 +189,9 @@
   var btnClicks = [];
   var clickSequence = [];
   var savedSentence = [];
+  var auto_ar = ["NASDAQ","Sensex","Navy","Nicaragua","Army","America","Appreciation"] ;
+
+  
   $(document).ready(function() {
     var data ={};
     var date = new Date();
@@ -205,6 +236,8 @@
         btn.css({'border':'2px solid #adabab','box-shadow':'none'});
       }
     });
+ 
+    
     $('#finish').click( function()
     {
 	  $('#whole').show();
@@ -231,7 +264,7 @@
          )
       });
 
- $('#example_1').hide();
+    $('#example_1').hide();
     var $flowchart = $('#example_5');
     var $container = $flowchart.parent();
     var $linkProperties = $('#link_properties');
@@ -283,6 +316,7 @@
     $('#hide').click(function() {
       $('#example_1').hide()
     });
+    
     $('#savelinkname1').click(function() {
       var selectedLinkId = $('#example_1').flowchart('getSelectedLinkId');
       if (selectedLinkId != null) {
@@ -292,7 +326,8 @@
         $('#linkrel').text($linkname1.val()).fadeIn('slow');
       }
     });
-    $('#savelinkname').click(function() {
+    
+	$('#savelinkname').click(function() {
       var selectedLinkId = $flowchart.flowchart('getSelectedLinkId');
       if (selectedLinkId != null) {
         var data = $flowchart.flowchart('getData');
@@ -534,10 +569,14 @@
     }
     var operatorId = 0;
   $draggableOperators.hover(function() {
-      $(this).css('cursor','pointer');
+      var eid= ($(this)[0].id).concat("","-edit");
+	  $('#'+eid).css("display","block");
+	  $(this).css('cursor','pointer');
       $('#show_lemma').text($(this).attr('title').replace(/@/g,' ')).fadeIn("slow");
   }, function() {
-      $(this).css('cursor','auto');
+      var eid= ($(this)[0].id).concat("","-edit");
+      $('#'+eid).css("display","none");
+	  $(this).css('cursor','auto');
       $('#show_lemma').text(' ');
   });
   $draggableOperators.click(function(){

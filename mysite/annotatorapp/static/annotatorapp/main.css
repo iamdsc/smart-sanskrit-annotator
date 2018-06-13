@@ -143,3 +143,8 @@ td{
   color:#2879d0;
   float: right;
 }
+
+.edit {
+  display:none;
+}
+
