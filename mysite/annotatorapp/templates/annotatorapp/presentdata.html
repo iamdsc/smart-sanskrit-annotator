@@ -80,10 +80,9 @@
                 <td colspan={{wd1.colspan}} align="left">
                   <div class='edit_div' id = '{{x}}-edit_div'>
                     <input type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words" value='{{wd1.word}}'>
-                    <a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" id="{{x}}-edit" class="edit">Edit</a>
+		    <a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" id="{{x}}-edit" class="edit" data-id='{{x}}'>Edit</a>
                   </div>
                 </td>
-
 
                 {%endwith%}
               {%else%}
@@ -185,6 +184,8 @@
 
 
 <script type="text/javascript">
+
+ //function is made available after the document is loaded to initialize values to variables
   $(document).ready(function() {
   var nop = 0;
   var line = 20;
@@ -263,26 +264,34 @@
   }
   function removeActive(x) {
 
-    for (var i = 0; i < x.length; i++) {
-      x[i].classList.remove("autocomplete-active");
+      for (var i = 0; i < x.length; i++) {
+        x[i].classList.remove("autocomplete-active");
+      }
     }
-  }
-  function closeAllLists(elmnt) {
+    function closeAllLists(elmnt) {
 
-    var x = document.getElementsByClassName("autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != inp) {
-      x[i].parentNode.removeChild(x[i]);
-    }
+      var x = document.getElementsByClassName("autocomplete-items");
+      for (var i = 0; i < x.length; i++) {
+        if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+   }
   }
+
 }
 document.addEventListener("click", function (e) {
     closeAllLists(e.target);
 });
 } 
 
-
-  //function is made available after the document is loaded to initialize values to variables
+ 
+  $(function (){
+	$(".edit").click(function(){
+	  var id=$(this).data('id');
+      var word=$("#"+id).val();
+	  $(".modal-body #word_name").val(word);
+	})
+  });
 
 
     var data ={};
