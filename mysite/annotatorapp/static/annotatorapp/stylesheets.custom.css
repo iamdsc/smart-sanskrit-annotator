@@ -1,3 +1,5 @@
+/*styling the flowchart*/
+
 .flowchart-example-container {
   height: 200px;
   border: 1px solid #BBB;
@@ -15,7 +17,7 @@
 .flowchart-example pre {
   display: none;
 }
-
+/*operator creation style*/
 #create_operator {
   margin-bottom: 10px;
 }
@@ -43,6 +45,7 @@ h4 {
   margin-top: 40px;
 }
 
+/*styling inter operator properties and links between them*/
 #operator_properties, #link_properties {
   display: none;
   margin-top: 20px;
@@ -71,6 +74,8 @@ h4 {
     border: 1px solid black;
 }
 
+/*operator styling while dragging them and keeping them in orientation*/
+
 .draggable_operator {
   display: inline-block;
   padding: 2px 5px 2px 5px;
@@ -97,6 +102,7 @@ h4 {
   margin-bottom: 20px;
 }
 
+/*styling delete button*/
 .delete_selected_button {
   margin-bottom: 20px;
 }

@@ -428,35 +428,36 @@ th {
   padding: 0;
 }
 
-div.yellow_back {background-color:#FFFF00}
-div.yellow_cent {background-color:#FFFF00; margin:0 auto; border: outset 5pt; padding:10pt}
-div.deep_sky_cent {background-color:#00C0FF; margin:0 auto; border: outset 5pt; padding:10pt}
-div.salmon_back {background-color:#F08070}
-div.aquamarine_back {background-color:#6FFFC3}
-div.mauve_back {background-color:#FF99FF}
-div.magenta_back {background-color:#FF00FF}
-div.mauve_cent {background-color:#FF99FF; margin:0 auto; border: outset 8pt; padding:10pt}
-div.cyan_back {background-color:#00FFFF}
-div.cyan_cent {background-color:#00FFFF; margin:0 auto; border: outset 5pt; padding:10pt}
-div.lavender_cent {background-color:#E6E6FA; margin:0 auto; border: outset 5pt; padding:10pt}
-div.gold_back {background-color:#A58959}
-div.gold_cent {background-color:#A58959; margin:0 auto; border: outset 0pt; padding:10pt}
-div.inflexion {background-color:#FFFF00; margin:0 auto; border: outset 2pt; padding:5pt}
-div.chamois_back {background-color:#F5F5DC; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt; width:100%}
-div.blue_back {background-color:#0000FF}
-div.green_back {background-color:#008000}
-div.brown_back {background-color:#A02820; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt; padding:10pt; width:100%}
-div.lime_back {background-color:#00FF00}
-div.deep_sky_back {background-color:#00C0FF}
-div.carmin_back {background-color:#FF1975}
-div.orange_back {background-color:#FFA000}
-div.red_back {background-color:#FF0000}
-div.grey_back {background-color:#B8B8B8}
-div.pink_back {background-color:#FFDDDD; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt}
-div.spacing20 {border-collapse:separate; border-spacing:20pt}
-div.light_blue_back {background-color:#ADD8E6}
-div.lavender_back {background-color:#E6E6FA}
-div.lawngreen_back {background-color:#7CFC00}
+input.yellow_back {background-color:#FFFF00}
+input.yellow_cent {background-color:#FFFF00; margin:0 auto; border: outset 5pt; padding:10pt}
+input.deep_sky_cent {background-color:#00C0FF; margin:0 auto; border: outset 5pt; padding:10pt}
+input.salmon_back {background-color:#F08070}
+input.aquamarine_back {background-color:#6FFFC3}
+input.mauve_back {background-color:#FF99FF}
+input.magenta_back {background-color:#FF00FF}
+input.mauve_cent {background-color:#FF99FF; margin:0 auto; border: outset 8pt; padding:10pt}
+input.cyan_back {background-color:#00FFFF}
+input.cyan_cent {background-color:#00FFFF; margin:0 auto; border: outset 5pt; padding:10pt}
+input.lavender_cent {background-color:#E6E6FA; margin:0 auto; border: outset 5pt; padding:10pt}
+input.gold_back {background-color:#A58959}
+input.gold_cent {background-color:#A58959; margin:0 auto; border: outset 0pt; padding:10pt}
+input.inflexion {background-color:#FFFF00; margin:0 auto; border: outset 2pt; padding:5pt}
+input.chamois_back {background-color:#F5F5DC; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt; width:100%}
+input.blue_back {background-color:#0000FF}
+input.green_back {background-color:#008000}
+input.brown_back {background-color:#A02820; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt; padding:10pt; width:100%}
+input.lime_back {background-color:#00FF00}
+input.deep_sky_back {background-color:#00C0FF}
+input.carmin_back {background-color:#FF1975}
+input.orange_back {background-color:#FFA000}
+input.red_back {background-color:#FF0000}
+input.grey_back {background-color:#B8B8B8}
+input.pink_back {background-color:#FFDDDD; margin-left: 0pt; margin-right: 0pt; margin-top: 0pt}
+input.spacing20 {border-collapse:separate; border-spacing:20pt}
+input.light_blue_back {background-color:#ADD8E6}
+input.lavender_back {background-color:#E6E6FA}
+input.lawngreen_back {background-color:#7CFC00}
+
 /* Popup container */
 .popup {
     position: relative;

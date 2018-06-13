@@ -1,14 +1,16 @@
 import os
 from django.core.management.base import BaseCommand
 from annotatorapp.models import Noun, Indeclinables, Verbs
-
+#collecting information on Morphs to populate the database
+#The column SH in each table should be used for auto-completion, based on corresponding radio button.
+#this information is being fetched from data.txt file in the location annotatorapp/managements/commands/data.txt
 
 dirname = os.path.dirname(__file__)
 path = os.path.join(dirname,'data.txt')
 
 class Command(BaseCommand):
     help = 'Populates the database with Morph information'
-    
+ #collecting nouns for populating database
     def data_nouns(self):
         f = open(path)
         for _ in range(33):
@@ -33,7 +35,7 @@ class Command(BaseCommand):
             except Exception as e:
                 print(e)
         f.close()
-
+#collecting indeclinables for populating database
     def data_indeclinables(self):
         f = open(path)
         for _ in range(547):
@@ -58,7 +60,7 @@ class Command(BaseCommand):
             except Exception as e:
                 print(e)
         f.close()
-
+#collecting verbs for populating database
     def data_verbs(self):
         f = open(path)
         for _ in range(606):

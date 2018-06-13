@@ -2,9 +2,6 @@
 {%block title%}Presentdata{%endblock%}
 {%block content%}
 {% load poll_extras %}
-
-
-
 <p id = 'show_lemma' class='label other'></p>
 <div class="panel-group">
     <!--applying recommendation options-->
@@ -79,12 +76,16 @@
             {%elif p|checkpos:lp2 == 'ok'%}
 
               {% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
-
+                <!--this will generate all possible segments from the input sentence-->
                 <td colspan={{wd1.colspan}} align="left">
+<<<<<<< HEAD
                         <div type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words">{{wd1.word}}<div>
 					<a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" id="{{x}}-edit" class="edit">Edit</a>
 		</td>
-
+=======
+                        <input type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words" value='{{wd1.word}}'>
+                </td>
+>>>>>>> 29df82ed1f0d3db6a81dbe586aea7de7f6c05477
 
                 {%endwith%}
               {%else%}
@@ -99,7 +100,7 @@
    </div>
 
   </div>
-  <button id='get-sel'>Make Segment</button>
+    <!--flowchart will be generated upon clicking the finish button-->
   <button id='finish' align='centre' class='btn btn-success' style="margin: 40px 50% 0 50%;" title='Finish Segmentation'> Finish </button>
 </div>
 
@@ -136,6 +137,7 @@
 <div class="container" id="whole">
 
   <h1>Flowchart</h1>
+    <!--display of flowchart and various options given herewith-->
   <button class="btn btn-info delete_selected_button"> Delete Selected Operator/link </button>
   <button class="btn btn-info get_data"> Get data </button>
   <table>
@@ -187,31 +189,39 @@
   var init_time = 0;
   var end_time = 0;
   var btnClicks = [];
-  var clickSequence = [];
+  var clickSequence = [];//captures the ids which leads to the sequences that have been followed by user
   var savedSentence = [];
+<<<<<<< HEAD
   var auto_ar = ["NASDAQ","Sensex","Navy","Nicaragua","Army","America","Appreciation"] ;
 
   
+=======
+
+  //function is made available after the document is loaded to initialize values to variables
+>>>>>>> 29df82ed1f0d3db6a81dbe586aea7de7f6c05477
   $(document).ready(function() {
     var data ={};
     var date = new Date();
     init_time = date.getTime();
+
 	$('#whole').hide();
 	$('#recommend1').prop('checked',false);
+	//add the given property 'checked' to the id recommend2
     $('#recommend2').prop('checked',false);
     var id = 0;
-    var btn = $('#word-table > tbody > tr:first > td > button');
+    var btn = $('#word-table > tbody > tr:first > td > input');
     var c = true;
-
+    //for applying shadows to buttons in the given table consisting of possible segments
     function btnHigh(){
     if(c){
-      btn.css({'border':'2px solid yellow','box-shadow': '0px 3px 10px #f4d641'});
+      btn.toggleClass('high');
     }
     else{
-      btn.css({'border':'2px solid #adabab','box-shadow':'none'});
+      btn.toggleClass('high');
     }
     c = !c;
     }
+    //recommendation using segmentation only which highlights the first row
 	$('#recommend1').change(function(){
       var nop = 0;
       var line = 20;
@@ -221,9 +231,13 @@
       }
       else{
         clearInterval(id);
-        btn.css({'border':'2px solid #adabab','box-shadow':'none'});
+        btn.removeClass('high');
       }
     });
+
+
+    //recommendation using segmentation and display of the single morphs in the list of all segements
+
 	$('#recommend2').change(function(){
       var nop = 0;
       var line = 20;
@@ -233,11 +247,16 @@
      }
       else{
         clearInterval(id);
-        btn.css({'border':'2px solid #adabab','box-shadow':'none'});
+        btn.removeClass('high');
       }
     });
+<<<<<<< HEAD
  
     
+=======
+
+    //once finish has been selected, the words selected along with data including timestamp, clickedsequence goes to the database
+>>>>>>> 29df82ed1f0d3db6a81dbe586aea7de7f6c05477
     $('#finish').click( function()
     {
 	  $('#whole').show();
@@ -246,6 +265,9 @@
 	    end_time = date.getTime();
       if_finish=1;
       console.log(init_time, end_time);
+      console.log(clickSequence);
+      console.log(savedSentence);
+      console.log(newWords);
       $.ajax(
       {
           type:"POST",
@@ -437,6 +459,8 @@
           }
        })
     });
+
+    //function to save sentence that has been shown using links among the operators in the flowchart
     $flowchart.siblings('.save_data').click(function() {
       var dragdata = $flowchart.flowchart('getData');
       var links = dragdata.links ;
@@ -457,6 +481,7 @@
           t=links[key].toConnector.substr(3);
           f=links[key].fromConnector.substr(4);
           wordidrel[t]=rname;
+          //saving the data shown along with the relationname
           if(c.includes(f)) {
             wordidchilds[f] = wordidchilds[f]+'-'+t;
           }else {wordidchilds[f] = '-'+t;c.push(f)}
@@ -568,6 +593,8 @@
       return dic;
     }
     var operatorId = 0;
+
+  //to orient the draggable operators and allow input of re
   $draggableOperators.hover(function() {
       var eid= ($(this)[0].id).concat("","-edit");
 	  $('#'+eid).css("display","block");
@@ -579,10 +606,12 @@
 	  $(this).css('cursor','auto');
       $('#show_lemma').text(' ');
   });
-  $draggableOperators.click(function(){
 
-  var flag = 0;
-	if ( if_finish == 0) {
+  $draggableOperators.click(function()
+  {
+    var flag = 0;
+	if ( if_finish == 0)
+	{
 	  flag = 1;
 	  $('#whole').show();
 	}
@@ -590,15 +619,20 @@
   var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
   var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
   btnClicks.push(pid);
-  (clickSequence[(clickSequence.length)-1] != (pid+'S')) ?  clickSequence.push(pid+'S') :  clickSequence.push(pid+'U');
-  if(colorlp[pid] !='grey_back')
-  {
-        if(!savedSentence.includes(pid)){
-          savedSentence.push(pid);
+
+  if(colorlp[pid] !='grey_back') 
+  {     
+        (clickSequence[(clickSequence.length)-1] != (pid+'S')) ?  clickSequence.push(pid+'S') :  clickSequence.push(pid+'U');
+        var flag = 0;
+        if ( if_finish == 0) {
+            flag = 1;
+            $('#whole').show();
         }
-        savedSentence.sort(function(a,b){
-          return Number(a[-1])-Number(b[-1]);
-        });
+
+        if(!savedSentence.includes(pid)){
+            savedSentence.push(pid);
+        }
+
         if($(this).attr('datastatus') == 'off') {
           var $element = $(this);
           var nbInputs = parseInt($element.data('nb-inputs'));
@@ -655,6 +689,7 @@
       		  flag = 0;
       	 	}
       	 }
+
       	  $flowchart.flowchart('createOperator', pid, data);
             nop += 1;
             $(this).parent().append("<p class = 'tick'>✓</p>");
@@ -677,23 +712,36 @@
             nop -= 1;
           }
   }
+
   else if(colorlp[pid] == 'grey_back'){
-  //   if(f==0){
-  //   var w = $(this).css('width');
-  //   $(this).attr('type','text');
-  //   $(this).css({'width':w,'padding-left':'10px','padding-right':'10px'});
-  //   f=1;
-  // }
-  // else{
-  //   $(this).attr('value','done');
-  // }
+    // function to handle gray button clicks
+    if(clickSequence[(clickSequence.length)-1]!= (pid+'G'))
+    {
+      clickSequence.push(pid+'G');
+    }
+    $(this).attr('type','text');
+    $(this).attr('readonly','readonly');
+    $(this).css('width',($(this).attr('value').length+1)*13 + 'px');
   }
 });
-    // $('#get-sel').on('click',function(){
-    //   var selectedText = $.selection();
-    //   alert(selectedText);
-    // });
+  var newWords = [];
+  $draggableOperators.select(function(){
+    // function for handling gray words
+    var i = $("<input type='text' class='words' readonly>");
+    i.attr('value',$(this).selection());
+    newWords.push(i.attr('value'));
+    $(this).before(i);
+    i.css('width',(i.attr('value').length+1)*13+'px');    
+    $(this).attr('value',$(this).attr('value').replace(i.attr('value'),''));
+    $(this).css('width',($(this).attr('value').length+1)*13+'px');
+    var v = $(this).attr('value');
+    if(v===''|| v===' '){ 
+      $(this).hide();
+    }
+  });
+
   $('#undo').click(function(){
+    // function to undo click
     var wordId = String(btnClicks.pop());
     $("#"+wordId).click();
     btnClicks.pop();
