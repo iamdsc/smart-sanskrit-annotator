@@ -81,7 +81,6 @@
                         <input type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words" value='{{wd1.word}}'>
                 </td>
 
-
                 {%endwith%}
               {%else%}
             {%endif%}
@@ -172,15 +171,15 @@
 	//add the given property 'checked' to the id recommend2
     $('#recommend2').prop('checked',false);
     var id = 0;
-    var btn = $('#word-table > tbody > tr:first > td > button');
+    var btn = $('#word-table > tbody > tr:first > td > input');
     var c = true;
     //for applying shadows to buttons in the given table consisting of possible segments
     function btnHigh(){
     if(c){
-      btn.css({'border':'2px solid yellow','box-shadow': '0px 3px 10px #f4d641'});
+      btn.toggleClass('high');
     }
     else{
-      btn.css({'border':'2px solid #adabab','box-shadow':'none'});
+      btn.toggleClass('high');
     }
     c = !c;
     }
@@ -194,7 +193,7 @@
       }
       else{
         clearInterval(id);
-        btn.css({'border':'2px solid #adabab','box-shadow':'none'});
+        btn.removeClass('high');
       }
     });
 
@@ -210,7 +209,7 @@
      }
       else{
         clearInterval(id);
-        btn.css({'border':'2px solid #adabab','box-shadow':'none'});
+        btn.removeClass('high');
       }
     });
 
@@ -223,6 +222,9 @@
 	    end_time = date.getTime();
       if_finish=1;
       console.log(init_time, end_time);
+      console.log(clickSequence);
+      console.log(savedSentence);
+      console.log(newWords);
       $.ajax(
       {
           type:"POST",
@@ -240,8 +242,6 @@
         }
          )
       });
-
-  
 
  $('#example_1').hide();
     var $flowchart = $('#example_5');
@@ -570,17 +570,18 @@
   var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
   var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
   btnClicks.push(pid);
-  (clickSequence[(clickSequence.length)-1] != (pid+'S')) ?  clickSequence.push(pid+'S') :  clickSequence.push(pid+'U');
+
   if(colorlp[pid] !='grey_back') 
-  {
-          var flag = 0;
-          if ( if_finish == 0) {
+  {     
+        (clickSequence[(clickSequence.length)-1] != (pid+'S')) ?  clickSequence.push(pid+'S') :  clickSequence.push(pid+'U');
+        var flag = 0;
+        if ( if_finish == 0) {
             flag = 1;
             $('#whole').show();
-          }
+        }
 
         if(!savedSentence.includes(pid)){
-          savedSentence.push(pid);
+            savedSentence.push(pid);
         }
 
         if($(this).attr('datastatus') == 'off') {
@@ -664,25 +665,34 @@
   }
 
   else if(colorlp[pid] == 'grey_back'){
+    // function to handle gray button clicks
+    if(clickSequence[(clickSequence.length)-1]!= (pid+'G'))
+    {
+      clickSequence.push(pid+'G');
+    }
     $(this).attr('type','text');
     $(this).attr('readonly','readonly');
     $(this).css('width',($(this).attr('value').length+1)*13 + 'px');
   }
 });
-
+  var newWords = [];
   $draggableOperators.select(function(){
     // function for handling gray words
     var i = $("<input type='text' class='words' readonly>");
     i.attr('value',$(this).selection());
+    newWords.push(i.attr('value'));
     $(this).before(i);
     i.css('width',(i.attr('value').length+1)*13+'px');    
     $(this).attr('value',$(this).attr('value').replace(i.attr('value'),''));
     $(this).css('width',($(this).attr('value').length+1)*13+'px');
     var v = $(this).attr('value');
-    if(v===''|| v===' '){ $(this).hide();}
+    if(v===''|| v===' '){ 
+      $(this).hide();
+    }
   });
 
   $('#undo').click(function(){
+    // function to undo click
     var wordId = String(btnClicks.pop());
     $("#"+wordId).click();
     btnClicks.pop();

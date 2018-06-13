@@ -132,6 +132,7 @@ td{
   padding:0;
   margin:0;
 }
+
 .words{
   display:inline-block;
   border:2px solid #adabab;
@@ -139,6 +140,18 @@ td{
   box-shadow: 0px 4px 3px rgba(0,0,0,0.4),
        0px 8px 13px rgba(0,0,0,0.1),
        0px 18px 23px rgba(0,0,0,0.1);
+  margin:0;
+  font-size:17px;
+  letter-spacing: 4px;
+}
+
+
+/*highlighting the buttons*/
+.high{
+  display:inline-block;
+  border:2px solid yellow;
+  border-radius:8px;
+  box-shadow: 0px 3px 10px #f4d641;
   margin:0;
   font-size:17px;
   letter-spacing: 4px;
