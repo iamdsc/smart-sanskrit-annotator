@@ -73,14 +73,17 @@ class User(models.Model):
 	end_time = models.CharField(max_length=100)
 
 class Noun(models.Model):
+	"""docstring for Noun"""
 	noun_id = models.AutoField(primary_key=True)
 	sh = models.CharField(max_length=50)
 
 class Indeclinables(models.Model):
+	"""docstring for Indeclinables"""
 	ind_id = models.AutoField(primary_key=True)
 	sh = models.CharField(max_length=50)
 
 class Verbs(models.Model):
+	"""docstring for Verbs"""
 	verb_id = models.AutoField(primary_key=True)
 	sh = models.CharField(max_length=50)
 

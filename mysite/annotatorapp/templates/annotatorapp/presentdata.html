@@ -199,20 +199,26 @@
   var clickSequence = [];//captures the ids which leads to the sequences that have been followed by user
   var savedSentence = [];
   var auto_ar = [];
+
+  //function for autocompleting entries whenever there is a gray box encountered
+  //and manual entry of words need to occur
+
   function autocomplete(inp, arr) {
+  //inputs are the text field element and an array of possible autocompleted values:
   var currentFocus;
+  //execute a function when someone writes in the text field:
   inp.addEventListener("input", function(e) {
       var a, b, i, val = this.value;
-      closeAllLists();
+      closeAllLists(); //close any already open lists of autocompleted values
       if (!val) { return false;}
       currentFocus = -1;
       a = document.createElement("DIV");
       a.setAttribute("id", this.id + "autocomplete-list");
       a.setAttribute("class", "autocomplete-items");
-      this.parentNode.appendChild(a);
+      this.parentNode.appendChild(a); //append the DIV element as a child of the autocomplete container:
 
       for (i = 0; i < arr.length; i++) {
-        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) { //check if the item starts with the same letters as the text field value:
           b = document.createElement("DIV");
           b.innerHTML = "<b>" + arr[i].substr(0, val.length) + "</b>";
           b.innerHTML += arr[i].substr(val.length);
@@ -225,19 +231,20 @@
         }
       }
   });
+  //execute a function presses a key on the keyboard:
   inp.addEventListener("keydown", function(e) {
       var x = document.getElementById(this.id + "autocomplete-list");
       if (x)
        {x = x.getElementsByTagName("div")};
       if (e.keyCode == 40)
-      {
+      {  //If the arrow DOWN key is pressed, increase the currentFocus variable:
         currentFocus++;
-        addActive(x);
-      } else if (e.keyCode == 38) {
+        addActive(x); //and make the current item more visible:
+      } else if (e.keyCode == 38) { //up
         currentFocus--;
 
         addActive(x);
-      } else if (e.keyCode == 13) {
+      } else if (e.keyCode == 13) { //enter key
 
         e.preventDefault();
         if (currentFocus > -1) {
@@ -248,7 +255,7 @@
         }
       }
   });
-  function addActive(x) {
+  function addActive(x) { //function to classify an item as "active"
     if (!x) return false;
     removeActive(x);
     if (currentFocus >= x.length)
@@ -257,12 +264,12 @@
       currentFocus = (x.length - 1);
     x[currentFocus].classList.add("autocomplete-active");
   }
-  function removeActive(x) {
+  function removeActive(x) { //function to remove the "active" class from all autocomplete items:
       for (var i = 0; i < x.length; i++) {
         x[i].classList.remove("autocomplete-active");
       }
     }
-    function closeAllLists(elmnt) {
+    function closeAllLists(elmnt) { //close all autocomplete lists in the document, except the one passed as an argument:
       var x = document.getElementsByClassName("autocomplete-items");
       for (var i = 0; i < x.length; i++) {
         if (elmnt != x[i] && elmnt != inp) {
@@ -271,9 +278,10 @@
     }
   }
  }
-document.addEventListener("click", function (e) {
+document.addEventListener("click", function (e) { //execute a function when someone clicks in the document:
     closeAllLists(e.target);
-});
+
+});//for editing each of those words segemented in the table
 	$(".edit").click(function(){
 	  var id=$(this).data('id');
       var word=$("#"+id).val();
@@ -353,6 +361,8 @@ document.addEventListener("click", function (e) {
           }
         })
       });
+
+
     $('#example_1').hide();
     var $flowchart = $('#example_5');
     var $container = $flowchart.parent();
@@ -363,6 +373,7 @@ document.addEventListener("click", function (e) {
     var $linkname = $('#link_name');
     var $linkname1 = $('#link_name1');
     $flowchart.flowchart({
+      //initialization of properties
       data: data,
       multipleLinksOnOutput: true,
       onLinkSelect: function(linkId) {
@@ -402,6 +413,7 @@ document.addEventListener("click", function (e) {
         return true;
       }
     });
+    //hiding the data corresponding to the id example_1
     $('#hide').click(function() {
       $('#example_1').hide()
     });
@@ -795,9 +807,9 @@ document.addEventListener("click", function (e) {
     // function for handling gray words
     var i = $("<input type='text' class='words' readonly>");
     i.attr('value',$(this).selection());
-    newWords.push(i.attr('value'));
+    newWords.push(i.attr('value')); // acquiring new values
     $(this).before(i);
-    i.css('width',(i.attr('value').length+1)*13+'px');
+    i.css('width',(i.attr('value').length+1)*13+'px'); //adding css properties
     $(this).attr('value',$(this).attr('value').replace(i.attr('value'),''));
     $(this).css('width',($(this).attr('value').length+1)*13+'px');
     var v = $(this).attr('value');
@@ -812,6 +824,9 @@ document.addEventListener("click", function (e) {
     btnClicks.pop();
   });
 
+
+  //takes in radio input of either verb indeclinable or noun to help them get classified in those categories
+  //to suggest possible SH column values in auto completion
   $("input[type='radio']").click(function(){
     var radioValue = $("input[name='word_form']:checked").val();
     if(radioValue == 'comp'){
@@ -832,7 +847,7 @@ document.addEventListener("click", function (e) {
           data[0] = data[0].slice(1,);
           data[data.length-1] = data[data.length-1].slice(0,-1);
           auto_ar = data;
-          autocomplete(document.getElementById("morph"), auto_ar);
+          autocomplete(document.getElementById("morph"), auto_ar);//implementing auto complete function
         }
       })
   }

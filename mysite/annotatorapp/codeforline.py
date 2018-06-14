@@ -110,9 +110,9 @@ def getdatafromsite(inputsent) : # Scrapping data from site
 	return t
 
 def savedatafromsite(df,sent):
-
+	##captures sentences from the site and ssaves them to WordOptions model
 	for i in range(df.shape[0]):
-		row = df.iloc[i]
+		row = df.iloc[i]#indexing based on postion
 		try:
 			word_option = WordOptions(sentence = sent,
 									level = row["level"],
@@ -127,7 +127,7 @@ def savedatafromsite(df,sent):
 									aux_info = row["aux_inf"],
 									word = row["word"],
 									)
-			word_option.save()
+			word_option.save()#saving the class object
 			
 		except Exception as e:
 			print("WordOption not inserted : ",sent_id,"/",word)
