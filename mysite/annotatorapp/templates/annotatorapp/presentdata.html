@@ -344,6 +344,7 @@ document.addEventListener("click", function (e) { //execute a function when some
 	word_name= $("#word_name").val(); 
 	word_morph= $("#morph").val();
 	$("#morph").val('');
+	document.querySelector('input[name="word_form"]:checked').checked = false;
 	pid=2;
 	var data = {
 	  top:0,
