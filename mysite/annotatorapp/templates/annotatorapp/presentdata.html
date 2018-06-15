@@ -7,30 +7,42 @@
 
 <div class="panel-group">
 
-    <!--applying recommendation options-->
+  <!--applying recommendation options-->
   <p><strong>RECOMMENDATION : </strong></p>
   <ul class="pager">
     <strong>Segmentation </strong> <!--segmentation only , performs highlighting of the first row-->
-    <li><label class="switch">
+    <li>
+	<label class="switch">
     <input type="checkbox" id="recommend1">
     <span class="slider round"></span>
-    </label></li>
+    </label>
+	</li>
     <strong>Segmentation + FlowChart </strong><!--performs highlighting of first row as well as eliminates the noisy conflict segments-->
-    <li><label class="switch">
+    <li>
+	<label class="switch">
     <input type="checkbox" id="recommend2">
     <span class="slider round"></span>
-    </label></li>
-
-      <!--undo the last action-->
-
+    </label>
+	</li>
+	
+	<!--undo the last action-->
     <li><button class='btn btn-default' id='undo' title='Undo Option'>Undo</button></li>
-  <li class="next"><a  href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="Refresh Option">Reset</a></li>
-
+	<li class="next"><a href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="Refresh Option">Reset</a></li>
+  
   </ul>
+  
   <div class="panel panel-info">
+  
         <div class="panel-heading" >
-          <h3 class="panel-title">
-            <a data-toggle="collapse" href="#collapse{{sentid}}">{{line}}</a>
+		
+          <h3 class="panel-title" >
+            <a data-toggle="collapse" href="#collapse{{sentid}}">
+			<table >
+			{% for word in line.split%}
+			<th id='heading'>{{word}}</th>
+			{% endfor %}
+			</table>
+			</a>
           </h3>
         </div>
       <!--collapsible to list out words, lemma, morph, auxi and preverb for the entire user input-->
@@ -115,14 +127,14 @@
         </div>
         <div class="modal-body">
 			<form autocomplete="off">
-				Word    : <input type="text" id="word_name"> <br><br>
-				Form    :
+				Word : <input type="text" id="word_name"> <br><br>
+				Form :
         Noun <input type="radio" name="word_form" value="noun">
         Verb <input type="radio" name="word_form" value="verb">
 				Indeclinables <input type="radio" name="word_form" value="ind">
         Compound <input type="radio" name="word_form" value="comp">
         <br><br>
-				<div class="autocompete" style="width:300px"> Morph :
+				<div class="autocompete" style="width:300px">Morph :
 					<input id="morph" name="word_morph" type="text">
 				</div>
 			  <div class="modal-footer">
@@ -190,726 +202,668 @@
  //function is made available after the document is loaded to initialize values to variables
   $(document).ready(function()
   {
-	  var nop = 0;
-	  var line = 20;
-	  var if_finish = 0;
-	  var init_time = 0;
-	  var end_time = 0;
-	  var btnClicks = [];
-	  var clickSequence = [];//captures the ids which leads to the sequences that have been followed by user
-	  var savedSentence = [];
-	  var auto_ar = [];
+  var nop = 0;
+  var line = 20;
+  var if_finish = 0;
+  var init_time = 0;
+  var end_time = 0;
+  var btnClicks = [];
+  var clickSequence = [];//captures the ids which leads to the sequences that have been followed by user
+  var savedSentence = [];
+  var auto_ar = [];
 
-	  //function for autocompleting entries whenever there is a gray box encountered
-	  //and manual entry of words need to occur
+  //function for autocompleting entries whenever there is a gray box encountered
+  //and manual entry of words need to occur
 
-	  function autocomplete(inp, arr) {
-		//inputs are the text field element and an array of possible autocompleted values:
-		var currentFocus;
-		//execute a function when someone writes in the text field:
-		inp.addEventListener("input", function(e) {
-		  var a, b, i, val = this.value;
-		  closeAllLists(); //close any already open lists of autocompleted values
-		  if (!val) { return false;}
-		  currentFocus = -1;
-		  a = document.createElement("DIV");
-		  a.setAttribute("id", this.id + "autocomplete-list");
-		  a.setAttribute("class", "autocomplete-items");
-		  this.parentNode.appendChild(a); //append the DIV element as a child of the autocomplete container:
+  function autocomplete(inp, arr) {
+  //inputs are the text field element and an array of possible autocompleted values:
+  var currentFocus;
+  //execute a function when someone writes in the text field:
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      closeAllLists(); //close any already open lists of autocompleted values
+      if (!val) { return false;}
+      currentFocus = -1;
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      this.parentNode.appendChild(a); //append the DIV element as a child of the autocomplete container:
 
-		  for (i = 0; i < arr.length; i++) {
-			if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) { //check if the item starts with the same letters as the text field value:
-			  b = document.createElement("DIV");
-			  b.innerHTML = "<b>" + arr[i].substr(0, val.length) + "</b>";
-			  b.innerHTML += arr[i].substr(val.length);
-			  b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-				  b.addEventListener("click", function(e) {
-				  inp.value = this.getElementsByTagName("input")[0].value;
-				  closeAllLists();
-			  });
-			  a.appendChild(b);
-			}
-		  }
-		});
-	  
-		//execute a function presses a key on the keyboard:
-		inp.addEventListener("keydown", function(e) {
-		  var x = document.getElementById(this.id + "autocomplete-list");
-		  if (x)
-		   {x = x.getElementsByTagName("div")};
-		  if (e.keyCode == 40)
-		  {  //If the arrow DOWN key is pressed, increase the currentFocus variable:
-			currentFocus++;
-			addActive(x); //and make the current item more visible:
-		  } else if (e.keyCode == 38) { //up
-			currentFocus--;
+      for (i = 0; i < arr.length; i++) {
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) { //check if the item starts with the same letters as the text field value:
+          b = document.createElement("DIV");
+          b.innerHTML = "<b>" + arr[i].substr(0, val.length) + "</b>";
+          b.innerHTML += arr[i].substr(val.length);
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+              b.addEventListener("click", function(e) {
+              inp.value = this.getElementsByTagName("input")[0].value;
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  //execute a function presses a key on the keyboard:
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x)
+       {x = x.getElementsByTagName("div")};
+      if (e.keyCode == 40)
+      {  //If the arrow DOWN key is pressed, increase the currentFocus variable:
+        currentFocus++;
+        addActive(x); //and make the current item more visible:
+      } else if (e.keyCode == 38) { //up
+        currentFocus--;
 
-			addActive(x);
-		  } else if (e.keyCode == 13) { //enter key
+        addActive(x);
+      } else if (e.keyCode == 13) { //enter key
 
-			e.preventDefault();
-			if (currentFocus > -1) {
+        e.preventDefault();
+        if (currentFocus > -1) {
 
-			  if (x) {
-				x[currentFocus].click()
-			  };
-			}
-		  }
-		});
-	  
-		function addActive(x) { //function to classify an item as "active"
-		  if (!x) return false;
-		  removeActive(x);
-		  if (currentFocus >= x.length)
-		  currentFocus = 0;
-		  if (currentFocus < 0)
-			currentFocus = (x.length - 1);
-		  x[currentFocus].classList.add("autocomplete-active");
-		}
-	  
-		function removeActive(x) { //function to remove the "active" class from all autocomplete items:
-		  for (var i = 0; i < x.length; i++) {
-			x[i].classList.remove("autocomplete-active");
-		  }
-		}
-	  
-		//close all autocomplete lists in the document, except the one passed as an argument:
-		function closeAllLists(elmnt) { 
-		  var x = document.getElementsByClassName("autocomplete-items");
-		  for (var i = 0; i < x.length; i++) {
-			if (elmnt != x[i] && elmnt != inp) 
-			x[i].parentNode.removeChild(x[i]);
-		  }
-		}
+          if (x) {
+            x[currentFocus].click()
+          };
+        }
+      }
+  });
+  function addActive(x) { //function to classify an item as "active"
+    if (!x) return false;
+    removeActive(x);
+    if (currentFocus >= x.length)
+      currentFocus = 0;
+    if (currentFocus < 0)
+      currentFocus = (x.length - 1);
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) { //function to remove the "active" class from all autocomplete items:
+      for (var i = 0; i < x.length; i++) {
+        x[i].classList.remove("autocomplete-active");
+      }
+    }
+    function closeAllLists(elmnt) { //close all autocomplete lists in the document, except the one passed as an argument:
+      var x = document.getElementsByClassName("autocomplete-items");
+      for (var i = 0; i < x.length; i++) {
+        if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+ }
+document.addEventListener("click", function (e) { //execute a function when someone clicks in the document:
+    closeAllLists(e.target);
 
-		//execute a function when someone clicks in the document:
-		document.addEventListener("click", function (e) {    
-			closeAllLists(e.target);
-		});
-		}
-
-	  //for editing each of those words segemented in the table
-		$(".edit").click(function(){
-		  var id=$(this).data('id');
-		  var word=$("#"+id).val();
-		  $(".modal-body #word_name").val(word);
-		});
-
-	  function getcurrent_tl()
-	  { 
-		var div_width = document.getElementById("example_5").clientWidth;
-		console.log(line+' '+nop+' '+div_width); 
-		var tl = [];
-		if (( nop > (div_width/200) ) && (nop%2 == 0)) {
-			nop = 0;
-			line += 400;
-		}
-		tl.push( ((nop*150) % div_width) + 20 );
-		if ( nop%2 ==0 ) {
-			tl.push(20+line);
-			  }
-		else {
-			tl.push(200+line);
-		}
-	  console.log(tl);
-	  return tl;		
-	  }
-
-	  $("#word_done").click(function() {
-		word_name= $("#word_name").val(); 
-		word_morph= $("#morph").val();
-		$("#morph").val('');
-		pid=2;
-		var data = {
-		  top:0,
-		  left:0,
-		  properties: {
-			title: word_name,
-			inputs: {
-			  ins: {
-				label: word_morph, 
-				multiple: false
-			  }
-			},
-			outputs: {
-			  outs: {
-				label: '.',
-				multiple: false
-			  }
-			}
-		  }
-		}
-		tl = getcurrent_tl();
-		data.top=tl[1];
-		data.left=tl[0]; 
-		$("#example_5").flowchart('createOperator', pid, data);
-		nop++;
-	  });
-			
-	  var data ={};
-	  var date = new Date();
-	  nit_time = date.getTime();
-	  $('#whole').hide();
-	  $('#recommend1').prop('checked',false);
-	  //add the given property 'checked' to the id recommend2
-	  $('#recommend2').prop('checked',false);
-	  var id = 0;
-	  var btn = $('#word-table > tbody > tr:first > td > input');
-	  var c = true;
-	  //for applying shadows to buttons in the given table consisting of possible segments
-	  function btnHigh(){
-	  if(c){
-		btn.toggleClass('high');
-	  }
-	  else{
-		btn.toggleClass('high');
-	  }
-	  c = !c;
-	  }
-	  //recommendation using segmentation only which highlights the first row
-		$('#recommend1').change(function(){
-		  var nop = 0;
-		  var line = 20;
-		  var c1 = this.checked;
-		  if(c1){
-			id = setInterval(btnHigh,800);
-		  }
-		  else{
-			clearInterval(id);
-			btn.removeClass('high');
-		  }
-		});
-		//recommendation using segmentation and display of the single morphs in the list of all segements
-		$('#recommend2').change(function(){
-		  var nop = 0;
-		  var line = 20;
-		  var c2 = this.checked;
-		  if(c2){
-			id = setInterval(btnHigh,800);
-		 }
-		  else{
-			clearInterval(id);
-			btn.removeClass('high');
-		  }
-		});
-		//once finish has been selected, the words selected along with data including timestamp, clickedsequence goes to the database
-		$('#finish').click( function()
-		{
-		  $('#whole').show();
-		  $('#finish').hide();
-		  var date = new Date();
-			end_time = date.getTime();
-		  if_finish=1;
-		  $.ajax(
-		  {
-			  type:"POST",
-			  url: "ajax/save_data_to_db/",
-			  data:{
-					  'it' : JSON.stringify(init_time),
-					  'et' : JSON.stringify(end_time),
-					  'cs' : JSON.stringify(clickSequence),
-					  'ss' : JSON.stringify(savedSentence)
-			  },
-			  success: function(data)
-			  {
-				alert('Added to DB');
-			  }
-			})
-		  });
-
-
-		$('#example_1').hide();
-		var $flowchart = $('#example_5');
-		var $container = $flowchart.parent();
-		var $linkProperties = $('#link_properties');
-		var $linkProperties1 = $('#link_properties1');
-		$linkProperties.hide();
-		$linkProperties1.hide();
-		var $linkname = $('#link_name');
-		var $linkname1 = $('#link_name1');
-		$flowchart.flowchart({
-		  //initialization of properties
-		  data: data,
-		  multipleLinksOnOutput: true,
-		  onLinkSelect: function(linkId) {
-			$linkProperties.show();
-			var data = $flowchart.flowchart('getData');
-			var rname = 'link';
-			if (typeof data.links[linkId].relationame != 'undefined') {
-					rname = data.links[linkId].relationame;
-				}
-			$linkname.val(rname);
-			$("#myModal").modal();
-			$('#linkrel').text(rname);
-			return true;
-		  },
-		  onLinkUnselect: function() {
-			$linkProperties.hide();
-			return true;
-		  }
-		});
-		$('#example_1').flowchart({
-		  data: {},
-		  multipleLinksOnOutput: true,
-		  onLinkSelect: function(linkId) {
-			$linkProperties1.show();
-			var data = $('#example_1').flowchart('getData');
-			var rname = 'link';
-			if (typeof data.links[linkId].relationame != 'undefined') {
-					rname = data.links[linkId].relationame;
-				}
-			$linkname1.val(rname);
-			$("#myModal").modal();
-			$('#linkrel').text(rname);
-			return true;
-		  },
-		  onLinkUnselect: function() {
-			$linkProperties1.hide();
-			return true;
-		  }
-		});
-		//hiding the data corresponding to the id example_1
-		$('#hide').click(function() {
-		  $('#example_1').hide()
-		});
-
-		$('#savelinkname1').click(function() {
-		  var selectedLinkId = $('#example_1').flowchart('getSelectedLinkId');
-		  if (selectedLinkId != null) {
-			var data = $('#example_1').flowchart('getData');
-			data.links[selectedLinkId].relationame = $linkname1.val();
-			$('#example_1').flowchart('setData', data);
-			$('#linkrel').text($linkname1.val()).fadeIn('slow');
-		  }
-		});
-
-		$('#savelinkname').click(function() {
-		  var selectedLinkId = $flowchart.flowchart('getSelectedLinkId');
-		  if (selectedLinkId != null) {
-			var data = $flowchart.flowchart('getData');
-			data.links[selectedLinkId].relationame = $linkname.val();
-			$flowchart.flowchart('setData', data);
-			$('#linkrel').text($linkname.val()).fadeIn('slow');
-		  }
-		});
-		$flowchart.siblings('.show1').click(function() {
-		  $('#example_1').show();
-		  var data = JSON.parse('{{dragdata}}'.replace(/(&quot\;)/g,"\""));
-		  var i = 10 ;
-		  var top = 50;
-		  for(var key in data) {
-				data[key].left = i;
-				data[key].top = top;
-				i += 250;
-				$('#example_1').flowchart('createOperator', key, data[key]);
-			if ( i > (document.getElementById("example_1").clientWidth - 250) ) {
-				  i = 10;
-				  top += 150;
-			  }
-			};
-		});
-		$flowchart.siblings('.show2').click(function() {
-			var links = JSON.parse('{{links}}'.replace(/(&quot\;)/g,"\""));
-			var data1 = $('#example_1').flowchart('getData');
-			data1['links'] = links;
-			$('#example_1').flowchart('setData',data1);
-		});
-		var operatorI = 0;
-		$flowchart.siblings('.create_operator').click(function() {
-		  var operatorId = 'created_operator_' + operatorI;
-		  var operatorData = {
-			top: 60,
-			left: 500,
-			properties: {
-			  title: 'Operator ' + (operatorI + 3),
-			  inputs: {
-				input_1: {
-				  label: 'Input 1',
-				}
-			  },
-			  outputs: {
-				output_1: {
-				  label: 'Output 1',
-				}
-			  }
-			}
-		  };
-		  operatorI++;
-		  $flowchart.flowchart('createOperator', operatorId, operatorData);
-		});
-		$flowchart.siblings('.delete_selected_button').click(function() {
-		  $flowchart.flowchart('deleteSelected');
-		  $('#example_1').flowchart('deleteSelected');
-		});
-		$('#ds1').click(function() {
-		  $flowchart.flowchart('deleteSelected');
-		  $('#example_1').flowchart('deleteSelected');
-		  $('#linkrel').text('...');
-		  $('#myModal').fadeOut('slow').modal('hide');
-		});
-		$flowchart.siblings('.get_data').click(function() {
-		  function download(filename, text) {
-			var element = document.createElement('a');
-			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-			element.setAttribute('download', filename);
-			element.style.display = 'none';
-			document.body.appendChild(element);
-			element.click();
-			document.body.removeChild(element);
-		  }
-		  // Start file download.
-		  var sentid='{{sentid}}'
-		  $.ajax(
-		  {
-			  type:"POST",
-			  url: "ajax/get_data/",
-			  data:{
-					  'sentid' : sentid
-			  },
-			  success: function( data )
-			  {
-				 var tbody = document.getElementById('tbody');
-				 var data1 =  JSON.parse(data.replace(/(&quot\;)/g,"\""));
-				 var text = '';
-				 for ( var key in data1) {
-				  var tr = "<tr>";
-				  var rel = '_';
-				  if(data1[key][5]!=''){
-					rel = data1[key][5]
-				  }
-				  text = text + data1[key][0]+'\t'+ data1[key][2]+'\t'+ data1[key][4]+'\t'+data1[key][3].replace(/ /g,'')+'\t'+'_'+'\t'+'_'+'\t'+ data1[key][6]+'\t'+ rel+'\t'+'_'+'\t'+'_'
-				  text = text + '\n'
-				  tr += "<td>" +data1[key][0]+ "</td>" +
-					"<td>" +data1[key][1]+ "</td>" +
-					"<td>" +data1[key][2]+ "</td>" +
-					"<td>" +data1[key][3]+ "</td>" +
-					"<td>" +data1[key][4]+ "</td>" +
-					"<td>" +data1[key][5]+ "</td>" +
-					 "<td>" + data1[key][6] + "</td></tr>";
-				  /* We add the table row to the table body */
-				  tbody.innerHTML += tr;
-				 }
-				 download(sentid+".txt",text)
-			  }
-		   })
-		});
-		//function to save sentence that has been shown using links among the operators in the flowchart
-		$flowchart.siblings('.save_data').click(function() {
-		  var dragdata = $flowchart.flowchart('getData');
-		  var links = dragdata.links ;
-		  var link ={};
-		  var wordidparent={};
-		  var c=[];
-		  var l =[];
-		  var f=0;
-		  var t=0;
-		  var wordidchilds={};
-		  var wordidrel={}
-		  var sentid='{{sentid}}'
-		  var rname =''
-		  for(var key in links){
-			  if (typeof links[key].relationame != 'undefined') {
-					  rname = links[key].relationame;
-				  }
-			  t=links[key].toConnector.substr(3);
-			  f=links[key].fromConnector.substr(4);
-			  wordidrel[t]=rname;
-			  //saving the data shown along with the relationname
-			  if(c.includes(f)) {
-				wordidchilds[f] = wordidchilds[f]+'-'+t;
-			  }else {wordidchilds[f] = '-'+t;c.push(f)}
-			  wordidparent[t]=f;
-		  };
-		  $.ajax(
-		  {
-			  type:"POST",
-			  url: "ajax/save_data/",
-			  data:{
-					  'wp' : JSON.stringify(wordidparent),
-					  'wc' : JSON.stringify(wordidchilds),
-					  'wr' : JSON.stringify(wordidrel),
-					  'sentid' : sentid
-			  },
-			  success: function( data )
-			  {
-				alert('Flowchart Saved Successfully');
-			  }
-		   })
-		});
-			// CSRF code
-		function getCookie(name) {
-			var cookieValue = null;
-			var i = 0;
-			if (document.cookie && document.cookie !== '') {
-				var cookies = document.cookie.split(';');
-				for (i; i < cookies.length; i++) {
-					var cookie = jQuery.trim(cookies[i]);
-					// Does this cookie string begin with the name we want?
-					if (cookie.substring(0, name.length + 1) === (name + '=')) {
-						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-						break;
-					}
-				}
-			}
-			return cookieValue;
-		}
-		var csrftoken = getCookie('csrftoken');
-		function csrfSafeMethod(method) {
-			// these HTTP methods do not require CSRF protection
-			return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-		}
-		$.ajaxSetup({
-			crossDomain: false, // obviates need for sameOrigin test
-			beforeSend: function(xhr, settings) {
-				if (!csrfSafeMethod(settings.type)) {
-					xhr.setRequestHeader("X-CSRFToken", csrftoken);
-				}
-			}
-		});
-		var $draggableOperators = $('.draggable_operator');
-		var dwor = [];
-		function getOperatorData($element) {
-		  var nbInputs = parseInt($element.data('nb-inputs'));
-		  var nbOutputs = nbInputs;
-		  var str = $element.data('nb-lemmas').toString();
-		  var status = $element.data('nb-status');
-		  var ids = $element.data('nb-ids').toString().split('-');
-		  var showlabels =str.split('\n');
-		  var dic = {};
-		  var data =[];
-		  var wordtext =  $element.text();
-		  if (status == 'lemma') {
-			  var i = 0;
-			  for (i = 0; i < nbInputs; i++) {
-				var data1 = {
-				  properties: {
-					title:ids[i] +' : '+ $element.text(),
-					inputs: {
-					  ins: {
-						  label: showlabels[i],
-						  multiple: false
-						}
-					},
-					outputs: {
-					  outs: {
-						  label: '(:i)',
-						  multiple: false
-					  }
-					}
-				  }
-				};
-				dic['lemma_'+ids[i]] = data1
-				data.push(data1)
-			  }
-		}
-		else {
-		  var data1 = {
-			properties: {
-			  title: ids[0]+' : ' +$element.text(),
-			  inputs: {
-				ins: {
-				  label: '(:i)',
-				  multiple: false
-				}
-			  },
-			  outputs: {
-				outs: {
-				  label: '(:i)',
-				  multiple: true
-				}
-			  }
-			}
-		  };
-		  dic['word_'+ids[0]] = data1
-		  data.push(data1)
-		}
-		return dic;
-		}
-		
-		var operatorId = 0;
-	  // to perform edit morph operation
-	  $('.edit_div').hover(function(){
-		var eid= ($(this)[0].id).replace('_div','');
-		$('#'+eid).css("display","block");
-	  },function(){
-		var eid= ($(this)[0].id).replace('_div','');
-		$('#'+eid).css("display","none");
-	  });
-	  //to orient the draggable operators and allow input of re
-	  $draggableOperators.hover(function() {
-		  $(this).css('cursor','pointer');
-		$('#show_lemma').text($(this).attr('title').replace(/@/g,' ')).fadeIn("slow");
-	  }, function() {
-
-		  $(this).css('cursor','auto');
-		$('#show_lemma').text(' ');
-	  });
-	  $draggableOperators.click(function()
-	  {
-		var flag = 0;
-		if ( if_finish == 0)
-		{
-		  flag = 1;
-		  $('#whole').show();
-		}
-		var pid = $(this).attr('id');
-		var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
-		var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
-		btnClicks.push(pid);
-		if(colorlp[pid] !='grey_back')
-		{
-			(clickSequence[(clickSequence.length)-1] != (pid+'S')) ?  clickSequence.push(pid+'S') :  clickSequence.push(pid+'U');
-			var flag = 0;
-			if ( if_finish == 0) {
-				flag = 1;
-				$('#whole').show();
-			}
-			if(!savedSentence.includes(pid)){
-				savedSentence.push(pid);
-			}
-			if($(this).attr('datastatus') == 'off') {
-			  var $element = $(this);
-			  var nbInputs = parseInt($element.data('nb-inputs'));
-			  var nbOutputs = nbInputs;
-			  var str = $element.data('nb-lemmas').toString();
-			  var status = $element.data('nb-status');
-			  var ids = $element.data('nb-ids').toString().split('-');
-			  var showlabels =str.split('\n');
-			  var wordtext =  $element.text();
-			  var div_width = document.getElementById("example_5").clientWidth;
-			  var data = {
-				left: 0,
-				top : 0,
-				properties: {
-				  title: $element.text()+ '<br>'+showlabels[0].split('@')[1],
-				  inputs: {},
-				  outputs: {}
-				}
-			  };
-			  if (( nop > (div_width/200) )  && (nop%2 == 0)) {
-				nop = 0;
-				line += 400;
-			  }
-			  data.left = ( nop*150 ) % div_width + 20;
-			  if ( nop%2 ==0 ) {
-				data.top = 20+line;
-			  }
-			  else {
-				data.top = 200+line;
-			  }
-			  var i = 0;
-			  var c = document.getElementById('recommend2').checked;
-			  if ( c ) {
-				data.properties.inputs['in-'+ids[i]] = {
-				  label: showlabels[i].split('@')[0].slice(1,-1)
-				};
-				data.properties.outputs['out-'+ids[i]] = {
-				  label: '.'
-				};
-			  }
-			  else {
-				for (i = 0; i < nbInputs; i++) {
-				  data.properties.inputs['in-'+ids[i]] = {
-					label: showlabels[i].split('@')[0].slice(1,-1)
-				  };
-				}
-				for (i = 0; i < nbInputs; i++) {
-				  data.properties.outputs['out-'+ids[i]] = {
-					label: '.'
-				  };
-				}
-				if ( if_finish==0 ) {
-				  $('#whole').hide();
-				  flag = 0;
-				}
-			  }
-			  $flowchart.flowchart('createOperator', pid, data);
-			  nop += 1;
-			  console.log(nop+' '+(div_width/200));
-			  $(this).parent().append("<p class = 'tick'>✓</p>");
-				for (i = 0; i < cids[pid].length; i++) {
-				  $('#'+cids[pid][i]).fadeOut();
-				  $('#'+cids[pid][i]).parent().attr('class','w_back');
-				}
-				$(this).attr("datastatus", "on");
-			}
-			else if($(this).attr('datastatus') == 'on') {
-			  $(this).siblings('p').remove(".tick");
-			  $flowchart.flowchart('deleteOperator', pid);
-			  if (if_finish == 0)
-				$('#whole').hide();
-				for (var i = 0; i < cids[pid].length; i++) {
-				  $('#'+cids[pid][i]).fadeIn('slow');
-				  $('#'+cids[pid][i]).parent().attr('class',colorlp[cids[pid][i]]);
-				}
-				$(this).attr("datastatus", "off");
-				nop -= 1;
-			  }
-	  }
-	  else if(colorlp[pid]=='grey_back'){
-		// function to handle gray button clicks
-		if(clickSequence[(clickSequence.length)-1]!= (pid+'G'))
-		{
-		  clickSequence.push(pid+'G');
-		}
-		var eid= ($(this)[0].id).concat('-edit');
-		$('#'+eid).remove();
-		$('#whole').hide();
-		$(this).attr('type','text');
-		$(this).attr('readonly','readonly');
-		$(this).css('width',($(this).attr('value').length+1)*13 + 'px');
-	  }
+});//for editing each of those words segemented in the table
+	$(".edit").click(function(){
+	  var id=$(this).data('id');
+      var word=$("#"+id).val();
+	  $(".modal-body #word_name").val(word);
 	});
-	  var newWords = [];
-	  $draggableOperators.select(function(){
-		// function for handling gray words
-		var i = $("<input type='text' class='words' readonly>");
-		i.attr('value',$(this).selection());
-		newWords.push(i.attr('value')); // acquiring new values
-		$(this).before(i);
-		i.css('width',(i.attr('value').length+1)*13+'px'); //adding css properties
-		$(this).attr('value',$(this).attr('value').replace(i.attr('value'),''));
-		$(this).css('width',($(this).attr('value').length+1)*13+'px');
-		var v = $(this).attr('value');
-		if(v===''|| v===' '){
-		  $(this).hide();
-		}
-	  });
-	  $('#undo').click(function(){
-		// function to undo click
-		var wordId = String(btnClicks.pop());
-		$("#"+wordId).click();
-		btnClicks.pop();
-	  });
+  var data ={};
+  var date = new Date();
+  init_time = date.getTime();
+	$('#whole').hide();
+	$('#recommend1').prop('checked',false);
+	//add the given property 'checked' to the id recommend2
+  $('#recommend2').prop('checked',false);
+  var id = 0;
+  var btn = $('#word-table > tbody > tr:first > td > input');
+  var c = true;
+  //for applying shadows to buttons in the given table consisting of possible segments
+  function btnHigh(){
+  if(c){
+    btn.toggleClass('high');
+  }
+  else{
+    btn.toggleClass('high');
+  }
+  c = !c;
+  }
+  //recommendation using segmentation only which highlights the first row
+	$('#recommend1').change(function(){
+      var nop = 0;
+      var line = 20;
+      var c1 = this.checked;
+      if(c1){
+        id = setInterval(btnHigh,800);
+      }
+      else{
+        clearInterval(id);
+        btn.removeClass('high');
+      }
+    });
+    //recommendation using segmentation and display of the single morphs in the list of all segements
+	$('#recommend2').change(function(){
+      var nop = 0;
+      var line = 20;
+      var c2 = this.checked;
+      if(c2){
+        id = setInterval(btnHigh,800);
+     }
+      else{
+        clearInterval(id);
+        btn.removeClass('high');
+      }
+    });
+    //once finish has been selected, the words selected along with data including timestamp, clickedsequence goes to the database
+    $('#finish').click( function()
+    {
+	  $('#whole').show();
+	  $('#finish').hide();
+  	  var date = new Date();
+	    end_time = date.getTime();
+      if_finish=1;
+      console.log(init_time, end_time);
+      console.log(clickSequence);
+      console.log(savedSentence);
+      console.log(newWords);
+      $.ajax(
+      {
+          type:"POST",
+          url: "ajax/save_data_to_db/",
+          data:{
+                  'it' : JSON.stringify(init_time),
+                  'et' : JSON.stringify(end_time),
+                  'cs' : JSON.stringify(clickSequence),
+                  'ss' : JSON.stringify(savedSentence)
+          },
+          success: function(data)
+          {
+            alert('Added to DB');
+          }
+        })
+      });
 
 
-	  //takes in radio input of either verb indeclinable or noun to help them get classified in those categories
-	  //to suggest possible SH column values in auto completion
-	  $("input[type='radio']").click(function(){
-		var radioValue = $("input[name='word_form']:checked").val();
-		if(radioValue == 'comp'){
-		   $('#morph').attr('value','compound');
-		}
-		else{
-		   $('#morph').attr('value','');
-		  $.ajax(
-		  {
-			type:'POST',
-			url:'ajax/get_word_form/',
-			data:{
-			  'table_id': JSON.stringify(radioValue)
-			},
-			success: function( data )
-			{
-			  data=data.replace(/[,)(]/g,"").split("''");
-			  data[0] = data[0].slice(1,);
-			  data[data.length-1] = data[data.length-1].slice(0,-1);
-			  auto_ar = data;
-		  autocomplete(document.getElementById("morph"), auto_ar);//implementing auto complete function
-			}
-		  })
-		}
-	  });
+    $('#example_1').hide();
+    var $flowchart = $('#example_5');
+    var $container = $flowchart.parent();
+    var $linkProperties = $('#link_properties');
+    var $linkProperties1 = $('#link_properties1');
+    $linkProperties.hide();
+    $linkProperties1.hide();
+    var $linkname = $('#link_name');
+    var $linkname1 = $('#link_name1');
+    $flowchart.flowchart({
+      //initialization of properties
+      data: data,
+      multipleLinksOnOutput: true,
+      onLinkSelect: function(linkId) {
+        $linkProperties.show();
+        var data = $flowchart.flowchart('getData');
+        var rname = 'link';
+        if (typeof data.links[linkId].relationame != 'undefined') {
+                rname = data.links[linkId].relationame;
+            }
+        $linkname.val(rname);
+        $("#myModal").modal();
+        $('#linkrel').text(rname);
+        return true;
+      },
+      onLinkUnselect: function() {
+        $linkProperties.hide();
+        return true;
+      }
+    });
+    $('#example_1').flowchart({
+      data: {},
+      multipleLinksOnOutput: true,
+      onLinkSelect: function(linkId) {
+        $linkProperties1.show();
+        var data = $('#example_1').flowchart('getData');
+        var rname = 'link';
+        if (typeof data.links[linkId].relationame != 'undefined') {
+                rname = data.links[linkId].relationame;
+            }
+        $linkname1.val(rname);
+        $("#myModal").modal();
+        $('#linkrel').text(rname);
+        return true;
+      },
+      onLinkUnselect: function() {
+        $linkProperties1.hide();
+        return true;
+      }
+    });
+    //hiding the data corresponding to the id example_1
+    $('#hide').click(function() {
+      $('#example_1').hide()
+    });
+
+    $('#savelinkname1').click(function() {
+      var selectedLinkId = $('#example_1').flowchart('getSelectedLinkId');
+      if (selectedLinkId != null) {
+        var data = $('#example_1').flowchart('getData');
+        data.links[selectedLinkId].relationame = $linkname1.val();
+        $('#example_1').flowchart('setData', data);
+        $('#linkrel').text($linkname1.val()).fadeIn('slow');
+      }
+    });
+
+	$('#savelinkname').click(function() {
+      var selectedLinkId = $flowchart.flowchart('getSelectedLinkId');
+      if (selectedLinkId != null) {
+        var data = $flowchart.flowchart('getData');
+        data.links[selectedLinkId].relationame = $linkname.val();
+        $flowchart.flowchart('setData', data);
+        $('#linkrel').text($linkname.val()).fadeIn('slow');
+      }
+    });
+    $flowchart.siblings('.show1').click(function() {
+      $('#example_1').show();
+      var data = JSON.parse('{{dragdata}}'.replace(/(&quot\;)/g,"\""));
+      var i = 10 ;
+      var top = 50;
+      for(var key in data) {
+            data[key].left = i;
+            data[key].top = top;
+            i += 250;
+            $('#example_1').flowchart('createOperator', key, data[key]);
+	    if ( i > (document.getElementById("example_1").clientWidth - 250) ) {
+		      i = 10;
+		      top += 150;
+	      }
+        };
+    });
+    $flowchart.siblings('.show2').click(function() {
+        var links = JSON.parse('{{links}}'.replace(/(&quot\;)/g,"\""));
+        var data1 = $('#example_1').flowchart('getData');
+        data1['links'] = links;
+        $('#example_1').flowchart('setData',data1);
+    });
+    var operatorI = 0;
+    $flowchart.siblings('.create_operator').click(function() {
+      var operatorId = 'created_operator_' + operatorI;
+      var operatorData = {
+        top: 60,
+        left: 500,
+        properties: {
+          title: 'Operator ' + (operatorI + 3),
+          inputs: {
+            input_1: {
+              label: 'Input 1',
+            }
+          },
+          outputs: {
+            output_1: {
+              label: 'Output 1',
+            }
+          }
+        }
+      };
+      operatorI++;
+      $flowchart.flowchart('createOperator', operatorId, operatorData);
+    });
+    $flowchart.siblings('.delete_selected_button').click(function() {
+      $flowchart.flowchart('deleteSelected');
+      $('#example_1').flowchart('deleteSelected');
+    });
+    $('#ds1').click(function() {
+      $flowchart.flowchart('deleteSelected');
+      $('#example_1').flowchart('deleteSelected');
+      $('#linkrel').text('...');
+      $('#myModal').fadeOut('slow').modal('hide');
+    });
+    $flowchart.siblings('.get_data').click(function() {
+      function download(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+      // Start file download.
+      var sentid='{{sentid}}'
+      $.ajax(
+      {
+          type:"POST",
+          url: "ajax/get_data/",
+          data:{
+                  'sentid' : sentid
+          },
+          success: function( data )
+          {
+             var tbody = document.getElementById('tbody');
+             var data1 =  JSON.parse(data.replace(/(&quot\;)/g,"\""));
+             var text = '';
+             for ( var key in data1) {
+              var tr = "<tr>";
+              var rel = '_';
+              if(data1[key][5]!=''){
+                rel = data1[key][5]
+              }
+              text = text + data1[key][0]+'\t'+ data1[key][2]+'\t'+ data1[key][4]+'\t'+data1[key][3].replace(/ /g,'')+'\t'+'_'+'\t'+'_'+'\t'+ data1[key][6]+'\t'+ rel+'\t'+'_'+'\t'+'_'
+              text = text + '\n'
+              tr += "<td>" +data1[key][0]+ "</td>" +
+                "<td>" +data1[key][1]+ "</td>" +
+                "<td>" +data1[key][2]+ "</td>" +
+                "<td>" +data1[key][3]+ "</td>" +
+                "<td>" +data1[key][4]+ "</td>" +
+                "<td>" +data1[key][5]+ "</td>" +
+                 "<td>" + data1[key][6] + "</td></tr>";
+              /* We add the table row to the table body */
+              tbody.innerHTML += tr;
+             }
+             download(sentid+".txt",text)
+          }
+       })
+    });
+    //function to save sentence that has been shown using links among the operators in the flowchart
+    $flowchart.siblings('.save_data').click(function() {
+      var dragdata = $flowchart.flowchart('getData');
+      var links = dragdata.links ;
+      var link ={};
+      var wordidparent={};
+      var c=[];
+      var l =[];
+      var f=0;
+      var t=0;
+      var wordidchilds={};
+      var wordidrel={}
+      var sentid='{{sentid}}'
+      var rname =''
+      for(var key in links){
+          if (typeof links[key].relationame != 'undefined') {
+                  rname = links[key].relationame;
+              }
+          t=links[key].toConnector.substr(3);
+          f=links[key].fromConnector.substr(4);
+          wordidrel[t]=rname;
+          //saving the data shown along with the relationname
+          if(c.includes(f)) {
+            wordidchilds[f] = wordidchilds[f]+'-'+t;
+          }else {wordidchilds[f] = '-'+t;c.push(f)}
+          wordidparent[t]=f;
+      };
+      $.ajax(
+      {
+          type:"POST",
+          url: "ajax/save_data/",
+          data:{
+                  'wp' : JSON.stringify(wordidparent),
+                  'wc' : JSON.stringify(wordidchilds),
+                  'wr' : JSON.stringify(wordidrel),
+                  'sentid' : sentid
+          },
+          success: function( data )
+          {
+            alert('Flowchart Saved Successfully');
+          }
+       })
+    });
+        // CSRF code
+    function getCookie(name) {
+        var cookieValue = null;
+        var i = 0;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (i; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        crossDomain: false, // obviates need for sameOrigin test
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+    var $draggableOperators = $('.draggable_operator');
+    var dwor = [];
+    function getOperatorData($element) {
+      var nbInputs = parseInt($element.data('nb-inputs'));
+      var nbOutputs = nbInputs;
+      var str = $element.data('nb-lemmas').toString();
+      var status = $element.data('nb-status');
+      var ids = $element.data('nb-ids').toString().split('-');
+      var showlabels =str.split('\n');
+      var dic = {};
+      var data =[];
+      var wordtext =  $element.text();
+      if (status == 'lemma') {
+          var i = 0;
+          for (i = 0; i < nbInputs; i++) {
+            var data1 = {
+              properties: {
+                title:ids[i] +' : '+ $element.text(),
+                inputs: {
+                  ins: {
+                      label: showlabels[i],
+                      multiple: false
+                    }
+                },
+                outputs: {
+                  outs: {
+                      label: '(:i)',
+                      multiple: false
+                  }
+                }
+              }
+            };
+            dic['lemma_'+ids[i]] = data1
+            data.push(data1)
+	}
+      }
+      else {
+        var data1 = {
+            properties: {
+                title: ids[0]+' : ' +$element.text(),
+                inputs: {
+                  ins: {
+                      label: '(:i)',
+                      multiple: false
+                    }
+                },
+                outputs: {
+                  outs: {
+                      label: '(:i)',
+                      multiple: true
+                  }
+                }
+              }
+          };
+        dic['word_'+ids[0]] = data1
+        data.push(data1)
+      }
+      return dic;
+    }
+    var operatorId = 0;
+  // to perform edit morph operation
+  $('.edit_div').hover(function(){
+    var eid= ($(this)[0].id).replace('_div','');
+    $('#'+eid).css("display","block");
+  },function(){
+    var eid= ($(this)[0].id).replace('_div','');
+    $('#'+eid).css("display","none");
+  });
+  //to orient the draggable operators and allow input of re
+  $draggableOperators.hover(function() {
+	  $(this).css('cursor','pointer');
+    $('#show_lemma').text($(this).attr('title').replace(/@/g,' ')).fadeIn("slow");
+  }, function() {
+
+	  $(this).css('cursor','auto');
+    $('#show_lemma').text(' ');
+  });
+  $draggableOperators.click(function()
+  {
+    var flag = 0;
+	if ( if_finish == 0)
+	{
+	  flag = 1;
+	  $('#whole').show();
+	}
+	var pid = $(this).attr('id');
+  var cids = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
+  var colorlp = JSON.parse('{{colorlp}}'.replace(/(&quot\;)/g,"\""));
+  btnClicks.push(pid);
+  if(colorlp[pid] !='grey_back')
+  {
+        (clickSequence[(clickSequence.length)-1] != (pid+'S')) ?  clickSequence.push(pid+'S') :  clickSequence.push(pid+'U');
+        var flag = 0;
+        if ( if_finish == 0) {
+            flag = 1;
+            $('#whole').show();
+        }
+        if(!savedSentence.includes(pid)){
+            savedSentence.push(pid);
+        }
+        if($(this).attr('datastatus') == 'off') {
+          var $element = $(this);
+          var nbInputs = parseInt($element.data('nb-inputs'));
+          var nbOutputs = nbInputs;
+          var str = $element.data('nb-lemmas').toString();
+          var status = $element.data('nb-status');
+          var ids = $element.data('nb-ids').toString().split('-');
+          var showlabels =str.split('\n');
+          var wordtext =  $element.text();
+          var div_width = document.getElementById("example_5").clientWidth;
+          var data = {
+            left: 0,
+        	  top : 0,
+      	properties: {
+                title: $element.text()+ '<br>'+showlabels[0].split('@')[1],
+                inputs: {},
+                outputs: {}
+              }
+            };
+            if (( nop > (div_width/200) )  && (nop%2 == 0)) {
+              nop = 0;
+              line += 400;
+            }
+            data.left = ( nop*150 ) % div_width + 20;
+            if ( nop%2 ==0 ) {
+              data.top = 20+line;
+            }
+            else {
+              data.top = 200+line;
+            }
+            var i = 0;
+            var c = document.getElementById('recommend2').checked;
+            if ( c ) {
+      		data.properties.inputs['in-'+ids[i]] = {
+      		label: showlabels[i].split('@')[0].slice(1,-1)
+      		};
+      		data.properties.outputs['out-'+ids[i]] = {
+      		  label: '.'
+      		};
+            }
+            else {
+      	      for (i = 0; i < nbInputs; i++) {
+      		data.properties.inputs['in-'+ids[i]] = {
+      		label: showlabels[i].split('@')[0].slice(1,-1)
+      		};
+      	      }
+      	      for (i = 0; i < nbInputs; i++) {
+      		data.properties.outputs['out-'+ids[i]] = {
+      		  label: '.'
+      		};
+      	      }
+      		if ( if_finish==0 ) {
+      		  $('#whole').hide();
+      		  flag = 0;
+      	 	}
+      	 }
+      	  $flowchart.flowchart('createOperator', pid, data);
+            nop += 1;
+            $(this).parent().append("<p class = 'tick'>✓</p>");
+            for (i = 0; i < cids[pid].length; i++) {
+              $('#'+cids[pid][i]).fadeOut();
+              $('#'+cids[pid][i]).parent().attr('class','w_back');
+            }
+            $(this).attr("datastatus", "on");
+          }
+          else if($(this).attr('datastatus') == 'on') {
+            $(this).siblings('p').remove(".tick");
+            $flowchart.flowchart('deleteOperator', pid);
+      	  if (if_finish == 0)
+      		$('#whole').hide();
+            for (var i = 0; i < cids[pid].length; i++) {
+              $('#'+cids[pid][i]).fadeIn('slow');
+              $('#'+cids[pid][i]).parent().attr('class',colorlp[cids[pid][i]]);
+            }
+            $(this).attr("datastatus", "off");
+            nop -= 1;
+          }
+  }
+  else if(colorlp[pid]=='grey_back'){
+    // function to handle gray button clicks
+    if(clickSequence[(clickSequence.length)-1]!= (pid+'G'))
+    {
+      clickSequence.push(pid+'G');
+    }
+    var eid= ($(this)[0].id).concat('-edit');
+    $('#'+eid).remove();
+    $(this).attr('type','text');
+    $(this).attr('readonly','readonly');
+    $(this).css('width',($(this).attr('value').length+1)*13 + 'px');
+  }
+});
+  var newWords = [];
+  $draggableOperators.select(function(){
+    // function for handling gray words
+    var i = $("<input type='text' class='words' readonly>");
+    i.attr('value',$(this).selection());
+    newWords.push(i.attr('value')); // acquiring new values
+    $(this).before(i);
+    i.css('width',(i.attr('value').length+1)*13+'px'); //adding css properties
+    $(this).attr('value',$(this).attr('value').replace(i.attr('value'),''));
+    $(this).css('width',($(this).attr('value').length+1)*13+'px');
+    var v = $(this).attr('value');
+    if(v===''|| v===' '){
+      $(this).hide();
+    }
+  });
+  $('#undo').click(function(){
+    // function to undo click
+    var wordId = String(btnClicks.pop());
+    $("#"+wordId).click();
+    btnClicks.pop();
+  });
+
+
+  //takes in radio input of either verb indeclinable or noun to help them get classified in those categories
+  //to suggest possible SH column values in auto completion
+  $("input[type='radio']").click(function(){
+    var radioValue = $("input[name='word_form']:checked").val();
+    if(radioValue == 'comp'){
+       $('#morph').attr('value','compound');
+    }
+    else{
+       $('#morph').attr('value','');
+    $.ajax(
+      {
+        type:'POST',
+        url:'ajax/get_word_form/',
+        data:{
+          'table_id': JSON.stringify(radioValue)
+        },
+        success: function( data )
+        {
+          data=data.replace(/[,)(]/g,"").split("''");
+          data[0] = data[0].slice(1,);
+          data[data.length-1] = data[data.length-1].slice(0,-1);
+          auto_ar = data;
+          autocomplete(document.getElementById("morph"), auto_ar);//implementing auto complete function
+        }
+      })
+  }
+  }); 
   });
 </script>
 </div>
