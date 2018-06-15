@@ -43,6 +43,12 @@
 	padding:0px;
     min-height: 300px;
 }
+#heading{
+	text-align:center;
+	padding:5px;
+	letter-spacing:4px;
+}
+
 .table-responsive{
 	min-height: 300px;
 }
@@ -170,6 +176,7 @@ td{
 
 .autocomplete {
   /*the container must be positioned relative:*/
+
   position: relative;
   display: inline-block;
 }
@@ -186,7 +193,7 @@ td{
 .autocomplete-items {
   position: absolute;
   left: 88px;
-  right: 326px;
+  right: 320px;
 }
 .autocomplete-items div {
   padding: 10px;

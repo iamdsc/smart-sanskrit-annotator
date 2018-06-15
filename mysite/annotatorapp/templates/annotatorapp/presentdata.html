@@ -7,30 +7,42 @@
 
 <div class="panel-group">
 
-    <!--applying recommendation options-->
+  <!--applying recommendation options-->
   <p><strong>RECOMMENDATION : </strong></p>
   <ul class="pager">
     <strong>Segmentation </strong> <!--segmentation only , performs highlighting of the first row-->
-    <li><label class="switch">
+    <li>
+	<label class="switch">
     <input type="checkbox" id="recommend1">
     <span class="slider round"></span>
-    </label></li>
+    </label>
+	</li>
     <strong>Segmentation + FlowChart </strong><!--performs highlighting of first row as well as eliminates the noisy conflict segments-->
-    <li><label class="switch">
+    <li>
+	<label class="switch">
     <input type="checkbox" id="recommend2">
     <span class="slider round"></span>
-    </label></li>
-
-      <!--undo the last action-->
-
+    </label>
+	</li>
+	
+	<!--undo the last action-->
     <li><button class='btn btn-default' id='undo' title='Undo Option'>Undo</button></li>
-  <li class="next"><a  href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="Refresh Option">Reset</a></li>
-
+	<li class="next"><a href="{% url 'annotatorapp:reset_allselection' sent_id=sentid %}" title="Refresh Option">Reset</a></li>
+  
   </ul>
+  
   <div class="panel panel-info">
+  
         <div class="panel-heading" >
-          <h3 class="panel-title">
-            <a data-toggle="collapse" href="#collapse{{sentid}}">{{line}}</a>
+		
+          <h3 class="panel-title" >
+            <a data-toggle="collapse" href="#collapse{{sentid}}">
+			<table >
+			{% for word in line.split%}
+			<th id='heading'>{{word}}</th>
+			{% endfor %}
+			</table>
+			</a>
           </h3>
         </div>
       <!--collapsible to list out words, lemma, morph, auxi and preverb for the entire user input-->
@@ -115,14 +127,14 @@
         </div>
         <div class="modal-body">
 			<form autocomplete="off">
-				Word    : <input type="text" id="word_name"> <br><br>
-				Form    :
+				Word : <input type="text" id="word_name"> <br><br>
+				Form :
         Noun <input type="radio" name="word_form" value="noun">
         Verb <input type="radio" name="word_form" value="verb">
 				Indeclinables <input type="radio" name="word_form" value="ind">
         Compound <input type="radio" name="word_form" value="comp">
         <br><br>
-				<div class="autocompete" style="width:300px"> Morph :
+				<div class="autocompete" style="width:300px">Morph :
 					<input id="morph" name="word_morph" type="text">
 				</div>
 			  <div class="modal-footer">
@@ -851,7 +863,7 @@ document.addEventListener("click", function (e) { //execute a function when some
         }
       })
   }
-  });
+  }); 
   });
 </script>
 </div>
