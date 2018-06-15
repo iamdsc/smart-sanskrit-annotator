@@ -290,10 +290,12 @@
     }
   }
  }
-document.addEventListener("click", function (e) { //execute a function when someone clicks in the document:
+/*document.addEventListener("click", function (e) { //execute a function when someone clicks in the document:
     closeAllLists(e.target);
 
-});//for editing each of those words segemented in the table
+});*/
+
+//for editing each of those words segemented in the table
 	$(".edit").click(function(){
 	  var id=$(this).data('id');
       var word=$("#"+id).val();
