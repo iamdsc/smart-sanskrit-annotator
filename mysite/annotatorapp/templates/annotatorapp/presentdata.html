@@ -319,6 +319,58 @@ document.addEventListener("click", function (e) { //execute a function when some
   }
   c = !c;
   }
+
+  function getcurrent_tl()
+  { 
+	var div_width = document.getElementById("example_5").clientWidth;
+	console.log(line+' '+nop+' '+div_width); 
+	var tl = [];
+	if (( nop > (div_width/200) ) && (nop%2 == 0)) {
+		nop = 0;
+		line += 400;
+	}
+	tl.push( ((nop*150) % div_width) + 20 );
+	if ( nop%2 ==0 ) {
+		tl.push(20+line);
+		  }
+	else {
+		tl.push(200+line);
+	}
+  console.log(tl);
+  return tl;		
+  }
+
+  $("#word_done").click(function() {
+	word_name= $("#word_name").val(); 
+	word_morph= $("#morph").val();
+	$("#morph").val('');
+	pid=2;
+	var data = {
+	  top:0,
+	  left:0,
+	  properties: {
+		title: word_name,
+		inputs: {
+		  ins: {
+			label: word_morph, 
+			multiple: false
+		  }
+		},
+		outputs: {
+		  outs: {
+			label: '.',
+			multiple: false
+		  }
+		}
+	  }
+	}
+	tl = getcurrent_tl();
+	data.top=tl[1];
+	data.left=tl[0]; 
+	$("#example_5").flowchart('createOperator', pid, data);
+	nop++;
+  });
+
   //recommendation using segmentation only which highlights the first row
 	$('#recommend1').change(function(){
       var nop = 0;
@@ -801,8 +853,9 @@ document.addEventListener("click", function (e) { //execute a function when some
             nop -= 1;
           }
   }
-  else if(colorlp[pid]=='grey_back'){
+  else if(colorlp[pid]=='grey_back'){  
     // function to handle gray button clicks
+    $("#example_5").hide();
     if(clickSequence[(clickSequence.length)-1]!= (pid+'G'))
     {
       clickSequence.push(pid+'G');
