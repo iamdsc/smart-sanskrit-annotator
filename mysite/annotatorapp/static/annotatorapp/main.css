@@ -191,6 +191,8 @@ td{
   font-size: 16px;
 }
 .autocomplete-items {
+  height:300px;
+  overflow-y:auto;
   position: absolute;
   left: 88px;
   right: 320px;
