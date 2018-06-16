@@ -95,7 +95,10 @@
                 <td colspan={{wd1.colspan}} align="left">
                   <div class='edit_div' id = '{{x}}-edit_div'>
                     <input type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words" value='{{wd1.word}}'>
-		    <a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" id="{{x}}-edit" class="edit" data-id='{{x}}'>Edit</a>
+		    
+					{%if wd1.color_class != "grey_back"%}
+						<a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" id="{{x}}-edit" class="edit" data-id='{{x}}'>Edit</a>		
+      		        {%endif%}
                   </div>
                 </td>
 
@@ -203,6 +206,8 @@
   $(document).ready(function()
   {
   var nop = 0;
+  var cur_op_id=0; 
+  var if_done = 0;
   var line = 20;
   var if_finish = 0;
   var init_time = 0;
@@ -211,6 +216,7 @@
   var clickSequence = [];//captures the ids which leads to the sequences that have been followed by user
   var savedSentence = [];
   var auto_ar = [];
+  var properties = {};
 
   //function for autocompleting entries whenever there is a gray box encountered
   //and manual entry of words need to occur
@@ -267,6 +273,7 @@
         }
       }
   });
+  
   function addActive(x) { //function to classify an item as "active"
     if (!x) return false;
     removeActive(x);
@@ -276,28 +283,28 @@
       currentFocus = (x.length - 1);
     x[currentFocus].classList.add("autocomplete-active");
   }
+  
   function removeActive(x) { //function to remove the "active" class from all autocomplete items:
-      for (var i = 0; i < x.length; i++) {
+      for (var i = 0; i < x.length; i++) 
         x[i].classList.remove("autocomplete-active");
-      }
-    }
-    function closeAllLists(elmnt) { //close all autocomplete lists in the document, except the one passed as an argument:
+  }
+  
+  function closeAllLists(elmnt) { //close all autocomplete lists in the document, except the one passed as an argument:
       var x = document.getElementsByClassName("autocomplete-items");
       for (var i = 0; i < x.length; i++) {
-        if (elmnt != x[i] && elmnt != inp) {
-        x[i].parentNode.removeChild(x[i]);
-      }
+        if (elmnt != x[i] && elmnt != inp) 
+        	x[i].parentNode.removeChild(x[i]);
     }
   }
- }
-document.addEventListener("click", function (e) { //execute a function when someone clicks in the document:
-    closeAllLists(e.target);
-
-});//for editing each of those words segemented in the table
+  } 
+  
+  //for editing each of those words segemented in the table
 	$(".edit").click(function(){
-	  var id=$(this).data('id');
-      var word=$("#"+id).val();
-	  $(".modal-body #word_name").val(word);
+	var id=$(this).data('id');
+    var word=$("#"+id).val();
+	cur_op_id = id;
+	$(".modal-body #word_name").val(word);
+    $('#'+id).siblings('p').remove(".tick");
 	});
   var data ={};
   var date = new Date();
@@ -320,36 +327,12 @@ document.addEventListener("click", function (e) { //execute a function when some
   c = !c;
   }
 
-  function getcurrent_tl()
-  { 
-	var div_width = document.getElementById("example_5").clientWidth;
-	console.log(line+' '+nop+' '+div_width); 
-	var tl = [];
-	if (( nop > (div_width/200) ) && (nop%2 == 0)) {
-		nop = 0;
-		line += 400;
-	}
-	tl.push( ((nop*150) % div_width) + 20 );
-	if ( nop%2 ==0 ) {
-		tl.push(20+line);
-		  }
-	else {
-		tl.push(200+line);
-	}
-  console.log(tl);
-  return tl;		
-  }
-
   $("#word_done").click(function() {
 	word_name= $("#word_name").val(); 
 	word_morph= $("#morph").val();
 	$("#morph").val('');
 	document.querySelector('input[name="word_form"]:checked').checked = false;
-	pid=2;
-	var data = {
-	  top:0,
-	  left:0,
-	  properties: {
+	properties= {
 		title: word_name,
 		inputs: {
 		  ins: {
@@ -363,13 +346,9 @@ document.addEventListener("click", function (e) { //execute a function when some
 			multiple: false
 		  }
 		}
-	  }
-	}
-	tl = getcurrent_tl();
-	data.top=tl[1];
-	data.left=tl[0]; 
-	$("#example_5").flowchart('createOperator', pid, data);
-	nop++;
+	};
+	if_done = 1;
+	$('#'+cur_op_id).click();		
   });
 
   //recommendation using segmentation only which highlights the first row
@@ -386,7 +365,8 @@ document.addEventListener("click", function (e) { //execute a function when some
       }
     });
     //recommendation using segmentation and display of the single morphs in the list of all segements
-	$('#recommend2').change(function(){
+
+	  $('#recommend2').change(function(){
       var nop = 0;
       var line = 20;
       var c2 = this.checked;
@@ -406,10 +386,6 @@ document.addEventListener("click", function (e) { //execute a function when some
   	  var date = new Date();
 	    end_time = date.getTime();
       if_finish=1;
-      console.log(init_time, end_time);
-      console.log(clickSequence);
-      console.log(savedSentence);
-      console.log(newWords);
       $.ajax(
       {
           type:"POST",
@@ -788,8 +764,8 @@ document.addEventListener("click", function (e) { //execute a function when some
           var div_width = document.getElementById("example_5").clientWidth;
           var data = {
             left: 0,
-        	  top : 0,
-      	properties: {
+        	top : 0,
+      		properties: {
                 title: $element.text()+ '<br>'+showlabels[0].split('@')[1],
                 inputs: {},
                 outputs: {}
@@ -823,16 +799,20 @@ document.addEventListener("click", function (e) { //execute a function when some
       		};
       	      }
       	      for (i = 0; i < nbInputs; i++) {
-      		data.properties.outputs['out-'+ids[i]] = {
-      		  label: '.'
-      		};
+      			data.properties.outputs['out-'+ids[i]] = {
+      		  		label: '.'
+      			};
       	      }
-      		if ( if_finish==0 ) {
-      		  $('#whole').hide();
-      		  flag = 0;
-      	 	}
-      	 }
-      	  $flowchart.flowchart('createOperator', pid, data);
+      		  if ( if_finish==0 ) {
+      		  	$('#whole').hide();
+      		  	flag = 0;
+      	 	  }
+      	    }
+			if( if_done == 1) {
+				data.properties = properties;
+				if_done = 0;
+			}
+			$flowchart.flowchart('createOperator', pid, data);
             nop += 1;
             $(this).parent().append("<p class = 'tick'>✓</p>");
             for (i = 0; i < cids[pid].length; i++) {
@@ -871,7 +851,7 @@ document.addEventListener("click", function (e) { //execute a function when some
   var newWords = [];
   $draggableOperators.select(function(){
     // function for handling gray words
-    var i = $("<input type='text' class='words' readonly>");
+    var i = $("<input type='text' class='words' readonly>");	
     i.attr('value',$(this).selection());
     newWords.push(i.attr('value')); // acquiring new values
     $(this).before(i);
@@ -882,6 +862,9 @@ document.addEventListener("click", function (e) { //execute a function when some
     if(v===''|| v===' '){
       $(this).hide();
     }
+	var e = $('<a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" class="edit">Edit</a>');
+	i.append(e);
+	i.css('display','block');
   });
   $('#undo').click(function(){
     // function to undo click
