@@ -849,22 +849,30 @@
   }
 });
   var newWords = [];
+  var id_count = 0;
   $draggableOperators.select(function(){
     // function for handling gray words
-    var i = $("<input type='text' class='words' readonly>");	
+    var sid = $(this).attr('id');
+    var i = $("<input type='button' class='draggable_operator words' readonly>");
+    id_count ++;
+    i.attr('id',(sid+'-'+id_count));
     i.attr('value',$(this).selection());
-    newWords.push(i.attr('value')); // acquiring new values
+    var e = $('<a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" class="edit">Edit </a>');
+    e.attr('id',i.attr('id')+'-edit');
+    e.attr('data-id',i.attr('id'));
+    e.css('display','inline');
+    
+    newWords.push(i.attr('value')); // acquiring new values 
     $(this).before(i);
+    i.after(e);
     i.css('width',(i.attr('value').length+1)*13+'px'); //adding css properties
     $(this).attr('value',$(this).attr('value').replace(i.attr('value'),''));
     $(this).css('width',($(this).attr('value').length+1)*13+'px');
+
     var v = $(this).attr('value');
     if(v===''|| v===' '){
       $(this).hide();
     }
-	var e = $('<a href="#edit-modal" data-toggle="modal" data-target="#edit-modal" class="edit">Edit</a>');
-	i.append(e);
-	i.css('display','block');
   });
   $('#undo').click(function(){
     // function to undo click
