@@ -320,7 +320,7 @@ $(document).ready(function()
 		c = !c;
 	}
 
-	$("#word_done").click(function() {
+	$(document).on("click","#word_done",function() {
 		word_name= $("#word_name").val(); 
 		word_morph= $("#morph").val();
 		$("#morph").val('');
@@ -728,13 +728,14 @@ $(document).ready(function()
 	});
 	
 	//to orient the draggable operators and allow input of re
-	$(doccument).on('hover','.draggable_operator',function() {
-		$(this).css('cursor','pointer');
-		$('#show_lemma').text($(this).attr('title').replace(/@/g,' ')).fadeIn("slow");
-	}, 
-	function() {
-		$(this).css('cursor','auto');
-		$('#show_lemma').text(' ');
+	$('.edit_div').on("mouseenter", ".draggable_operator", function(ev) {
+    // hover starts code here
+    $('#show_lemma').text($(ev.target).attr('title').replace(/@/g,' ')).fadeIn("slow");
+	});
+
+	$('edit_div').on("mouseleave", ".draggable_operator", function() {
+    // hover ends code here
+    $('#show_lemma').text(' ');
 	});
 	
 	$(document).on('click','.draggable_operator',function(){
@@ -912,7 +913,7 @@ $(document).ready(function()
 	$draggableOperators.select(function(){
 		// function for handling gray words
 		var sid = $(this).prop('id');
-		var i = $("<input type='button' class='draggable_operator words' datastatus = 'off'  readonly>");
+		var i = $("<input type='button' class='draggable_operator words' datastatus = 'off' title=' ' readonly>");
 		id_count ++;
 		i.prop('id',sid+'-'+id_count);
 		i.val($(this).selection());
