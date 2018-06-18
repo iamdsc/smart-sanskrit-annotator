@@ -134,7 +134,7 @@
 					Noun <input type="radio" name="word_form" value="noun">
 					Verb <input type="radio" name="word_form" value="verb">
 					Indeclinables <input type="radio" name="word_form" value="ind">
-					Compound <input type="radio" name="word_form" value="comp">
+					Compound Component<input type="radio" name="word_form" value="comp">
 					<br><br>
 					<div class="autocompete" style="width:300px">Morph :
 						<input id="morph" name="word_morph" type="text">
@@ -340,6 +340,7 @@ $(document).ready(function()
 				}
 			}
 		};
+		$("#"+cur_op_id).attr('title',word_morph);
 		if_done = 1;
 			$('#'+cur_op_id).click();		
 	});
@@ -727,7 +728,7 @@ $(document).ready(function()
 	});
 	
 	//to orient the draggable operators and allow input of re
-	$draggableOperators.hover(function() {
+	$(doccument).on('hover','.draggable_operator',function() {
 		$(this).css('cursor','pointer');
 		$('#show_lemma').text($(this).attr('title').replace(/@/g,' ')).fadeIn("slow");
 	}, 
@@ -942,7 +943,7 @@ $(document).ready(function()
 	$("input[type='radio']").click(function(){
 		var radioValue = $("input[name='word_form']:checked").val();
 		if(radioValue == 'comp')
-			$('#morph').val('compound');
+			$('#morph').val('IIC');
 		else{
 			$('#morph').val('');
 			$.ajax({
