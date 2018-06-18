@@ -104,7 +104,7 @@ def presentdataview(request) :
 		Inputlineform = forms.inputlineform(request.POST)
 		saveline = True
 		if Inputlineform.is_valid():
-			print('form is is_valid')
+			print('form is valid')
 			try:
 				Sentence = Sentences(
 										line = Inputlineform.cleaned_data['line'],
