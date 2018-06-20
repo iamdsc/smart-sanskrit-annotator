@@ -148,9 +148,6 @@
 
 	</div>
 </div>
-{%endblock%}
-
-{% block javascript %}
 
 <div class="container" id="whole">
 
@@ -198,7 +195,9 @@
 <div class="flowchart-example-container" id="example_1"></div>
 
 <div class="flowchart-example-container" id="example_5"></div>
+{%endblock%}
 
+{%block javascript%}
 
 <script type="text/javascript">
 //function is made available after the document is loaded to initialize values to variables
@@ -219,13 +218,62 @@ $(document).ready(function()
 	var data ={};
 	var date = new Date();
 	var id = 0;
-	var btn = $('#word-table > tbody > tr:first > td > input');
+	var btn = $('#word-table > tbody > tr:first > td > div > input[type="button"]');
+	
 	var c = true;
 	
 	init_time = date.getTime();
 	$('#whole').hide();
 	$('#recommend1').prop('checked',false);
 	$('#recommend2').prop('checked',false);
+
+	//for applying shadows to buttons in the given table consisting of possible segments
+	function btnHigh(){
+		if(c)
+			btn.toggleClass('high');
+		else
+			btn.toggleClass('high');
+		c = !c;
+	}
+
+	//recommendation using segmentation only which highlights the first row
+	$('#recommend1').change(function(){
+		nop = 0;
+		line = 20;
+		var c1 = this.checked;
+		if(c1)
+			id = setInterval(btnHigh,800);
+		else{
+			clearInterval(id);
+			btn.removeClass('high');
+		}
+		var conf = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
+		for(var key in conf){
+			if(conf[key].length == 0){
+				$('#'+key).click();
+			}
+		} 
+	});
+	
+	//recommendation using segmentation and display of the single morphs in the list of all segements
+	$('#recommend2').change(function(){
+		nop = 0;
+		line = 20;
+		var c2 = this.checked;
+		if(c2)
+			id = setInterval(btnHigh,800);
+		else{
+			clearInterval(id);
+			btn.removeClass('high');
+		}
+		var conf = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
+		for(var key in conf){
+			if(conf[key].length == 0){
+				$('#'+key).click();
+			}
+		} 
+	});
+
 	//function for autocompleting entries whenever there is a gray box encountered
 	//and manual entry of words need to occur
 
@@ -311,14 +359,7 @@ $(document).ready(function()
 		$('#'+id).siblings('p').remove(".tick");
  	});
 
-	//for applying shadows to buttons in the given table consisting of possible segments
-	function btnHigh(){
-		if(c)
-			btn.toggleClass('high');
-		else
-			btn.toggleClass('high');
-		c = !c;
-	}
+
 
 	$(document).on("click","#word_done",function() {
 		word_name= $("#word_name").val(); 
@@ -342,34 +383,10 @@ $(document).ready(function()
 		};
 		$("#"+cur_op_id).attr('title',word_morph);
 		if_done = 1;
-			$('#'+cur_op_id).click();		
+		$('#'+cur_op_id).click();		
 	});
 
-	//recommendation using segmentation only which highlights the first row
-	$('#recommend1').change(function(){
-		var nop = 0;
-		var line = 20;
-		var c1 = this.checked;
-		if(c1)
-			id = setInterval(btnHigh,800);
-		else{
-			clearInterval(id);
-			btn.removeClass('high');
-		}
-	});
-	
-	//recommendation using segmentation and display of the single morphs in the list of all segements
-	$('#recommend2').change(function(){
-		var nop = 0;
-		var line = 20;
-		var c2 = this.checked;
-		if(c2)
-			id = setInterval(btnHigh,800);
-		else{
-			clearInterval(id);
-			btn.removeClass('high');
-		}
-	});
+
 	
 	//once finish has been selected, the words selected along with data including timestamp, clickedsequence goes to the database
 	$('#finish').click( function(){
@@ -723,19 +740,19 @@ $(document).ready(function()
 			$('#'+eid).css("display","block");
 		},
 		function(){
-		var eid= ($(this)[0].id).replace('_div','');
-		$('#'+eid).css("display","none");
+			var eid= ($(this)[0].id).replace('_div','');
+			$('#'+eid).css("display","none");
 	});
 	
 	//to orient the draggable operators and allow input of re
 	$('.edit_div').on("mouseenter", ".draggable_operator", function(ev) {
-    // hover starts code here
-    $('#show_lemma').text($(ev.target).attr('title').replace(/@/g,' ')).fadeIn("slow");
+    	// hover starts code here
+    	$('#show_lemma').text($(ev.target).attr('title').replace(/@/g,' ')).fadeIn("slow");
 	});
 
-	$('edit_div').on("mouseleave", ".draggable_operator", function() {
-    // hover ends code here
-    $('#show_lemma').text(' ');
+	$('.edit_div').on("mouseleave", ".draggable_operator", function() {
+    	// hover ends code here
+    	$('#show_lemma').text(' ');
 	});
 	
 	$(document).on('click','.draggable_operator',function(){
@@ -760,8 +777,10 @@ $(document).ready(function()
 			$(this).attr('readonly','readonly');
 			$(this).css('width',($(this).val().length+1)*13 + 'px');
 		}
+
 		else if((pid.match(/-/g)||[]).length==2){
 			(clickSequence[(clickSequence.length)-1] != (pid+'S')) ?  clickSequence.push(pid+'S') :  clickSequence.push(pid+'U');
+			var eid= ($(this)[0].id).concat('-edit');
 			var flag = 0;
 			if ( if_finish == 0) {
 				flag = 1;
@@ -804,6 +823,7 @@ $(document).ready(function()
 				nop += 1;
 				$(this).parent().append("<p class = 'tick'>✓</p>");
 				$(this).attr("datastatus", "on");
+				$('#'+eid).css("display","none");
 			}
 			else if($(this).attr('datastatus') == 'on') {
 				$(this).siblings('p').remove(".tick");
@@ -812,6 +832,7 @@ $(document).ready(function()
 					$('#whole').hide();
 				$(this).attr("datastatus", "off");
 				nop -= 1;
+				$('#'+eid).css("display","inline-block");
 			}
 		}
 
@@ -823,7 +844,8 @@ $(document).ready(function()
 				$('#whole').show();
 			}
 			if(!savedSentence.includes(pid))
-				savedSentence.push(pid);
+				savedSentence.push(pid)
+
 			if($(this).attr('datastatus') == 'off') {
 				var $element = $(this);
 				var nbInputs = parseInt($element.data('nb-inputs'));
