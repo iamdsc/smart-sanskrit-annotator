@@ -153,8 +153,8 @@ td{
 
 /*highlighting the buttons*/
 .high{
-  /*display:inline-block;*/
-  border:2px solid yellow;
+  
+  border:2px solid #f4d641;
   border-radius:8px;
   box-shadow: 0px 3px 10px #f4d641;
   margin:0;

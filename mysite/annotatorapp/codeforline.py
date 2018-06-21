@@ -335,21 +335,32 @@ def contestofwordsdata(sent_id):
 	conflictslp1color = {}
 	for i in df.index:
 		conflictslp[str(df.loc[i].level)+'-'+str(df.loc[i].position)+'-'+str(df.loc[i].endposition)+'-'+df.loc[i].color_class] = []
+	print(conflictslp)
+	lev = []
+	pos = []
+	ep = []
 	for key in conflictslp.keys():
 		l =int(key.split('-')[0])
 		p =int(key.split('-')[1])
 		e = int(key.split('-')[2])
+		lev.append(l)
+		pos.append(p)
+		ep.append(e)
 
-		for i in df.index :
-			if(l==df.loc[i].level) and ((df.loc[i].position>p) and df.loc[i].position <e) :
+	print(lev)
+	print(pos)
+	print(ep)
+
+	for i in df.index :
+		if(l==df.loc[i].level) and ((df.loc[i].position>p) and df.loc[i].position <e) :
+			if not str(df.loc[i].level)+'-'+str(df.loc[i].position) in conflictslp[key] :
+				conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
+		if not (l == df.loc[i].level) :
+			if((df.loc[i].position>p-1) and df.loc[i].position <e-1) :
 				if not str(df.loc[i].level)+'-'+str(df.loc[i].position) in conflictslp[key] :
 					conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
-			if not (l == df.loc[i].level) :
-				if((df.loc[i].position>p-1) and df.loc[i].position <e-1) :
-					if not str(df.loc[i].level)+'-'+str(df.loc[i].position) in conflictslp[key] :
-						conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
-			if((df.loc[i].position<p) and df.loc[i].endposition>p+1):
-				conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
+		if((df.loc[i].position<p) and df.loc[i].endposition>p+1):
+			conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
 
 	for key in conflictslp:
 		conflictslp1[key.split('-')[0]+'-'+key.split('-')[1]] = conflictslp[key]
@@ -360,6 +371,82 @@ def contestofwordsdata(sent_id):
 				'wordfromchunk' : wordfromchunk,'chunkrange' :chunkrange,'colspanofchunk':colspanofchunk,'colspanofword':colspanofword,
 				'allwords':words,'positionrange':positionrange,'levelpos':levelpos,'levelwordpos':levelwordpos,'wordsinsentence':wordsinsentence,'chunkwordids':chunkwordids
 				}
-				
-	context['allvar'] = context	
+	print(df)
+	dirname = os.path.dirname(__file__)
+	path = os.path.join(dirname,'all_sandhi.txt')
+	s = pd.read_csv(path, encoding='utf-8', sep=',')
+	print(s)
+	df_2 = pd.DataFrame(data=s)
+	for i, j in zip(pos, ep):
+		m = i
+		n = j
+		word_df1 = df.loc[df['position'] == m and df['endposition'] == n].word
+		x = i + 1
+		y = j + 1
+		for x, y in zip(pos, ep):
+			if (x == m and x < n) and (y < n):
+				word_df2 = df.loc[df['position'] == x and df['endposition'] == y].word
+				d = 0
+				for letter1, letter2 in zip(word_df1, word_df2):
+					if letter1 == letter2:
+						d = d + 1
+					if d > 2:
+						print("conflict")
+					elif d == 2:
+						C2 = word_df1[-2:]
+						C1 = word_df2[-2:]
+						k = 0
+						for q in df_2.loc[df_2['c2'] == C2].c1:
+							if q == C1:
+								k = k + 1
+						if k == 0:
+							print("conflict")
+						else:
+							print("not conflict : sandhi")
+
+					else:
+						C1 = word_df1[-1:]
+						C2 = word_df2[-1:]
+						k = 0
+						for q in df_2.loc[df_2['c2'] == C2].c1:
+							if q == C1:
+								k = k + 1
+						if k == 0:
+							print("conflict")
+						else:
+							print("not conflict : sandhi")
+
+			elif (x > m and x < n) and (y == n):
+				word_df2 = df.loc[df['position'] == x and df['endposition'] == y].word
+				d = 0
+				for letter1, letter2 in zip(word_df1, word_df2):
+					if letter1 == letter2:
+						d = d + 1
+					if d > 2:
+						print("conflict")
+					elif d == 2:
+						C1 = word_df1[-2:]
+						C2 = word_df2[-2:]
+						k = 0
+						for q in df_2.loc[df_2['c1'] == C1].c2:
+							if q == C2:
+								k = k + 1
+						if k == 0:
+							print("conflict")
+						else:
+							print("not conflict : sandhi")
+
+					else:
+						C1 = word_df1[-1:]
+						C2 = word_df2[-1:]
+						k = 0
+						for q in df_2.loc[df_2['c1'] == C1].c2:
+							if q == C2:
+								k = k + 1
+						if k == 0:
+							print("conflict")
+						else:
+							print("not conflict : sandhi")
+
+	context['allvar'] = context
 	return context
