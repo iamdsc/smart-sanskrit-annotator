@@ -372,95 +372,100 @@ def contestofwordsdata(sent_id):
 				'wordfromchunk' : wordfromchunk,'chunkrange' :chunkrange,'colspanofchunk':colspanofchunk,'colspanofword':colspanofword,
 				'allwords':words,'positionrange':positionrange,'levelpos':levelpos,'levelwordpos':levelwordpos,'wordsinsentence':wordsinsentence,'chunkwordids':chunkwordids
 				}
-	# # print(df)
-	# dirname = os.path.dirname(__file__)
-	# path = os.path.join(dirname,'all_sandhi.txt')
-	# s = pd.read_csv(path, encoding='utf-8', sep=',')
-	# #print(s)
-	# df_2 = pd.DataFrame(data=s)
-	# # print(df_2)
-	# # print(df.columns)
-	# for i, j in zip(range(len(pos)),range(len(ep))):
-	# 	m = pos[i]
-	# 	n = ep[j]
-	# 	word_df1 = df[(df['position'] == m) & (df['endposition'] == n)]
-	# 	word_df1 = word_df1['word'][0]
-	# 	print(word_df1)
-	# 	for x, y in zip(range(len(pos)),range(len(ep))):
-	# 		if x!=i:
-	# 			a = pos[x]
-	# 			b = ep[y]
-	# 			print(a,b)
-	# 			if (a == m and b < n):
-	# 				word_df2 = df[(df['position'] == a) & (df['endposition'] == b)]
-	# 				word_df2 = word_df2['word'][0]
-	# 				print(word_df2)
-	# 				d = 0
-	# 				for letter1, letter2 in zip(word_df1, word_df2):
-	# 					if letter1 == letter2:
-	# 						d = d + 1
+	# print(df)
+	dirname = os.path.dirname(__file__)
+	path = os.path.join(dirname,'all_sandhi.txt')
+	s = pd.read_csv(path, encoding='utf-8', sep=',')
+	#print(s)
+	df_2 = pd.DataFrame(data=s)
+	# print(df_2)
+	# print(df.columns)
+	df_x = df.drop_duplicates('word')
+	print(df_x)
+	for i, j in zip(range(len(pos)),range(len(ep))):
+		m = pos[i]
+		n = ep[j]
+		# print(m,n)
+		word_df1 = df_x[(df_x['position'] == m) & (df_x['endposition'] == n)]
+		word_df1 = df_x.iloc[0]['word']
+		# print(word_df1)
+		# print(word_df1)
+		for x, y in zip(range(len(pos)),range(len(ep))):
+			if x!=i:
+				a = pos[x]
+				b = ep[y]
+				# print(a,b)
+				if (a == m and b < n):
+					print(a,b)
+					word_df2 = df_x[(df_x['position'] == a) & (df_x['endposition'] == b)]
+					word_df2 = df_x.iloc[0]['word']
+					# print(word_df2)
+					d = 0
+					for letter1, letter2 in zip(word_df1, word_df2):
+						if letter1 == letter2:
+							d = d + 1
 
-	# 				if d > 2:
-	# 					print("conflict")
-	# 				elif d == 2:
-	# 					C2 = word_df1[:2]
-	# 					C1 = word_df2[-2:]
-	# 					k = 0
-	# 					for q in df_2.loc[df_2['c2'] == C2].c1:
-	# 						if q == C1:
-	# 							k = k + 1
-	# 					if k == 0:
-	# 						print("conflict")
-	# 					else:
-	# 						print("not conflict : sandhi")
+					if d > 2:
+						print("conflict")
+					elif d == 2:
+						C2 = word_df1[:2]
+						C1 = word_df2[-2:]
+						k = 0
+						for q in df_2.loc[df_2['c2'] == C2].c1:
+							if q == C1:
+								k = k + 1
+						if k == 0:
+							print("conflict")
+						else:
+							print("not conflict : sandhi")
 
-	# 				else:
-	# 					C1 = word_df1[:1]
-	# 					C2 = word_df2[-1:]
-	# 					k = 0
-	# 					for q in df_2.loc[df_2['c2'] == C2].c1:
-	# 						if q == C1:
-	# 							k = k + 1
-	# 					if k == 0:
-	# 						print("conflict")
-	# 					else:
-	# 						print("not conflict : sandhi")
+					else:
+						C1 = word_df1[:1]
+						C2 = word_df2[-1:]
+						k = 0
+						for q in df_2.loc[df_2['c2'] == C2].c1:
+							if q == C1:
+								k = k + 1
+						if k == 0:
+							print("conflict")
+						else:
+							print("not conflict : sandhi")
 
-	# 			elif (a > m and b == n):
-	# 				word_df2 = df[(df['position'] == a) & (df['endposition'] == b)]
-	# 				word_df2 = word_df2['word'][0]
-	# 				print(word_df2)
+				elif (a > m and b == n):
+					word_df2 = df_x[(df_x['position'] == a) & (df_x['endposition'] == b)]
+					word_df2 = df_x.iloc[0]['word']
+					# print(word_df2)
 
-	# 				d = 0
-	# 				for letter1, letter2 in zip(word_df1, word_df2):
-	# 					if letter1 == letter2:
-	# 						d = d + 1
+					d = 0
+					for letter1, letter2 in zip(word_df1, word_df2):
+						if letter1 == letter2:
+							d = d + 1
 
-	# 				if d > 2:
-	# 					print("conflict")
-	# 				elif d == 2:
-	# 					C1 = word_df1[-2:]
-	# 					C2 = word_df2[:2]
-	# 					k = 0
-	# 					for q in df_2.loc[df_2['c1'] == C1].c2:
-	# 						if q == C2:
-	# 							k = k + 1
-	# 					if k == 0:
-	# 						print("conflict")
-	# 					else:
-	# 						print("not conflict : sandhi")
+					if d > 2:
+						print("conflict")
+					elif d == 2:
+						C1 = word_df1[-2:]
+						C2 = word_df2[:2]
+						k = 0
+						for q in df_2.loc[df_2['c1'] == C1].c2:
+							if q == C2:
+								k = k + 1
+						if k == 0:
+							print("conflict")
+						else:
+							print("not conflict : sandhi")
 
-	# 				else:
-	# 					C1 = word_df1[-1:]
-	# 					C2 = word_df2[:1]
-	# 					k = 0
-	# 					for q in df_2.loc[df_2['c1'] == C1].c2:
-	# 						if q == C2:
-	# 							k = k + 1
-	# 					if k == 0:
-	# 						print("conflict")
-	# 					else:
-	# 						print("not conflict : sandhi")
-
+					else:
+						C1 = word_df1[-1:]
+						C2 = word_df2[:1]
+						k = 0
+						for q in df_2.loc[df_2['c1'] == C1].c2:
+							if q == C2:
+								k = k + 1
+						if k == 0:
+							print("conflict")
+						else:
+							print("not conflict : sandhi")
+		# print('###')
 	context['allvar'] = context
 	return context

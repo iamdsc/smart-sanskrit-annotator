@@ -195,7 +195,7 @@ td{
   padding: 10px;
   cursor: pointer;
   background-color: #fff;
-  border-bottom: 1px solid #d4d4d4;
+  /*border-bottom: 1px solid #d4d4d4;*/
 }
 .opt-items div:hover {
   /*when hovering an item:*/
@@ -218,7 +218,7 @@ td{
   height:300px;
   overflow-y:auto;
   position: absolute;
-  border: 1px solid #d4d4d4;
+  /*border: 1px solid #d4d4d4;*/
   border-bottom: none;
   border-top: none;
   z-index: 99;
