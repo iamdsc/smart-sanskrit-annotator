@@ -302,6 +302,92 @@ $(document).ready(function()
 		}
 	} 
 
+	function location(){
+		var ctl = document.getElementById('word_name');
+		var startPos = ctl.selectionStart;
+		return startPos;
+	}	
+
+	var options ={ a:"aā", i:"iī", l:"lḷḹ", m:"mṃ", n:"nṅñṇ", r:"rṛṝ", s:"sṣś", t:"tṭ", u:"uū" };
+	var cur_opt = "";
+	function disp_opt(inp) {
+		//inputs are the text field element and an array of possible autocompleted values:
+		var currentFocus;
+		//execute a function when someone writes in the text field:
+		inp.addEventListener("input", function(e) {
+			var a, b, i, val = this.value;
+			closeAllLists(); //close any already open lists of autocompleted values
+			if (!val) { return false;}
+			currentFocus = -1;
+			a = document.createElement("DIV");
+			a.setAttribute("id", this.id + "autocomplete-list");
+			a.setAttribute("class", "autocomplete-items");
+			this.parentNode.appendChild(a); //append the DIV element as a child of the autocomplete container:
+
+			cur_loc = location();
+			cur_opt = options[ val[cur_loc-1] ];
+			if ( cur_opt != "") 
+				for( i=0; i<cur_opt.length; i++) {
+					b = document.createElement("DIV");
+					var ch=cur_opt[i];
+					b.innerHTML = ch;
+					( function() {
+						var c=ch;
+						b.addEventListener("click", function(e) {
+							inp.value = val.slice(0,cur_loc-1)+c+val.slice(cur_loc);
+							closeAllLists();
+						});
+					})();
+					a.appendChild(b);
+				}
+		});
+		//execute a function presses a key on the keyboard:
+		inp.addEventListener("keydown", function(e) {
+			var x = document.getElementById(this.id + "autocomplete-list");
+			if (x)
+				{x = x.getElementsByTagName("div")};
+			if (e.keyCode == 40){  //If the arrow DOWN key is pressed, increase the currentFocus variable:
+				currentFocus++;
+				addActive(x); //and make the current item more visible:
+			} 
+			else if (e.keyCode == 38) { //up
+			currentFocus--;
+			addActive(x);
+			} 
+			else if (e.keyCode == 13) { //enter key
+			e.preventDefault();
+			if (currentFocus > -1) 
+				if (x) 
+					x[currentFocus].click();
+			}
+		});
+
+		function addActive(x) { //function to classify an item as "active"
+			if (!x) return false;
+			removeActive(x);
+			if (currentFocus >= x.length)
+				currentFocus = 0;
+			if (currentFocus < 0)
+				currentFocus = (x.length - 1);
+			x[currentFocus].classList.add("autocomplete-active");
+		}
+
+		function removeActive(x) { //function to remove the "active" class from all autocomplete items:
+			for (var i = 0; i < x.length; i++) 
+				x[i].classList.remove("autocomplete-active");
+		}
+
+		function closeAllLists(elmnt) { //close all autocomplete lists in the document, except the one passed as an argument:
+			var x = document.getElementsByClassName("autocomplete-items");
+			for (var i = 0; i < x.length; i++) {
+				if (elmnt != x[i] && elmnt != inp) 
+					x[i].parentNode.removeChild(x[i]);
+			}
+		}
+	} 
+
+	disp_opt(word_name);
+
 	//for editing each of those words segemented in the table
 	$(document).on('click','.edit',function(){
 		var id=$(this).data('id');
@@ -719,23 +805,23 @@ $(document).ready(function()
 	// to perform edit morph operation
 	$('.edit_div').hover(
 		function(){
-			var eid= ($(this)[0].id).replace('_div','');
-			$('#'+eid).css("display","block");
+			var eid= ($(this)[0].id).replace('-edit_div','');
+			if ( $('#'+eid+'-tick').length == 0 && (eid.match(/-/g)||[]).length!=2 )
+				$('#'+eid+'-edit').css("display","block");
 		},
 		function(){
-		var eid= ($(this)[0].id).replace('_div','');
-		$('#'+eid).css("display","none");
+			var eid= ($(this)[0].id).replace('-edit_div','');
+			if ( $('#'+eid+'-tick').length == 0 && (eid.match(/-/g)||[]).length!=2 )
+				$('#'+eid+'-edit').css("display","none");
 	});
 	
 	//to orient the draggable operators and allow input of re
 	$('.edit_div').on("mouseenter", ".draggable_operator", function(ev) {
-    // hover starts code here
-    $('#show_lemma').text($(ev.target).attr('title').replace(/@/g,' ')).fadeIn("slow");
+		$('#show_lemma').text($(ev.target).attr('title').replace(/@/g,' ')).fadeIn("slow");
 	});
 
-	$('edit_div').on("mouseleave", ".draggable_operator", function() {
-    // hover ends code here
-    $('#show_lemma').text(' ');
+	$('.edit_div').on("mouseleave", ".draggable_operator", function() {
+		$('#show_lemma').text(' ');
 	});
 	
 	$(document).on('click','.draggable_operator',function(){
@@ -802,7 +888,9 @@ $(document).ready(function()
 				
 				$flowchart.flowchart('createOperator', pid, data);
 				nop += 1;
-				$(this).parent().append("<p class = 'tick'>✓</p>");
+				var e= $("<p class='tick'>✓</p>");
+				$(this).parent().append(e);
+				e.attr('id',pid+'-tick');
 				$(this).attr("datastatus", "on");
 			}
 			else if($(this).attr('datastatus') == 'on') {
@@ -811,6 +899,7 @@ $(document).ready(function()
 				if (if_finish == 0)
 					$('#whole').hide();
 				$(this).attr("datastatus", "off");
+				('#'+pid+'-edit_div').attr('class','edit_div');
 				nop -= 1;
 			}
 		}
@@ -885,7 +974,10 @@ $(document).ready(function()
 				
 				$flowchart.flowchart('createOperator', pid, data);
 				nop += 1;
-				$(this).parent().append("<p class = 'tick'>✓</p>");
+				var e = $(" <p class='tick'>✓</p>");
+				$(this).parent().append(e);
+				e.attr('id',pid+'-tick');
+				$('#'+pid+'-edit').css('display','none');
 				for (i = 0; i < cids[pid].length; i++) {
 					$('#'+cids[pid][i]).fadeOut();
 					$('#'+cids[pid][i]).parent().attr('class','w_back');
