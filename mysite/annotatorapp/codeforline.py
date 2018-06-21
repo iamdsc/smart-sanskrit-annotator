@@ -347,16 +347,20 @@ def contestofwordsdata(sent_id):
 		pos.append(p)
 		ep.append(e)
 
-		for i in df.index :
-			if(l==df.loc[i].level) and ((df.loc[i].position>p) and df.loc[i].position <e) :
+	print(lev)
+	print(pos)
+	print(ep)
+
+	for i in df.index :
+		if(l==df.loc[i].level) and ((df.loc[i].position>p) and df.loc[i].position <e) :
+			if not str(df.loc[i].level)+'-'+str(df.loc[i].position) in conflictslp[key] :
+				conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
+		if not (l == df.loc[i].level) :
+			if((df.loc[i].position>p-1) and df.loc[i].position <e-1) :
 				if not str(df.loc[i].level)+'-'+str(df.loc[i].position) in conflictslp[key] :
 					conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
-			if not (l == df.loc[i].level) :
-				if((df.loc[i].position>p-1) and df.loc[i].position <e-1) :
-					if not str(df.loc[i].level)+'-'+str(df.loc[i].position) in conflictslp[key] :
-						conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
-			if((df.loc[i].position<p) and df.loc[i].endposition>p+1):
-				conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
+		if((df.loc[i].position<p) and df.loc[i].endposition>p+1):
+			conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
 
 	for key in conflictslp:
 		conflictslp1[key.split('-')[0]+'-'+key.split('-')[1]] = conflictslp[key]
@@ -368,10 +372,12 @@ def contestofwordsdata(sent_id):
 				'allwords':words,'positionrange':positionrange,'levelpos':levelpos,'levelwordpos':levelwordpos,'wordsinsentence':wordsinsentence,'chunkwordids':chunkwordids
 				}
 	print(df)
-	"""
-	s = pd.read_csv("all_sandhi.txt", encoding='utf-8', sep=',')
+	dirname = os.path.dirname(__file__)
+	path = os.path.join(dirname,'all_sandhi.txt')
+	s = pd.read_csv(path, encoding='utf-8', sep=',')
+	print(s)
 	df_2 = pd.DataFrame(data=s)
-	for i, j in zip(p, e):
+	for i, j in zip(pos, ep):
 		m = i
 		n = j
 		word_df1 = df.loc[df['position'] == m and df['endposition'] == n].word
@@ -442,6 +448,5 @@ def contestofwordsdata(sent_id):
 						else:
 							print("not conflict : sandhi")
 
-	"""
 	context['allvar'] = context
 	return context
