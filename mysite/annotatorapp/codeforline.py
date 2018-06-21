@@ -337,16 +337,16 @@ def contestofwordsdata(sent_id):
 	for i in df.index:
 		conflictslp[str(df.loc[i].level)+'-'+str(df.loc[i].position)+'-'+str(df.loc[i].endposition)+'-'+df.loc[i].color_class] = []
 	# print(conflictslp)
-	lev = []
-	pos = []
-	ep = []
+	#lev = []
+	#pos = []
+	#ep = []
 	for key in conflictslp.keys():
 		l =int(key.split('-')[0])
 		p =int(key.split('-')[1])
 		e = int(key.split('-')[2])
-		lev.append(l)
-		pos.append(p)
-		ep.append(e)
+		#lev.append(l)
+		#pos.append(p)
+		#ep.append(e)
 
 	#print(lev)
 	#print(pos)
@@ -372,6 +372,58 @@ def contestofwordsdata(sent_id):
 				'wordfromchunk' : wordfromchunk,'chunkrange' :chunkrange,'colspanofchunk':colspanofchunk,'colspanofword':colspanofword,
 				'allwords':words,'positionrange':positionrange,'levelpos':levelpos,'levelwordpos':levelwordpos,'wordsinsentence':wordsinsentence,'chunkwordids':chunkwordids
 				}
+
+	dirname = os.path.dirname(__file__)
+	path = os.path.join(dirname, 'all_sandhi.txt')
+	s = pd.read_csv(path, encoding='utf-8', sep=',')
+	# print(s)
+	df_2 = pd.DataFrame(data=s)
+	df_x = df.drop_duplicates('word')
+	for key, value in conflictslp.items():
+		l = int(key.split('-')[0])
+		p = int(key.split('-')[1])
+		word_df1 = df_x[(df_x['level'] == l) & (df_x['position'] == p)]
+		word_df1 = df_x.iloc[0]['word']
+		if not value:
+			print("no conflicts")
+		else:
+			for v in value:
+				lv = int(v.split('-')[0])
+				pv = int(v.split('-')[1])
+				word_df2 = df_x[(df_x['level'] == lv) & (df_x['position'] == pv)]
+				word_df2 = df_x.iloc[0]['word']
+				# print(word_df2)
+				for letter1, letter2 in zip(word_df1, word_df2):
+					if letter1 == letter2:
+						d = d + 1
+
+				if d > 2:
+					print("conflict")
+				elif d == 2:
+					C2 = word_df1[:2]
+					C1 = word_df2[-2:]
+					k = 0
+					for q in df_2.loc[df_2['c2'] == C2].c1:
+						if q == C1:
+							k = k + 1
+					if k == 0:
+						print("conflict")
+					else:
+						print("not conflict : sandhi")
+
+				else:
+					C1 = word_df1[:1]
+					C2 = word_df2[-1:]
+					k = 0
+					for q in df_2.loc[df_2['c2'] == C2].c1:
+						if q == C1:
+							k = k + 1
+					if k == 0:
+						print("conflict")
+					else:
+						print("not conflict : sandhi")
+
+	'''
 	# print(df)
 	dirname = os.path.dirname(__file__)
 	path = os.path.join(dirname,'all_sandhi.txt')
@@ -406,7 +458,10 @@ def contestofwordsdata(sent_id):
 							d = d + 1
 
 					if d > 2:
-						print("conflict")
+						print(d)
+						print("0 conflict")
+						print(word_df1)
+						print(word_df2)
 					elif d == 2:
 						C2 = word_df1[:2]
 						C1 = word_df2[-2:]
@@ -415,9 +470,9 @@ def contestofwordsdata(sent_id):
 							if q == C1:
 								k = k + 1
 						if k == 0:
-							print("conflict")
+							print("1 conflict")
 						else:
-							print("not conflict : sandhi")
+							print("1 not conflict : sandhi")
 
 					else:
 						C1 = word_df1[:1]
@@ -427,9 +482,9 @@ def contestofwordsdata(sent_id):
 							if q == C1:
 								k = k + 1
 						if k == 0:
-							print("conflict")
+							print("2 conflict")
 						else:
-							print("not conflict : sandhi")
+							print("2 not conflict : sandhi")
 
 				elif (a > m and b == n):
 					word_df2 = df_x[(df_x['position'] == a) & (df_x['endposition'] == b)]
@@ -442,7 +497,8 @@ def contestofwordsdata(sent_id):
 							d = d + 1
 
 					if d > 2:
-						print("conflict")
+						print("3 conflict")
+						print(word_df2)
 					elif d == 2:
 						C1 = word_df1[-2:]
 						C2 = word_df2[:2]
@@ -451,9 +507,9 @@ def contestofwordsdata(sent_id):
 							if q == C2:
 								k = k + 1
 						if k == 0:
-							print("conflict")
+							print("4 conflict")
 						else:
-							print("not conflict : sandhi")
+							print("4 not conflict : sandhi")
 
 					else:
 						C1 = word_df1[-1:]
@@ -463,9 +519,10 @@ def contestofwordsdata(sent_id):
 							if q == C2:
 								k = k + 1
 						if k == 0:
-							print("conflict")
+							print("5 conflict")
 						else:
-							print("not conflict : sandhi")
+							print("5 not conflict : sandhi")
 		# print('###')
+	'''
 	context['allvar'] = context
 	return context
