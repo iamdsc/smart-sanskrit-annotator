@@ -153,7 +153,7 @@ def savedatafromsite(df,sent):
 
 def worddataofsentence(df,sent) :
 	words = []
-	
+	##related data for WordOptions model to handle values
 	for i in range(df.shape[0]):
 		row = df.iloc[i]
 		word_option = WordOptions(sentence = sent,
@@ -177,6 +177,7 @@ def checksent(sent) :
 	return Sentences.objects.filter(line=sent.line,linetype=sent.linetype).exists()
 
 def conflicts(df,sent):
+	# pass is just a placeholder for functionality to be added later.
 	pass
 
 def getsentwordtree(sent_id) :
@@ -347,9 +348,9 @@ def contestofwordsdata(sent_id):
 		pos.append(p)
 		ep.append(e)
 
-	print(lev)
-	print(pos)
-	print(ep)
+	#print(lev)
+	#print(pos)
+	#print(ep)
 
 	for i in df.index :
 		if(l==df.loc[i].level) and ((df.loc[i].position>p) and df.loc[i].position <e) :
@@ -375,7 +376,7 @@ def contestofwordsdata(sent_id):
 	dirname = os.path.dirname(__file__)
 	path = os.path.join(dirname,'all_sandhi.txt')
 	s = pd.read_csv(path, encoding='utf-8', sep=',')
-	print(s)
+	#print(s)
 	df_2 = pd.DataFrame(data=s)
 	for i, j in zip(pos, ep):
 		m = i
@@ -384,69 +385,71 @@ def contestofwordsdata(sent_id):
 		x = i + 1
 		y = j + 1
 		for x, y in zip(pos, ep):
-			if (x == m and x < n) and (y < n):
+			if (x == m and x < n) and (y > m and y < n):
 				word_df2 = df.loc[df['position'] == x and df['endposition'] == y].word
 				d = 0
 				for letter1, letter2 in zip(word_df1, word_df2):
 					if letter1 == letter2:
 						d = d + 1
-					if d > 2:
+
+				if d > 2:
+					print("conflict")
+				elif d == 2:
+					C2 = word_df1[:2]
+					C1 = word_df2[-2:]
+					k = 0
+					for q in df_2.loc[df_2['c2'] == C2].c1:
+						if q == C1:
+							k = k + 1
+					if k == 0:
 						print("conflict")
-					elif d == 2:
-						C2 = word_df1[-2:]
-						C1 = word_df2[-2:]
-						k = 0
-						for q in df_2.loc[df_2['c2'] == C2].c1:
-							if q == C1:
-								k = k + 1
-						if k == 0:
-							print("conflict")
-						else:
-							print("not conflict : sandhi")
-
 					else:
-						C1 = word_df1[-1:]
-						C2 = word_df2[-1:]
-						k = 0
-						for q in df_2.loc[df_2['c2'] == C2].c1:
-							if q == C1:
-								k = k + 1
-						if k == 0:
-							print("conflict")
-						else:
-							print("not conflict : sandhi")
+						print("not conflict : sandhi")
 
-			elif (x > m and x < n) and (y == n):
+				else:
+					C1 = word_df1[:1]
+					C2 = word_df2[-1:]
+					k = 0
+					for q in df_2.loc[df_2['c2'] == C2].c1:
+						if q == C1:
+							k = k + 1
+					if k == 0:
+						print("conflict")
+					else:
+						print("not conflict : sandhi")
+
+			elif (x > m and x < n) and (y > m and y == n):
 				word_df2 = df.loc[df['position'] == x and df['endposition'] == y].word
 				d = 0
 				for letter1, letter2 in zip(word_df1, word_df2):
 					if letter1 == letter2:
 						d = d + 1
-					if d > 2:
-						print("conflict")
-					elif d == 2:
-						C1 = word_df1[-2:]
-						C2 = word_df2[-2:]
-						k = 0
-						for q in df_2.loc[df_2['c1'] == C1].c2:
-							if q == C2:
-								k = k + 1
-						if k == 0:
-							print("conflict")
-						else:
-							print("not conflict : sandhi")
 
+				if d > 2:
+					print("conflict")
+				elif d == 2:
+					C1 = word_df1[-2:]
+					C2 = word_df2[:2]
+					k = 0
+					for q in df_2.loc[df_2['c1'] == C1].c2:
+						if q == C2:
+							k = k + 1
+					if k == 0:
+						print("conflict")
 					else:
-						C1 = word_df1[-1:]
-						C2 = word_df2[-1:]
-						k = 0
-						for q in df_2.loc[df_2['c1'] == C1].c2:
-							if q == C2:
-								k = k + 1
-						if k == 0:
-							print("conflict")
-						else:
-							print("not conflict : sandhi")
+						print("not conflict : sandhi")
+
+				else:
+					C1 = word_df1[-1:]
+					C2 = word_df2[:1]
+					k = 0
+					for q in df_2.loc[df_2['c1'] == C1].c2:
+						if q == C2:
+							k = k + 1
+					if k == 0:
+						print("conflict")
+					else:
+						print("not conflict : sandhi")
 
 	context['allvar'] = context
 	return context
