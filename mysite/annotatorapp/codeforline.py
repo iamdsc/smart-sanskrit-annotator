@@ -383,7 +383,7 @@ def contestofwordsdata(sent_id):
 		word_df1 = df.loc[df['position'] == m and df['endposition'] == n].word
 		x = i + 1
 		y = j + 1
-		for x, y in zip(p, e):
+		for x, y in zip(pos, ep):
 			if (x == m and x < n) and (y < n):
 				word_df2 = df.loc[df['position'] == x and df['endposition'] == y].word
 				d = 0
