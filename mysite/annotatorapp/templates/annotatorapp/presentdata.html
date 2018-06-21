@@ -129,14 +129,15 @@
 				</div>
 			<div class="modal-body">
 				<form autocomplete="off">
-					Word : <input type="text" id="word_name"> <br><br>
+					 <div class="opt" style="width:300px">
+					Word :<input type="text" id="word_name"> </div><br><br>
 					Form :
 					Noun <input type="radio" name="word_form" value="noun">
 					Verb <input type="radio" name="word_form" value="verb">
 					Indeclinables <input type="radio" name="word_form" value="ind">
 					Compound Component<input type="radio" name="word_form" value="comp">
 					<br><br>
-					<div class="autocompete" style="width:300px">Morph :
+					<div class="autocomplete" style="width:300px">Morph :
 						<input id="morph" name="word_morph" type="text">
 					</div>
 					<div class="modal-footer">
@@ -368,8 +369,8 @@ $(document).ready(function()
 			if (!val) { return false;}
 			currentFocus = -1;
 			a = document.createElement("DIV");
-			a.setAttribute("id", this.id + "autocomplete-list");
-			a.setAttribute("class", "autocomplete-items");
+			a.setAttribute("id", this.id + "opt-list");
+			a.setAttribute("class", "opt-items");
 			this.parentNode.appendChild(a); //append the DIV element as a child of the autocomplete container:
 
 			cur_loc = location();
@@ -391,7 +392,7 @@ $(document).ready(function()
 		});
 		//execute a function presses a key on the keyboard:
 		inp.addEventListener("keydown", function(e) {
-			var x = document.getElementById(this.id + "autocomplete-list");
+			var x = document.getElementById(this.id + "opt-list");
 			if (x)
 				{x = x.getElementsByTagName("div")};
 			if (e.keyCode == 40){  //If the arrow DOWN key is pressed, increase the currentFocus variable:
@@ -417,16 +418,16 @@ $(document).ready(function()
 				currentFocus = 0;
 			if (currentFocus < 0)
 				currentFocus = (x.length - 1);
-			x[currentFocus].classList.add("autocomplete-active");
+			x[currentFocus].classList.add("opt-active");
 		}
 
 		function removeActive(x) { //function to remove the "active" class from all autocomplete items:
 			for (var i = 0; i < x.length; i++) 
-				x[i].classList.remove("autocomplete-active");
+				x[i].classList.remove("opt-active");
 		}
 
 		function closeAllLists(elmnt) { //close all autocomplete lists in the document, except the one passed as an argument:
-			var x = document.getElementsByClassName("autocomplete-items");
+			var x = document.getElementsByClassName("opt-items");
 			for (var i = 0; i < x.length; i++) {
 				if (elmnt != x[i] && elmnt != inp) 
 					x[i].parentNode.removeChild(x[i]);
