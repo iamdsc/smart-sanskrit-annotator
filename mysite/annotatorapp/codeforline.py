@@ -370,43 +370,28 @@ def contestofwordsdata(sent_id):
 	dirname = os.path.dirname(__file__)
 	path = os.path.join(dirname, 'all_sandhi.txt')
 	s = pd.read_csv(path, encoding='utf-8', sep=',')
-	# print(s)
 	df_2 = pd.DataFrame(data=s)
-	# df_x = df.drop_duplicates('word')
-	df_x = df
-	# print(df_x)
-	# print(conflictslp1)
-	# print(conflictslp1.items())
 	keys=conflictslp1.keys()
-	values = conflictslp1.values()
-	# print(keys)
-	# print(values)
-	for key, value in zip(keys,values):
-		# print(key)
-		# print(value)
+	for key in keys:
+		value = conflictslp1[key]
 		l = int(key.split('-')[0])
 		p = int(key.split('-')[1])
-		print(l,p)
-		word_df1 = df_x[(df_x['level'] == l) & (df_x['position'] == p)]
-		word_df1 = df_x.iloc[0]['word']
+		word_df1 = df[(df['level'] == l) & (df['position'] == p)]
+		word_df1 = word_df1['word'].values[0]
 		print(word_df1)
-		# if not word_df1.empty:
 		if len(value)==0:
 			print("no conflicts")
 		elif len(value)!=0:
 			for v in value:
 				lv = int(v.split('-')[0])
 				pv = int(v.split('-')[1])
-				print(lv,pv)
-				word_df2 = df_x[(df_x['level'] == lv) & (df_x['position'] == pv)]
-				word_df2 = df_x.iloc[0]['word']
+				word_df2 = df[(df['level'] == lv) & (df['position'] == pv)]
+				word_df2 = word_df2['word'].values[0]
 				print(word_df2)
-				# if not word_df2.empty:
 				d = 0
 				for letter1, letter2 in zip(word_df1, word_df2):
 					if letter1 == letter2:
 						d = d + 1
-
 				if d > 2:
 					print("conflict")
 				elif d == 2:
@@ -420,7 +405,6 @@ def contestofwordsdata(sent_id):
 						print("conflict")
 					else:
 						print("not conflict : sandhi")
-
 				else:
 					C1 = word_df1[:1]
 					C2 = word_df2[-1:]
