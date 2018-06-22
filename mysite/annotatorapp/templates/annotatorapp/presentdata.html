@@ -357,25 +357,28 @@ $(document).ready(function()
 		return startPos;
 	}	
 
-	var options ={ a:"aā", i:"iī", l:"lḷḹ", m:"mṃ", n:"nṅñṇ", r:"rṛṝ", s:"sṣś", t:"tṭ", u:"uū" };
-	var cur_opt = "";
 	function disp_opt(inp) {
-		//inputs are the text field element and an array of possible autocompleted values:
-		var currentFocus;
-		//execute a function when someone writes in the text field:
-		inp.addEventListener("input", function(e) {
-			var a, b, i, val = this.value;
-			closeAllLists(); //close any already open lists of autocompleted values
-			if (!val) { return false;}
-			currentFocus = -1;
-			a = document.createElement("DIV");
-			a.setAttribute("id", this.id + "opt-list");
-			a.setAttribute("class", "opt-items");
-			this.parentNode.appendChild(a); //append the DIV element as a child of the autocomplete container:
+		var options ={ 65:"aā",72:"hḥ", 73:"iī", 76:"lḷḹ", 77:"mṃ", 78:"nṅñṇ", 82:"rṛṝ", 83:"sṣś", 84:"tṭ", 85:"uū" };
+		var cur_opt = "";
+		
+		//execute a function presses a key on the keyboard:
+		inp.addEventListener("keydown", function(e) {
+			var x = document.getElementById(this.id + "opt-list");
+			var val = document.getElementById(inp.id).value;
+			if (x)
+				{x = x.getElementsByTagName("div")};
+			
+			if( options[e.keyCode] ){
+				cur_opt = options[e.keyCode];
+				var a, b, i;
+				closeAllLists();	
+				currentFocus = -1;
+				cur_loc = location();
+				a = document.createElement("DIV");
+				a.setAttribute("id", this.id + "opt-list");
+				a.setAttribute("class", "opt-items");
+				inp.parentNode.appendChild(a); 
 
-			cur_loc = location();
-			cur_opt = options[ val[cur_loc-1] ];
-			if ( cur_opt != "") 
 				for( i=0; i<cur_opt.length; i++) {
 					b = document.createElement("DIV");
 					var ch=cur_opt[i];
@@ -383,18 +386,15 @@ $(document).ready(function()
 					( function() {
 						var c=ch;
 						b.addEventListener("click", function(e) {
-							inp.value = val.slice(0,cur_loc-1)+c+val.slice(cur_loc);
+							inp.value = val.slice(0,cur_loc)+c+val.slice(cur_loc);
 							closeAllLists();
 						});
 					})();
 					a.appendChild(b);
 				}
-		});
-		//execute a function presses a key on the keyboard:
-		inp.addEventListener("keydown", function(e) {
-			var x = document.getElementById(this.id + "opt-list");
-			if (x)
-				{x = x.getElementsByTagName("div")};
+			
+			}
+
 			if (e.keyCode == 40){  //If the arrow DOWN key is pressed, increase the currentFocus variable:
 				currentFocus++;
 				addActive(x); //and make the current item more visible:
@@ -911,18 +911,20 @@ $(document).ready(function()
 				var e= $("<p class='tick'>✓</p>");
 				$(this).parent().append(e);
 				e.attr('id',pid+'-tick');
-				$(this).attr("datastatus", "on");
 				$('#'+eid).css("display","none");
+				$(this).attr("datastatus", "on");
+				
 			}
 			else if($(this).attr('datastatus') == 'on') {
 				$(this).siblings('p').remove(".tick");
 				$flowchart.flowchart('deleteOperator', pid);
 				if (if_finish == 0)
 					$('#whole').hide();
+				$('#'+eid).css("display","inline");
 				$(this).attr("datastatus", "off");
 				('#'+pid+'-edit_div').attr('class','edit_div');
 				nop -= 1;
-				$('#'+eid).css("display","inline-block");
+				
 			}
 		}
 
