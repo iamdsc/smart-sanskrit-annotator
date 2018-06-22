@@ -379,11 +379,16 @@ def contestofwordsdata(sent_id):
 	# print(s)
 	df_2 = pd.DataFrame(data=s)
 	df_x = df.drop_duplicates('word')
-	for key, value in conflictslp.items():
+	print("*************")
+	print(conflictslp1)
+	print("*************")
+	for key, value in conflictslp1.items():
 		l = int(key.split('-')[0])
 		p = int(key.split('-')[1])
 		word_df1 = df_x[(df_x['level'] == l) & (df_x['position'] == p)]
 		word_df1 = df_x.iloc[0]['word']
+		print(word_df1)
+		print("------------------")
 		if not value:
 			print("no conflicts")
 		else:
@@ -392,7 +397,9 @@ def contestofwordsdata(sent_id):
 				pv = int(v.split('-')[1])
 				word_df2 = df_x[(df_x['level'] == lv) & (df_x['position'] == pv)]
 				word_df2 = df_x.iloc[0]['word']
-				# print(word_df2)
+				print(word_df2)
+				print("#########")
+				'''
 				for letter1, letter2 in zip(word_df1, word_df2):
 					if letter1 == letter2:
 						d = d + 1
@@ -422,7 +429,7 @@ def contestofwordsdata(sent_id):
 						print("conflict")
 					else:
 						print("not conflict : sandhi")
-
+		        '''
 	'''
 	# print(df)
 	dirname = os.path.dirname(__file__)
