@@ -7,7 +7,7 @@ import time
 import re
 import os
 from . import models
-from .models import Sentences,WordOptions,Wordsinsentence
+from .models import Sentences, WordOptions, Wordsinsentence
 import json
 
 
@@ -435,8 +435,3 @@ def contestofwordsdata(sent_id):
 
 	context['allvar'] = context
 	return context
-
-
-
-
-
