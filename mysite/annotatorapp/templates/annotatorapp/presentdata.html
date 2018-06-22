@@ -911,18 +911,20 @@ $(document).ready(function()
 				var e= $("<p class='tick'>✓</p>");
 				$(this).parent().append(e);
 				e.attr('id',pid+'-tick');
-				$(this).attr("datastatus", "on");
 				$('#'+eid).css("display","none");
+				$(this).attr("datastatus", "on");
+				
 			}
 			else if($(this).attr('datastatus') == 'on') {
 				$(this).siblings('p').remove(".tick");
 				$flowchart.flowchart('deleteOperator', pid);
 				if (if_finish == 0)
 					$('#whole').hide();
+				$('#'+eid).css("display","inline");
 				$(this).attr("datastatus", "off");
 				('#'+pid+'-edit_div').attr('class','edit_div');
 				nop -= 1;
-				$('#'+eid).css("display","inline-block");
+				
 			}
 		}
 
