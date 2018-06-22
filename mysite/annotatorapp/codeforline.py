@@ -221,6 +221,9 @@ def contestofwordsdata(sent_id):
 	for dw in wordsinsentence :
 		chunkwordids[dw.chunkno]=dw.id
 
+	
+
+
 	df = pd.DataFrame(columns = ['wordid','level','color_class','position','chunk_no','lemma','pre_verb','morph','colspan','wordlength','aux_info','word','subminp','maxp','endposition'])
 
 	i = 0 
@@ -285,7 +288,8 @@ def contestofwordsdata(sent_id):
 	dragdata = {}
 	links = {}
 	ic = 0
-	
+
+	# for dw in wordsinsentence :
 	for dw in wordsdata :
 		if dw.isSelected :
 			lemma = dw.lemma
@@ -314,6 +318,7 @@ def contestofwordsdata(sent_id):
 			        }
 			      } 
 			    }
+			# print('here')
 			dragdata['word_'+str(dw.id)] = data1
 			
 			if not dw.parent == -1 :
@@ -336,32 +341,22 @@ def contestofwordsdata(sent_id):
 	conflictslp1color = {}
 	for i in df.index:
 		conflictslp[str(df.loc[i].level)+'-'+str(df.loc[i].position)+'-'+str(df.loc[i].endposition)+'-'+df.loc[i].color_class] = []
-	# print(conflictslp)
-	#lev = []
-	#pos = []
-	#ep = []
 	for key in conflictslp.keys():
 		l =int(key.split('-')[0])
 		p =int(key.split('-')[1])
 		e = int(key.split('-')[2])
-		#lev.append(l)
-		#pos.append(p)
-		#ep.append(e)
 
-	#print(lev)
-	#print(pos)
-	#print(ep)
-
-	for i in df.index :
-		if(l==df.loc[i].level) and ((df.loc[i].position>p) and df.loc[i].position <e) :
-			if not str(df.loc[i].level)+'-'+str(df.loc[i].position) in conflictslp[key] :
-				conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
-		if not (l == df.loc[i].level) :
-			if((df.loc[i].position>p-1) and df.loc[i].position <e-1) :
+		for i in df.index :
+			if(l==df.loc[i].level) and ((df.loc[i].position>p) and df.loc[i].position <e) :
+				# print(l,p,e,df.loc[i].level,df.loc[i].position)
 				if not str(df.loc[i].level)+'-'+str(df.loc[i].position) in conflictslp[key] :
 					conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
-		if((df.loc[i].position<p) and df.loc[i].endposition>p+1):
-			conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
+			if not (l == df.loc[i].level) :
+				if((df.loc[i].position>p-1) and df.loc[i].position <e-1) :
+					if not str(df.loc[i].level)+'-'+str(df.loc[i].position) in conflictslp[key] :
+						conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
+			if((df.loc[i].position<p) and df.loc[i].endposition>p+1):
+				conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
 
 	for key in conflictslp:
 		conflictslp1[key.split('-')[0]+'-'+key.split('-')[1]] = conflictslp[key]
@@ -373,156 +368,325 @@ def contestofwordsdata(sent_id):
 				'allwords':words,'positionrange':positionrange,'levelpos':levelpos,'levelwordpos':levelwordpos,'wordsinsentence':wordsinsentence,'chunkwordids':chunkwordids
 				}
 
-	dirname = os.path.dirname(__file__)
-	path = os.path.join(dirname, 'all_sandhi.txt')
-	s = pd.read_csv(path, encoding='utf-8', sep=',')
-	# print(s)
-	df_2 = pd.DataFrame(data=s)
-	df_x = df.drop_duplicates('word')
-	for key, value in conflictslp.items():
-		l = int(key.split('-')[0])
-		p = int(key.split('-')[1])
-		word_df1 = df_x[(df_x['level'] == l) & (df_x['position'] == p)]
-		word_df1 = df_x.iloc[0]['word']
-		if not value:
-			print("no conflicts")
-		else:
-			for v in value:
-				lv = int(v.split('-')[0])
-				pv = int(v.split('-')[1])
-				word_df2 = df_x[(df_x['level'] == lv) & (df_x['position'] == pv)]
-				word_df2 = df_x.iloc[0]['word']
-				# print(word_df2)
-				for letter1, letter2 in zip(word_df1, word_df2):
-					if letter1 == letter2:
-						d = d + 1
-
-				if d > 2:
-					print("conflict")
-				elif d == 2:
-					C2 = word_df1[:2]
-					C1 = word_df2[-2:]
-					k = 0
-					for q in df_2.loc[df_2['c2'] == C2].c1:
-						if q == C1:
-							k = k + 1
-					if k == 0:
-						print("conflict")
-					else:
-						print("not conflict : sandhi")
-
-				else:
-					C1 = word_df1[:1]
-					C2 = word_df2[-1:]
-					k = 0
-					for q in df_2.loc[df_2['c2'] == C2].c1:
-						if q == C1:
-							k = k + 1
-					if k == 0:
-						print("conflict")
-					else:
-						print("not conflict : sandhi")
-
-	'''
-	# print(df)
-	dirname = os.path.dirname(__file__)
-	path = os.path.join(dirname,'all_sandhi.txt')
-	s = pd.read_csv(path, encoding='utf-8', sep=',')
-	#print(s)
-	df_2 = pd.DataFrame(data=s)
-	# print(df_2)
-	# print(df.columns)
-	df_x = df.drop_duplicates('word')
-	print(df_x)
-	for i, j in zip(range(len(pos)),range(len(ep))):
-		m = pos[i]
-		n = ep[j]
-		# print(m,n)
-		word_df1 = df_x[(df_x['position'] == m) & (df_x['endposition'] == n)]
-		word_df1 = df_x.iloc[0]['word']
-		# print(word_df1)
-		# print(word_df1)
-		for x, y in zip(range(len(pos)),range(len(ep))):
-			if x!=i:
-				a = pos[x]
-				b = ep[y]
-				# print(a,b)
-				if (a == m and b < n):
-					print(a,b)
-					word_df2 = df_x[(df_x['position'] == a) & (df_x['endposition'] == b)]
-					word_df2 = df_x.iloc[0]['word']
-					# print(word_df2)
-					d = 0
-					for letter1, letter2 in zip(word_df1, word_df2):
-						if letter1 == letter2:
-							d = d + 1
-
-					if d > 2:
-						print(d)
-						print("0 conflict")
-						print(word_df1)
-						print(word_df2)
-					elif d == 2:
-						C2 = word_df1[:2]
-						C1 = word_df2[-2:]
-						k = 0
-						for q in df_2.loc[df_2['c2'] == C2].c1:
-							if q == C1:
-								k = k + 1
-						if k == 0:
-							print("1 conflict")
-						else:
-							print("1 not conflict : sandhi")
-
-					else:
-						C1 = word_df1[:1]
-						C2 = word_df2[-1:]
-						k = 0
-						for q in df_2.loc[df_2['c2'] == C2].c1:
-							if q == C1:
-								k = k + 1
-						if k == 0:
-							print("2 conflict")
-						else:
-							print("2 not conflict : sandhi")
-
-				elif (a > m and b == n):
-					word_df2 = df_x[(df_x['position'] == a) & (df_x['endposition'] == b)]
-					word_df2 = df_x.iloc[0]['word']
-					# print(word_df2)
-
-					d = 0
-					for letter1, letter2 in zip(word_df1, word_df2):
-						if letter1 == letter2:
-							d = d + 1
-
-					if d > 2:
-						print("3 conflict")
-						print(word_df2)
-					elif d == 2:
-						C1 = word_df1[-2:]
-						C2 = word_df2[:2]
-						k = 0
-						for q in df_2.loc[df_2['c1'] == C1].c2:
-							if q == C2:
-								k = k + 1
-						if k == 0:
-							print("4 conflict")
-						else:
-							print("4 not conflict : sandhi")
-
-					else:
-						C1 = word_df1[-1:]
-						C2 = word_df2[:1]
-						k = 0
-						for q in df_2.loc[df_2['c1'] == C1].c2:
-							if q == C2:
-								k = k + 1
-						if k == 0:
-							print("5 conflict")
-						else:
-							print("5 not conflict : sandhi")
-		# print('###')
-	'''
 	context['allvar'] = context
+	
 	return context
+
+
+
+
+
+# def contestofwordsdata(sent_id):
+# 	Sentence1 = Sentences.objects.get(id = sent_id)
+# 	wordsdata = WordOptions.objects.all().filter(sentence = Sentence1)
+# 	wordsinsentence =Wordsinsentence.objects.all().filter(sentence = Sentence1)
+# 	chunkwordids = {}
+# 	for dw in wordsinsentence :
+# 		chunkwordids[dw.chunkno]=dw.id
+
+# 	df = pd.DataFrame(columns = ['wordid','level','color_class','position','chunk_no','lemma','pre_verb','morph','colspan','wordlength','aux_info','word','subminp','maxp','endposition'])
+
+# 	i = 0 
+# 	for wd in wordsdata :
+# 		df.loc[i] = [wd.id,wd.level,wd.color_class,wd.position,wd.chunk_no,wd.lemma,wd.pre_verb,wd.morph,wd.colspan,wd.wordlength,wd.aux_info,wd.word,0,0,wd.position+wd.colspan]
+# 		i+=1
+
+# 	wordfromchunk = {}
+# 	colspanofchunk = {}
+# 	for c in df.chunk_no.unique() :
+# 		df1 = df.loc[df['chunk_no'] == c]
+# 		minp = min(df1.position)
+# 		for i in df1.index :
+# 			df.loc[i,'subminp'] = df.loc[i,'position'] - minp
+			
+# 			df.loc[i,'maxp'] = df.loc[i,'subminp']+df.loc[i,'colspan']
+		
+# 		wordfromchunk[c] = []
+# 		df1 = df.loc[df['chunk_no'] == c]
+# 		for w in df1.word.unique() :
+# 			wordfromchunk[c].append(w)
+# 		colspanofchunk[c] = max(df1['maxp'])
+
+# 	words = df.word.unique()
+# 	levelofword = {}
+# 	posofword = {}
+# 	idsofword = {}
+# 	colspanofword={}
+# 	for w in words :
+# 		levelofword[w] = min(df.loc[df['word'] == w].level)
+# 		posofword[w] = min(df.loc[df['word'] == w].subminp)
+# 		colspanofword[w] = max(df.loc[df['word'] == w].colspan)
+# 		idsofword[w] = df.loc[df['word'] == w].wordid.unique()
+# 	sentwords = Sentence1.line.split(' ')
+# 	chunknum = {}
+# 	c = 0
+# 	for sw in sentwords :
+# 		c = c+1
+# 		chunknum[sw] = c
+
+# 	maxlevel = max(df.level)
+# 	levelrange = range(1,maxlevel+1)
+# 	chunkrange = range(1,max(df.chunk_no)+1)
+# 	positionrange = range(max(df['position'])+1)
+# 	maxpos = max(df['position']+df['colspan'])
+# 	levelpos = {}
+# 	levelwordpos = {}
+# 	for l in levelrange :
+# 		levelpos[l] = []
+# 		levelwordpos[l]=[]
+# 		df1 = df.loc[df['level'] == l]
+# 		for p in df1.position.unique() :
+# 			levelwordpos[l].append(p)
+# 		for p in positionrange :
+# 			check = True
+# 			for i in df1.index :
+# 				if (p == df1.loc[i,'position'] ) or ((p > df1.loc[i,'position'] ) and (p < df1.loc[i,'endposition'] )) :
+# 					check = False
+# 					break 
+# 			if check :
+# 				levelpos[l].append(p)
+# 	dragdata = {}
+# 	links = {}
+# 	ic = 0
+	
+# 	for dw in wordsdata :
+# 		if dw.isSelected :
+# 			lemma = dw.lemma
+# 			if not str(dw.pre_verb) == '' :
+# 				lemma = dw.pre_verb+'-'+lemma
+# 			if not str(dw.aux_info) == '' :
+# 				if dw.aux_info[-18:-1]=='sence of lemma = ' :
+# 					lemma = lemma+'-'+dw.aux_info[-1:]
+# 					if not str(dw.aux_info[:-18]) == ' ' :
+# 						lemma = lemma +' ('+dw.aux_info[:-18]+')'
+# 				else :
+# 					lemma = lemma +' ('+ dw.aux_info+')'
+# 			data1 = {
+
+# 			      "properties": {
+# 			        "title": str(dw.id )+' : '+ dw.word +'<br>['+lemma+']',
+# 			        "inputs": {
+# 			          "in-"+str(dw.id ): {
+# 			              "label": dw.morph
+# 			            }
+# 			        },
+# 			        "outputs": {
+# 			          "out-"+str(dw.id ): {
+# 			              "label": ' '
+# 			          }
+# 			        }
+# 			      } 
+# 			    }
+# 			dragdata['word_'+str(dw.id)] = data1
+			
+# 			if not dw.parent == -1 :
+# 				link1 = {
+
+# 					"fromOperator": 'word_'+str(dw.parent),
+# 					"fromConnector": "out-"+str(dw.parent),
+# 					"fromSubConnector": '0',
+# 					"toOperator": 'word_'+str(dw.id),
+# 					"toConnector": "in-"+str(dw.id),
+# 					"toSubConnector":"0",
+# 					"relationame":dw.relation
+
+# 				}
+# 				links[ic]=link1
+# 				ic = ic+1
+
+# 	conflictslp = {};
+# 	conflictslp1={};
+# 	conflictslp1color = {}
+# 	for i in df.index:
+# 		conflictslp[str(df.loc[i].level)+'-'+str(df.loc[i].position)+'-'+str(df.loc[i].endposition)+'-'+df.loc[i].color_class] = []
+# 	# print(conflictslp)
+# 	#lev = []
+# 	#pos = []
+# 	#ep = []
+# 	for key in conflictslp.keys():
+# 		l =int(key.split('-')[0])
+# 		p =int(key.split('-')[1])
+# 		e = int(key.split('-')[2])
+# 		#lev.append(l)
+# 		#pos.append(p)
+# 		#ep.append(e)
+
+# 	#print(lev)
+# 	#print(pos)
+# 	#print(ep)
+
+# 	for i in df.index :
+# 		if(l==df.loc[i].level) and ((df.loc[i].position>p) and df.loc[i].position <e) :
+# 			if not str(df.loc[i].level)+'-'+str(df.loc[i].position) in conflictslp[key] :
+# 				conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
+# 		if not (l == df.loc[i].level) :
+# 			if((df.loc[i].position>p-1) and df.loc[i].position <e-1) :
+# 				if not str(df.loc[i].level)+'-'+str(df.loc[i].position) in conflictslp[key] :
+# 					conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
+# 		if((df.loc[i].position<p) and df.loc[i].endposition>p+1):
+# 			conflictslp[key].append(str(df.loc[i].level)+'-'+str(df.loc[i].position))
+
+# 	for key in conflictslp:
+# 		conflictslp1[key.split('-')[0]+'-'+key.split('-')[1]] = conflictslp[key]
+# 		conflictslp1color[key.split('-')[0]+'-'+key.split('-')[1]] = key.split('-')[3]
+
+# 	context = {'line':Sentence1.line,'wordsdata' : wordsdata,'words' :sentwords,'chunknum' : chunknum,'sentid':sent_id,'dragdata': json.dumps(dragdata),'links':json.dumps(links),
+# 				'conflictslp' : json.dumps(conflictslp1),'colorlp':json.dumps(conflictslp1color),'levelofword' : levelofword,'levelrange' : levelrange,'posofword':posofword,'idsofword':idsofword,
+#    				'wordfromchunk' : wordfromchunk,'chunkrange' :chunkrange,'colspanofchunk':colspanofchunk,'colspanofword':colspanofword,
+# 				'allwords':words,'positionrange':positionrange,'levelpos':levelpos,'levelwordpos':levelwordpos,'wordsinsentence':wordsinsentence,'chunkwordids':chunkwordids
+# 				}
+
+# 	# dirname = os.path.dirname(__file__)
+# 	# path = os.path.join(dirname, 'all_sandhi.txt')
+# 	# s = pd.read_csv(path, encoding='utf-8', sep=',')
+# 	# # print(s)
+# 	# df_2 = pd.DataFrame(data=s)
+# 	# df_x = df.drop_duplicates('word')
+# 	# for key, value in conflictslp.items():
+# 	# 	l = int(key.split('-')[0])
+# 	# 	p = int(key.split('-')[1])
+# 	# 	word_df1 = df_x[(df_x['level'] == l) & (df_x['position'] == p)]
+# 	# 	word_df1 = df_x.iloc[0]['word']
+# 	# 	# print(word_df1)
+# 	# 	if not value:
+# 	# 		print("no conflicts")
+# 	# 	else:
+# 	# 		for v in value:
+# 	# 			lv = int(v.split('-')[0])
+# 	# 			pv = int(v.split('-')[1])
+# 	# 			word_df2 = df_x[(df_x['level'] == lv) & (df_x['position'] == pv)]
+# 	# 			word_df2 = df_x.iloc[0]['word']
+# 	# 			# print(word_df2)
+# 	# 			for letter1, letter2 in zip(word_df1, word_df2):
+# 	# 				if letter1 == letter2:
+# 	# 					d = d + 1
+
+# 	# 			if d > 2:
+# 	# 				print("conflict")
+# 	# 			elif d == 2:
+# 	# 				C2 = word_df1[:2]
+# 	# 				C1 = word_df2[-2:]
+# 	# 				k = 0
+# 	# 				for q in df_2.loc[df_2['c2'] == C2].c1:
+# 	# 					if q == C1:
+# 	# 						k = k + 1
+# 	# 				if k == 0:
+# 	# 					print("conflict")
+# 	# 				else:
+# 	# 					print("not conflict : sandhi")
+
+# 	# 			else:
+# 	# 				C1 = word_df1[:1]
+# 	# 				C2 = word_df2[-1:]
+# 	# 				k = 0
+# 	# 				for q in df_2.loc[df_2['c2'] == C2].c1:
+# 	# 					if q == C1:
+# 	# 						k = k + 1
+# 	# 				if k == 0:
+# 	# 					print("conflict")
+# 	# 				else:
+# 	# 					print("not conflict : sandhi")
+
+# 	'''
+# 	# print(df)
+# 	dirname = os.path.dirname(__file__)
+# 	path = os.path.join(dirname,'all_sandhi.txt')
+# 	s = pd.read_csv(path, encoding='utf-8', sep=',')
+# 	#print(s)
+# 	df_2 = pd.DataFrame(data=s)
+# 	# print(df_2)
+# 	# print(df.columns)
+# 	df_x = df.drop_duplicates('word')
+# 	print(df_x)
+# 	for i, j in zip(range(len(pos)),range(len(ep))):
+# 		m = pos[i]
+# 		n = ep[j]
+# 		# print(m,n)
+# 		word_df1 = df_x[(df_x['position'] == m) & (df_x['endposition'] == n)]
+# 		word_df1 = df_x.iloc[0]['word']
+# 		# print(word_df1)
+# 		# print(word_df1)
+# 		for x, y in zip(range(len(pos)),range(len(ep))):
+# 			if x!=i:
+# 				a = pos[x]
+# 				b = ep[y]
+# 				# print(a,b)
+# 				if (a == m and b < n):
+# 					print(a,b)
+# 					word_df2 = df_x[(df_x['position'] == a) & (df_x['endposition'] == b)]
+# 					word_df2 = df_x.iloc[0]['word']
+# 					# print(word_df2)
+# 					d = 0
+# 					for letter1, letter2 in zip(word_df1, word_df2):
+# 						if letter1 == letter2:
+# 							d = d + 1
+
+# 					if d > 2:
+# 						print(d)
+# 						print("0 conflict")
+# 						print(word_df1)
+# 						print(word_df2)
+# 					elif d == 2:
+# 						C2 = word_df1[:2]
+# 						C1 = word_df2[-2:]
+# 						k = 0
+# 						for q in df_2.loc[df_2['c2'] == C2].c1:
+# 							if q == C1:
+# 								k = k + 1
+# 						if k == 0:
+# 							print("1 conflict")
+# 						else:
+# 							print("1 not conflict : sandhi")
+
+# 					else:
+# 						C1 = word_df1[:1]
+# 						C2 = word_df2[-1:]
+# 						k = 0
+# 						for q in df_2.loc[df_2['c2'] == C2].c1:
+# 							if q == C1:
+# 								k = k + 1
+# 						if k == 0:
+# 							print("2 conflict")
+# 						else:
+# 							print("2 not conflict : sandhi")
+
+# 				elif (a > m and b == n):
+# 					word_df2 = df_x[(df_x['position'] == a) & (df_x['endposition'] == b)]
+# 					word_df2 = df_x.iloc[0]['word']
+# 					# print(word_df2)
+
+# 					d = 0
+# 					for letter1, letter2 in zip(word_df1, word_df2):
+# 						if letter1 == letter2:
+# 							d = d + 1
+
+# 					if d > 2:
+# 						print("3 conflict")
+# 						print(word_df2)
+# 					elif d == 2:
+# 						C1 = word_df1[-2:]
+# 						C2 = word_df2[:2]
+# 						k = 0
+# 						for q in df_2.loc[df_2['c1'] == C1].c2:
+# 							if q == C2:
+# 								k = k + 1
+# 						if k == 0:
+# 							print("4 conflict")
+# 						else:
+# 							print("4 not conflict : sandhi")
+
+# 					else:
+# 						C1 = word_df1[-1:]
+# 						C2 = word_df2[:1]
+# 						k = 0
+# 						for q in df_2.loc[df_2['c1'] == C1].c2:
+# 							if q == C2:
+# 								k = k + 1
+# 						if k == 0:
+# 							print("5 conflict")
+# 						else:
+# 							print("5 not conflict : sandhi")
+# 		# print('###')
+# 	'''
+# 	context['allvar'] = context
+# 	return context
