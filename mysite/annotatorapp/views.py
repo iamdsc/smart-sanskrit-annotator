@@ -36,6 +36,9 @@ def wordsinsentenceview(request):
     tabledata = WordsinsentenceTable(Wordsinsentence.objects.all())
     return render(request, 'annotatorapp/tables.html', {'tabledata': tabledata})
 
+def xsentenceview(request):
+	tabledata = Sentences.objects.all()
+	return render(request, 'annotatorapp/exsent.html', {'tabledata': tabledata})
 
 # for rendering response  upon obtaining data
 def get_dragdata(request):

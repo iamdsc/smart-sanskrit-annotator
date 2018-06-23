@@ -1,0 +1,19 @@
+{% extends "annotatorapp/base.html" %}
+{%block title%}Example Sentences{%endblock%}
+{%block content%}
+	<table>
+		<thead>
+			<tr>
+				<td>Id</td>
+				<td>Sentence</td>
+			</tr>
+		</thead>
+		<tbody>
+			{%for row in tabledata%}
+			<tr>
+				<td>{{row}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+	</table>
+{%endblock%}
