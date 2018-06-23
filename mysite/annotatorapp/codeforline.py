@@ -379,6 +379,14 @@ def contestofwordsdata(sent_id):
                'allwords': words, 'positionrange': positionrange, 'levelpos': levelpos, 'levelwordpos': levelwordpos,
                'wordsinsentence': wordsinsentence, 'chunkwordids': chunkwordids
                }
+
+    #print("######################################################################################")
+    #print(df)
+    #print("######################################################################################")
+    #print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    #print(conflictslp1)
+    #print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
     dirname = os.path.dirname(__file__)
     path = os.path.join(dirname, 'all_sandhi.txt')
     s = pd.read_csv(path, encoding='utf-8', sep=',')
@@ -386,13 +394,16 @@ def contestofwordsdata(sent_id):
     keys = conflictslp1.keys()
     for key in keys:
         value = conflictslp1[key]
+        print("*******")
+        print(value)
+        print("*******")
         l = int(key.split('-')[0])
         p = int(key.split('-')[1])
         word_df1 = df[(df['level'] == l) & (df['position'] == p)]
         word_df1 = word_df1['word'].values[0]
         print(word_df1)
         if len(value) == 0:
-            print("no conflicts")
+            print("## no conflicts")
         elif len(value) != 0:
             for v in value:
                 lv = int(v.split('-')[0])
@@ -400,34 +411,91 @@ def contestofwordsdata(sent_id):
                 word_df2 = df[(df['level'] == lv) & (df['position'] == pv)]
                 word_df2 = word_df2['word'].values[0]
                 print(word_df2)
-                d = 0
-                for letter1, letter2 in zip(word_df1, word_df2):
-                    if letter1 == letter2:
-                        d = d + 1
-                if d > 2:
-                    print("conflict")
-                elif d == 2:
-                    C2 = word_df1[:2]
-                    C1 = word_df2[-2:]
-                    k = 0
-                    for q in df_2.loc[df_2['c2'] == C2].c1:
-                        if q == C1:
-                            k = k + 1
-                    if k == 0:
-                        print("conflict")
+                if p >= pv:
+                    #c1 = word_df2 and c2 = word_df1
+                    d = 0
+                    if len(word_df1) > len(word_df2):
+                        for s in word_df2:
+                            if s in word_df1:
+                                d = d + 1
+                    elif len(word_df1) < len(word_df2):
+                        for s in word_df1:
+                            if s in word_df2:
+                                d = d + 1
                     else:
-                        print("not conflict : sandhi")
-                else:
-                    C1 = word_df1[:1]
-                    C2 = word_df2[-1:]
-                    k = 0
-                    for q in df_2.loc[df_2['c2'] == C2].c1:
-                        if q == C1:
-                            k = k + 1
-                    if k == 0:
-                        print("conflict")
+                        for s in word_df2:
+                            if s in word_df1:
+                                d = d + 1
+
+                    print("value of d is: " + str(d))
+                    if d > 2:
+                        print("! full conflict")
+                    elif d == 2:
+                        C2 = word_df1[:2]
+                        C1 = word_df2[-2:]
+                        k = 0
+                        for q in df_2.loc[df_2['c2'] == C2].c1:
+                            if q == C1:
+                                k = k + 1
+                        if k == 0:
+                            print("1 conflict")
+                        else:
+                            print("1 not conflict : sandhi")
                     else:
-                        print("not conflict : sandhi")
+                        C1 = word_df1[:1]
+                        C2 = word_df2[-1:]
+                        k = 0
+                        for q in df_2.loc[df_2['c2'] == C2].c1:
+                            if q == C1:
+                                k = k + 1
+                        if k == 0:
+                            print("2 conflict")
+                        else:
+                            print("2 not conflict : sandhi")
+                elif pv > p:
+                    #c1 = word_df1 and c2 = word_df2
+                    d = 0
+                    if len(word_df1) > len(word_df2):
+                        for s in word_df2:
+                            if s in word_df1:
+                                d = d + 1
+                    elif len(word_df1) < len(word_df2):
+                        for s in word_df1:
+                            if s in word_df2:
+                                d = d + 1
+                    else:
+                        for s in word_df2:
+                            if s in word_df1:
+                                d = d + 1
+
+
+
+                    print("value of d is: " + str(d))
+                    if d > 2:
+                        print("@ conflict")
+                    elif d == 2:
+                        C1 = word_df1[-2:]
+                        C2 = word_df2[:2]
+                        k = 0
+                        for q in df_2.loc[df_2['c2'] == C2].c1:
+                            if q == C1:
+                                k = k + 1
+                        if k == 0:
+                            print("3 conflict")
+                        else:
+                            print("3 not conflict : sandhi")
+                    else:
+                        C1 = word_df1[-1:]
+                        C2 = word_df2[:1]
+                        k = 0
+                        for q in df_2.loc[df_2['c2'] == C2].c1:
+                            if q == C1:
+                                k = k + 1
+                        if k == 0:
+                            print("4 conflict")
+                        else:
+                            print("4 not conflict : sandhi")
+
 
     context['allvar'] = context
     return context
