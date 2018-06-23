@@ -6,12 +6,15 @@
 			<tr>
 				<td>Id</td>
 				<td>Sentence</td>
+				<td>Type</td>
 			</tr>
 		</thead>
 		<tbody>
-			{%for row in tabledata%}
+			{% for i,l,t in lists %} 
 			<tr>
-				<td>{{row}}</td>
+				<td>{{i}}</td>
+				<td>{{l}}</td>
+				<td>{{t}}</td>
 			</tr>
 			{%endfor%}
 		</tbody>

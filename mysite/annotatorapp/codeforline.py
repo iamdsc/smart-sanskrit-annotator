@@ -384,8 +384,6 @@ def contestofwordsdata(sent_id):
     path = os.path.join(dirname, 'all_sandhi.txt')
     s = pd.read_csv(path, encoding='utf-8', sep=',')
     df_2 = pd.DataFrame(data=s)
-    # print('#############################')
-    # print(conflictslp1)
     keys = conflictslp1.keys()
     for key in keys:
         value = conflictslp1[key]
@@ -505,7 +503,6 @@ def contestofwordsdata(sent_id):
                         c1 = word_df2
                         c2 = word_df1
                     print(c1,c2)
-
-
+                    
     context['allvar'] = context
     return context
