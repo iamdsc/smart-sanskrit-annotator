@@ -380,12 +380,12 @@ def contestofwordsdata(sent_id):
                'wordsinsentence': wordsinsentence, 'chunkwordids': chunkwordids
                }
 
-    #print("######################################################################################")
-    #print(df)
-    #print("######################################################################################")
-    #print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    #print(conflictslp1)
-    #print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    print("######################################################################################")
+    print(df)
+    print("######################################################################################")
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    print(conflictslp1)
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
     dirname = os.path.dirname(__file__)
     path = os.path.join(dirname, 'all_sandhi.txt')
@@ -413,19 +413,10 @@ def contestofwordsdata(sent_id):
                 print(word_df2)
                 if p >= pv:
                     #c1 = word_df2 and c2 = word_df1
-                    d = 0
-                    if len(word_df1) > len(word_df2):
-                        for s in word_df2:
-                            if s in word_df1:
-                                d = d + 1
-                    elif len(word_df1) < len(word_df2):
-                        for s in word_df1:
-                            if s in word_df2:
-                                d = d + 1
+                    if len(word_df2) < len(word_df1):
+                        d = len(word_df2)
                     else:
-                        for s in word_df2:
-                            if s in word_df1:
-                                d = d + 1
+                        d = len(word_df1)
 
                     print("value of d is: " + str(d))
                     if d > 2:
@@ -455,20 +446,10 @@ def contestofwordsdata(sent_id):
                 elif pv > p:
                     #c1 = word_df1 and c2 = word_df2
                     d = 0
-                    if len(word_df1) > len(word_df2):
-                        for s in word_df2:
-                            if s in word_df1:
-                                d = d + 1
-                    elif len(word_df1) < len(word_df2):
-                        for s in word_df1:
-                            if s in word_df2:
-                                d = d + 1
+                    if len(word_df2) < len(word_df1):
+                        d = len(word_df2)
                     else:
-                        for s in word_df2:
-                            if s in word_df1:
-                                d = d + 1
-
-
+                        d = len(word_df1)
 
                     print("value of d is: " + str(d))
                     if d > 2:
