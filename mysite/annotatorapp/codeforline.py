@@ -380,17 +380,12 @@ def contestofwordsdata(sent_id):
                'wordsinsentence': wordsinsentence, 'chunkwordids': chunkwordids
                }
 
-    print("######################################################################################")
-    print(df)
-    print("######################################################################################")
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    print(conflictslp1)
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-
     dirname = os.path.dirname(__file__)
     path = os.path.join(dirname, 'all_sandhi.txt')
     s = pd.read_csv(path, encoding='utf-8', sep=',')
     df_2 = pd.DataFrame(data=s)
+    # print('#############################')
+    # print(conflictslp1)
     keys = conflictslp1.keys()
     for key in keys:
         value = conflictslp1[key]
@@ -411,71 +406,105 @@ def contestofwordsdata(sent_id):
                 word_df2 = df[(df['level'] == lv) & (df['position'] == pv)]
                 word_df2 = word_df2['word'].values[0]
                 print(word_df2)
-                if p >= pv:
-                    #c1 = word_df2 and c2 = word_df1
-                    if len(word_df2) < len(word_df1):
-                        d = len(word_df2)
-                    else:
-                        d = len(word_df1)
+                if p > pv:
+                    c1 = word_df2
+                    c2 = word_df1
+                    print(c1,c2)
 
-                    print("value of d is: " + str(d))
-                    if d > 2:
-                        print("! full conflict")
-                    elif d == 2:
-                        C2 = word_df1[:2]
-                        C1 = word_df2[-2:]
-                        k = 0
-                        for q in df_2.loc[df_2['c2'] == C2].c1:
-                            if q == C1:
-                                k = k + 1
-                        if k == 0:
-                            print("1 conflict")
-                        else:
-                            print("1 not conflict : sandhi")
-                    else:
-                        C1 = word_df1[:1]
-                        C2 = word_df2[-1:]
-                        k = 0
-                        for q in df_2.loc[df_2['c2'] == C2].c1:
-                            if q == C1:
-                                k = k + 1
-                        if k == 0:
-                            print("2 conflict")
-                        else:
-                            print("2 not conflict : sandhi")
+                    # d = 0
+                    # if len(word_df1) > len(word_df2):
+                    #     for s in word_df2:
+                    #         if s in word_df1:
+                    #             d = d + 1
+                    # elif len(word_df1) < len(word_df2):
+                    #     for s in word_df1:
+                    #         if s in word_df2:
+                    #             d = d + 1
+                    # else:
+                    #     for s in word_df2:
+                    #         if s in word_df1:
+                    #             d = d + 1
+
+                    # print("value of d is: " + str(d))
+                    # if d > 2:
+                    #     print("! full conflict")
+                    # elif d == 2:
+                    #     C2 = word_df1[:2]
+                    #     C1 = word_df2[-2:]
+                    #     k = 0
+                    #     for q in df_2.loc[df_2['c2'] == C2].c1:
+                    #         if q == C1:
+                    #             k = k + 1
+                    #     if k == 0:
+                    #         print("1 conflict")
+                    #     else:
+                    #         print("1 not conflict : sandhi")
+                    # else:
+                    #     C1 = word_df1[:1]
+                    #     C2 = word_df2[-1:]
+                    #     k = 0
+                    #     for q in df_2.loc[df_2['c2'] == C2].c1:
+                    #         if q == C1:
+                    #             k = k + 1
+                    #     if k == 0:
+                    #         print("2 conflict")
+                    #     else:
+                    #         print("2 not conflict : sandhi")
                 elif pv > p:
-                    #c1 = word_df1 and c2 = word_df2
-                    d = 0
-                    if len(word_df2) < len(word_df1):
-                        d = len(word_df2)
-                    else:
-                        d = len(word_df1)
+                    c1 = word_df1
+                    c2 = word_df2
+                    print(c1,c2)
+                    # d = 0
+                    # if len(word_df1) > len(word_df2):
+                    #     for s in word_df2:
+                    #         if s in word_df1:
+                    #             d = d + 1
+                    # elif len(word_df1) < len(word_df2):
+                    #     for s in word_df1:
+                    #         if s in word_df2:
+                    #             d = d + 1
+                    # else:
+                    #     for s in word_df2:
+                    #         if s in word_df1:
+                    #             d = d + 1
 
-                    print("value of d is: " + str(d))
-                    if d > 2:
-                        print("@ conflict")
-                    elif d == 2:
-                        C1 = word_df1[-2:]
-                        C2 = word_df2[:2]
-                        k = 0
-                        for q in df_2.loc[df_2['c2'] == C2].c1:
-                            if q == C1:
-                                k = k + 1
-                        if k == 0:
-                            print("3 conflict")
-                        else:
-                            print("3 not conflict : sandhi")
+
+
+                    # print("value of d is: " + str(d))
+                    # if d > 2:
+                    #     print("@ conflict")
+                    # elif d == 2:
+                    #     C1 = word_df1[-2:]
+                    #     C2 = word_df2[:2]
+                    #     k = 0
+                    #     for q in df_2.loc[df_2['c2'] == C2].c1:
+                    #         if q == C1:
+                    #             k = k + 1
+                    #     if k == 0:
+                    #         print("3 conflict")
+                    #     else:
+                    #         print("3 not conflict : sandhi")
+                    # else:
+                    #     C1 = word_df1[-1:]
+                    #     C2 = word_df2[:1]
+                    #     k = 0
+                    #     for q in df_2.loc[df_2['c2'] == C2].c1:
+                    #         if q == C1:
+                    #             k = k + 1
+                    #     if k == 0:
+                    #         print("4 conflict")
+                    #     else:
+                    #         print("4 not conflict : sandhi")
+                else:
+                    l1 = len(word_df1)
+                    l2 = len(word_df2)
+                    if l1<=l2:
+                        c1 = word_df1
+                        c2 = word_df2
                     else:
-                        C1 = word_df1[-1:]
-                        C2 = word_df2[:1]
-                        k = 0
-                        for q in df_2.loc[df_2['c2'] == C2].c1:
-                            if q == C1:
-                                k = k + 1
-                        if k == 0:
-                            print("4 conflict")
-                        else:
-                            print("4 not conflict : sandhi")
+                        c1 = word_df2
+                        c2 = word_df1
+                    print(c1,c2)
 
 
     context['allvar'] = context
