@@ -7,10 +7,12 @@ class Sentences(models.Model):
 	linetype = models.CharField(max_length=100)
 	
 	def __str__(self):
-		return str(self.id) +"/ "+ self.line+"---"+self.linetype
+		return str(self.id) +"/ "+ self.line+"/"+self.linetype
 
 	class Meta:
 		db_table = "Sentences"
+
+# class Example-Sentences
 
 class linetypes(models.Model):
 	"""docstring for linetypes"""
@@ -18,8 +20,7 @@ class linetypes(models.Model):
 
 	def __str__(self):
 		return str(self.linetype)
-
-
+		
 class Wordsinsentence(models.Model):
 	"""docstring for Wordsinsentence"""
 	sentence = models.ForeignKey(Sentences, on_delete=models.CASCADE,null=True)

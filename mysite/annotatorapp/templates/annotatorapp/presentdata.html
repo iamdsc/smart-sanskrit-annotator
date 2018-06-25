@@ -367,7 +367,7 @@ $(document).ready(function()
 			var val = document.getElementById(inp.id).value;
 			if (x)
 				{x = x.getElementsByTagName("div")};
-			
+
 			if( options[e.keyCode] ){
 				cur_opt = options[e.keyCode];
 				var a, b, i;
@@ -575,7 +575,8 @@ $(document).ready(function()
 			$('#linkrel').text($linkname.val()).fadeIn('slow');
 		}
 	});
-	
+
+	//to show the data that was hidden initially
 	$flowchart.siblings('.show1').click(function() {
 		$('#example_1').show();
 		var data = JSON.parse('{{dragdata}}'.replace(/(&quot\;)/g,"\""));
@@ -600,7 +601,7 @@ $(document).ready(function()
 		$('#example_1').flowchart('setData',data1);
 	});
 	
-	
+	//handles operator creation
 	var operatorI = 0;
 	$flowchart.siblings('.create_operator').click(function() {
 		var operatorId = 'created_operator_' + operatorI;
@@ -624,19 +625,22 @@ $(document).ready(function()
 		operatorI++;
 		$flowchart.flowchart('createOperator', operatorId, operatorData);
 	});
-	
+
+	//delete selected id
 	$flowchart.siblings('.delete_selected_button').click(function() {
 		$flowchart.flowchart('deleteSelected');
 		$('#example_1').flowchart('deleteSelected');
 	});
-	
+
+	//deletion display through the help of modals
 	$('#ds1').click(function() {
 		$flowchart.flowchart('deleteSelected');
 		$('#example_1').flowchart('deleteSelected');
 		$('#linkrel').text('...');
 		$('#myModal').fadeOut('slow').modal('hide');
 	});
-	
+
+
 	$flowchart.siblings('.get_data').click(function() {
 			function download(filename, text) {
 			var element = document.createElement('a');
@@ -833,7 +837,7 @@ $(document).ready(function()
 				$('#'+eid+'-edit').css("display","none");
 	});
 	
-	//to orient the draggable operators and allow input of re
+	//to orient the draggable operators and handle further operations
 	$('.edit_div').on("mouseenter", ".draggable_operator", function(ev) {
 		$('#show_lemma').text($(ev.target).attr('title').replace(/@/g,' ')).fadeIn("slow");
 	});
@@ -841,7 +845,8 @@ $(document).ready(function()
 	$('.edit_div').on("mouseleave", ".draggable_operator", function() {
 		$('#show_lemma').text(' ');
 	});
-	
+
+	//to give the similar functionality to the gray word segment not chosen
 	$(document).on('click','.draggable_operator',function(){
 		var flag = 0;
 		if ( if_finish == 0)
@@ -1047,7 +1052,8 @@ $(document).ready(function()
 		if(v===''|| v===' ')
 			$(this).hide();
 	});
-	
+
+	//for undo button action
 	$('#undo').click(function(){
 		// function to undo click
 		var wordId = String(btnClicks.pop());

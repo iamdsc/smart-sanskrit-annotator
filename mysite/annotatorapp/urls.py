@@ -3,12 +3,12 @@ from . import views
 #urls are specified which are mapped to corresponding views over the path specified
 
 app_name = 'annotatorapp'
-
 urlpatterns = [
 	path('', views.index, name='index'),
 	path('wordtable/',views.wordtableview,name='wordtableview'),
 	path('linetable/',views.sentenceview,name='sentenceview'),
 	path('wordsinsentencetable/',views.wordsinsentenceview,name='wordsinsentenceview'),
+	path('sentences/',views.xsentenceview,name='xsentenceview'),
 	path('presentdata/',views.presentdataview,name='presentdataview'),
 	re_path(r'select/(?P<sent_id>[0-9]+)/(?P<wordoption_id>[0-9]+)/$',views.select_wordoptionview,name='select_wordoption'),
 	re_path(r'eliminate/(?P<sent_id>[0-9]+)/(?P<wordoption_id>[0-9]+)/$',views.eliminate_wordoptionview,name='eliminate_wordoption'),
