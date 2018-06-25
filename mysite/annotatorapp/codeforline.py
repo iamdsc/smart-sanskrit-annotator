@@ -218,7 +218,7 @@ def getsentwordtree(sent_id):
             i = i + 1
     return json.dumps(df)
 
-
+#this function helps decide the conflicts asociated with each segment in the input sentence
 def contestofwordsdata(sent_id):
     Sentence1 = Sentences.objects.get(id=sent_id)
     wordsdata = WordOptions.objects.all().filter(sentence=Sentence1)
@@ -370,6 +370,7 @@ def contestofwordsdata(sent_id):
         conflictslp1[key.split('-')[0] + '-' + key.split('-')[1]] = conflictslp[key]
         conflictslp1color[key.split('-')[0] + '-' + key.split('-')[1]] = key.split('-')[3]
 
+    #context dictionary containing every detailed bit of the word in the sentence
     context = {'line': Sentence1.line, 'wordsdata': wordsdata, 'words': sentwords, 'chunknum': chunknum,
                'sentid': sent_id, 'dragdata': json.dumps(dragdata), 'links': json.dumps(links),
                'conflictslp': json.dumps(conflictslp1), 'colorlp': json.dumps(conflictslp1color),
@@ -380,6 +381,7 @@ def contestofwordsdata(sent_id):
                'wordsinsentence': wordsinsentence, 'chunkwordids': chunkwordids
                }
 
+    #handling the corner cases in sandhi check from the file named all_sandhi.txt
     dirname = os.path.dirname(__file__)
     path = os.path.join(dirname, 'all_sandhi.txt')
     s = pd.read_csv(path, encoding='utf-8', sep=',')
@@ -389,6 +391,8 @@ def contestofwordsdata(sent_id):
         value = conflictslp1[key]
         l = int(key.split('-')[0])
         p = int(key.split('-')[1])
+
+        #extracting word from dataframe of words corresponding to key level and positon
         word_df1 = df[(df['level'] == l) & (df['position'] == p)]
         word_df1 = word_df1['word'].values[0]
         if len(value) == 0:
@@ -397,6 +401,9 @@ def contestofwordsdata(sent_id):
             for v in value:
                 lv = int(v.split('-')[0])
                 pv = int(v.split('-')[1])
+
+                # extracting word from dataframe of words corresponding to value of the key level and positon
+
                 word_df2 = df[(df['level'] == lv) & (df['position'] == pv)]
                 word_df2 = word_df2['word'].values[0]
                 if p > pv:
@@ -436,6 +443,7 @@ def contestofwordsdata(sent_id):
                         if k == 0:
                             print("conflict")
                         else:
+                            #removing the cases of overlapping and sandhi
                             value.remove(str(lv) + '-' + str(pv))
 
                 elif pv > p:
