@@ -46,7 +46,7 @@
 #heading{
 	text-align:center;
 	padding:5px;
-	letter-spacing:4px;
+	letter-spacing:1px;
 }
 
 .table-responsive{
@@ -137,6 +137,7 @@ td{
   border:none;
   padding:0;
   margin:0;
+
 }
 
 .words{
