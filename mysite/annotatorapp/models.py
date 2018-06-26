@@ -88,5 +88,13 @@ class Verbs(models.Model):
 	verb_id = models.AutoField(primary_key=True)
 	sh = models.CharField(max_length=50)
 
+class Exsentences(models.Model):
+	"""docstring for Example Sentences"""
+	xsent_id = models.AutoField(primary_key=True)
+	line = models.CharField(max_length=200)
+	chunks = models.CharField(max_length=200)
+	lemmas = models.CharField(max_length=200)
+	morph_cng = models.CharField(max_length=200)
+
 
 
