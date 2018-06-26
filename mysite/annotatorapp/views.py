@@ -37,11 +37,10 @@ def wordsinsentenceview(request):
     return render(request, 'annotatorapp/tables.html', {'tabledata': tabledata})
 
 def xsentenceview(request):
-	ids = Sentences.objects.values('id')
-	lines = Sentences.objects.values('line')
-	linetypes = Sentences.objects.values('linetype')
-	lists=zip(ids,lines,linetypes)
-	return render(request, 'annotatorapp/exsent.html', {'lists':lists})
+    ids = Sentences.objects.values('id')
+    lines = Sentences.objects.values('line')
+    lists = zip(ids,lines)
+    return render(request, 'annotatorapp/exsent.html', {'lists':lists})
 
 # for rendering response  upon obtaining data
 def get_dragdata(request):

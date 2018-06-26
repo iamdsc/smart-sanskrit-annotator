@@ -6,17 +6,24 @@
 			<tr>
 				<td>Id</td>
 				<td>Sentence</td>
-				<td>Type</td>
 			</tr>
 		</thead>
 		<tbody>
-			{% for i,l,t in lists %} 
+			{% for i,l in lists %} 
 			<tr>
-				<td>{{i}}</td>
-				<td>{{l}}</td>
-				<td>{{t}}</td>
+				<td>{{i.id}}</td>
+				<td ><a href='' id='{{i.id}}' class='exs'>{{l.line}}</a></td>
 			</tr>
 			{%endfor%}
 		</tbody>
 	</table>
+{%endblock%}
+{%block javascript%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.exs').click(function(){
+		$(this).attr('href','/?line='+ $(this).text());
+	});
+});
+</script>
 {%endblock%}
