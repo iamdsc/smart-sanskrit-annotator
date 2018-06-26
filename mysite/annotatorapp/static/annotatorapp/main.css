@@ -44,9 +44,14 @@
     min-height: 300px;
 }
 #heading{
+
 	text-align:center;
-	padding:5px;
-	letter-spacing:1px;
+	padding:0;
+	margin:0;
+	letter-spacing:0;
+	width:1%;
+	white-space:nowrap;
+
 }
 
 .table-responsive{
@@ -248,4 +253,10 @@ thead > tr > td {
   margin-left: 20px;
   font-family: Arial;
   word-spacing: 5px; 
+}
+#heading_th{
+width:100px;
+overflow: auto;
+white-space: nowrap;
+position:absolute;
 }
