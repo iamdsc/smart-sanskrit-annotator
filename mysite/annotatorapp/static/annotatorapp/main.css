@@ -135,10 +135,10 @@ table{
 /*styling rows of tabular structures*/
 td{
   border:none;
-  padding:0;
-  margin:0;
 }
-
+thead > tr > td {
+  font-weight: bold;
+}
 .words{
   display:inline-block;
   border:2px solid #adabab;
@@ -242,4 +242,10 @@ td{
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important;
   color: #ffffff;
+}
+.exs{
+  float:left;
+  margin-left: 20px;
+  font-family: Arial;
+  word-spacing: 5px; 
 }

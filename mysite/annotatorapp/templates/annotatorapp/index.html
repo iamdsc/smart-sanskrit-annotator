@@ -3,7 +3,7 @@
 {% extends "annotatorapp/base.html" %}
 {%block title%}Input{%endblock%}
 {%block content%}
-  <form method = "POST" action = "{% url 'annotatorapp:presentdataview' %} " id='form'>
+  <form method = "POST" action = "{% url 'annotatorapp:presentdataview' %}" id='form'>
     {% csrf_token %}
     <div class="form-group" >
       <label for="line">Sentence</label>
@@ -29,5 +29,18 @@
     <div id="foot-container">
       <i class="fas fa-copyright"></i> Developed in CNeRG Lab, IIT KGP
 </div>
+{%endblock%}
+{%block javascript%}
+<script type="text/javascript">
+$(document).ready(function(){
+  var urlParams = new URLSearchParams(window.location.search);
+  var line = urlParams.toString();
+  line=line.replace(/\+/g,' ').slice(5,);
+  console.log(line);
+  $('#line').attr('value',line);
 
+
+
+});
+</script>
 {%endblock%}
