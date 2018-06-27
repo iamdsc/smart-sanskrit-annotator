@@ -45,8 +45,9 @@
 }
 #heading{
 	text-align:center;
-	padding:5px;
-	letter-spacing:4px;
+	padding:3.5px;
+	letter-spacing:0;
+	white-space:nowrap;
 }
 
 .table-responsive{

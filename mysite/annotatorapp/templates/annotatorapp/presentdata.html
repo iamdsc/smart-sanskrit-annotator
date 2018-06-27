@@ -39,7 +39,11 @@
 			<a data-toggle="collapse" href="#collapse{{sentid}}">
 			<table >
 				{% for word in line.split%}
-					<th id='heading'>{{word}}</th>
+					<th>
+						{%for c in word%}
+							<td id='heading'>{{c}}</td>
+						{%endfor%}
+					</th>
 				{% endfor %}
 			</table>
 			</a>
