@@ -13,19 +13,19 @@ class DCS:
         self.lemmas = []
         self.cng = []
 
-##for filename in os.listdir(directory_1):
-##    print(filename)
-##    if filename.endswith('.p'):
-##        output_load = pickle.load(open('100/'+filename, "rb"), encoding='utf-8')
-##        print(output_load)
-##        print('Sentence Id:',output_load.sent_id)
-##        print('Sentence:',output_load.sentence)
-##        print('Chunks:',output_load.dcs_chunks)
-##        print('Lemmas:',output_load.lemmas)
-##        print('Morphological class (CNG):',output_load.cng)
-
-for filename in os.listdir(directory_2):
+for filename in os.listdir(directory_1):
     print(filename)
-    f = open(filename)
-    
+    if filename.endswith('.p'):
+        output_load = pickle.load(open('100/'+filename, "rb"), encoding='utf-8')
+        print(output_load)
+        print('Sentence Id:',output_load.sent_id)
+        print('Sentence:',output_load.sentence)
+        print('Chunks:',output_load.dcs_chunks)
+        print('Lemmas:',output_load.lemmas)
+        print('Morphological class (CNG):',output_load.cng)
+
+##for filename in os.listdir(directory_2):
+##    print(filename)
+##    f = open(filename)
+##    
     
