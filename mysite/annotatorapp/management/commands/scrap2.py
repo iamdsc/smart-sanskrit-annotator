@@ -1,3 +1,6 @@
+#scrap file to read inputs for the 100 sentences
+#input files will have their outputs from pickleReader.py file
+
 import os
 import pickle
 
@@ -5,6 +8,7 @@ dirname = os.path.dirname(__file__)
 directory_1 = os.path.join(dirname,'100')
 directory_2 = os.path.join(dirname,'100_graphml')
 
+#extracted from pickleReader.py file
 class DCS:
     def __init__(self,sent_id,sentence):
         self.sent_id = sent_id
@@ -23,6 +27,7 @@ class DCS:
 ##        print('Chunks:',output_load.dcs_chunks)
 ##        print('Lemmas:',output_load.lemmas)
 ##        print('Morphological class (CNG):',output_load.cng)
+
 
 for filename in os.listdir(directory_2):
     print(filename)
