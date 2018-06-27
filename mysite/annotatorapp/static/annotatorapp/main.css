@@ -216,6 +216,7 @@ thead > tr > td {
   color: #ffffff;
 }
 
+/*styling the autocomplete options*/
 .autocomplete {
   /*the container must be positioned relative:*/
   position: relative;
@@ -252,12 +253,16 @@ thead > tr > td {
   background-color: DodgerBlue !important;
   color: #ffffff;
 }
+
+/*styling the example sentences part*/
 .exs{
   float:left;
   margin-left: 20px;
   font-family: Arial;
   word-spacing: 5px;
 }
+
+/*for conflict alignment of the buttons in the table*/
 .edit_div{
   display:inline-block;
 }

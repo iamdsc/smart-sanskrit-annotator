@@ -36,13 +36,14 @@ def wordsinsentenceview(request):
     tabledata = WordsinsentenceTable(Wordsinsentence.objects.all())
     return render(request, 'annotatorapp/tables.html', {'tabledata': tabledata})
 
+#renders a list consisting of lines and ids
 def xsentenceview(request):
     ids = Sentences.objects.values('id')
     lines = Sentences.objects.values('line')
     lists = zip(ids,lines)
     return render(request, 'annotatorapp/exsent.html', {'lists':lists})
 
-# for rendering response  upon obtaining data
+# for rendering response  upon obtaining saved word data (present as Draggable operators) from the database
 def get_dragdata(request):
     if request.is_ajax():
         if request.method == 'POST':
@@ -56,7 +57,7 @@ def get_dragdata(request):
         raise Http404
 
 
-# for rendering response upon saving the selected data to database
+# for rendering response upon saving the current selected data to database
 def save_dragdata(request):
     if request.is_ajax():
         if request.method == 'POST':
@@ -111,7 +112,8 @@ def save_dragdata(request):
     else:
         raise Http404
 
-
+#function that checks if input sentence is present in database otherwise sends request to SHR for data scrap.
+#returns a dictionary and pandas dataframe with the data
 def presentdataview(request):
     if request.method == "POST":
         Inputlineform = forms.inputlineform(request.POST)
@@ -204,7 +206,7 @@ def reset_allselectionview(request, sent_id):
     return redirect('annotatorapp:presentdataview')
 
 
-# rendering response for saving details of each data segment clicked by user
+# rendering response for saving details of each data segment(flowchart data) clicked by user
 def save_data_to_db(request):
     if request.is_ajax():
         if request.method == 'POST':
@@ -219,7 +221,7 @@ def save_data_to_db(request):
     else:
         raise Http404
 
-
+#used to retrieve autocomplete noun/verbs/indeclinables options
 def get_form_data(request):
     if request.is_ajax():
         if request.method == 'POST':

@@ -395,6 +395,7 @@ def contestofwordsdata(sent_id):
         #extracting word from dataframe of words corresponding to key level and positon
         word_df1 = df[(df['level'] == l) & (df['position'] == p)]
         word_df1 = word_df1['word'].values[0]
+
         if len(value) == 0:
             print("no conflicts")
         elif len(value) != 0:

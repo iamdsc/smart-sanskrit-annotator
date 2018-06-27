@@ -351,6 +351,8 @@ $(document).ready(function()
 		var startPos = ctl.selectionStart;
 		return startPos;
 	}
+
+	//function for displaying autocomplete possibilities involving different chaarcters that cannot be input from keyboard
 	function disp_opt(inp) {
 		var options ={ 65:"aā",72:"hḥ", 73:"iī", 76:"lḷḹ", 77:"mṃ", 78:"nṅñṇ", 82:"rṛṝ", 83:"sṣś", 84:"tṭ", 85:"uū" };
 		var cur_opt = "";
