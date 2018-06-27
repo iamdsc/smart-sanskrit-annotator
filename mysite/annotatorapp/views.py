@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from . import models, forms, codeforline
-from .models import Sentences, WordOptions, Wordsinsentence, User, Noun, Indeclinables, Verbs
+from .models import Sentences, WordOptions, Wordsinsentence, User, Noun, Indeclinables, Verbs, Exsentences
 from .tables import WordOptionsTable, SentencesTable, WordsinsentenceTable
 import json
 from django_datatables_view.base_datatable_view import BaseDatatableView
+import random
 
 
 # renders response for index page
@@ -38,9 +39,14 @@ def wordsinsentenceview(request):
 
 #renders a list consisting of lines and ids
 def xsentenceview(request):
-    ids = Sentences.objects.values('id')
-    lines = Sentences.objects.values('line')
-    lists = zip(ids,lines)
+    l = [0,20,40,60,80,100,120,140,160,180]
+    r = random.choice(l)
+    ids = Exsentences.objects.values('xsent_id')[r:r+20]
+    line = Exsentences.objects.values('line')[r:r+20]
+    chunks = Exsentences.objects.values('chunks')[r:r+20]
+    lemmas = Exsentences.objects.values('lemmas')[r:r+20]
+    morph_cng = Exsentences.objects.values('morph_cng')[r:r+20]
+    lists = zip(ids,line,chunks,lemmas,morph_cng)
     return render(request, 'annotatorapp/exsent.html', {'lists':lists})
 
 # for rendering response  upon obtaining saved word data (present as Draggable operators) from the database
