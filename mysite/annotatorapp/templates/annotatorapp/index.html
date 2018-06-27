@@ -37,10 +37,9 @@ $(document).ready(function(){
   var line = urlParams.toString();
   line=line.replace(/\+/g,' ').slice(5,);
   console.log(line);
+  if(line!=''){
   $('#line').attr('value',line);
-
-
-
+  }
 });
 </script>
 {%endblock%}

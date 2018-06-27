@@ -44,14 +44,9 @@
     min-height: 300px;
 }
 #heading{
-
 	text-align:center;
-	padding:0;
-	margin:0;
-	letter-spacing:0;
-	width:1%;
-	white-space:nowrap;
-
+	padding:5px;
+	letter-spacing:4px;
 }
 
 .table-responsive{
@@ -135,11 +130,19 @@ strong{
 .other {background-color: #e7e7e7; color: black;}
 table{
   border:none;
+  padding:0;
+  margin:0;
+  max-width:100%;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 /*styling rows of tabular structures*/
 td{
   border:none;
+  padding:0;
+  margin:0;
 }
 thead > tr > td {
   font-weight: bold;
@@ -158,7 +161,7 @@ thead > tr > td {
 
 /*highlighting the buttons*/
 .high{
-  
+
   border:2px solid #f4d641;
   border-radius:8px;
   box-shadow: 0px 3px 10px #f4d641;
@@ -231,7 +234,7 @@ thead > tr > td {
   top: 100%;
   left: 50px;
   right: 80px;
-  
+
 }
 .autocomplete-items div {
   padding: 10px;
@@ -252,11 +255,8 @@ thead > tr > td {
   float:left;
   margin-left: 20px;
   font-family: Arial;
-  word-spacing: 5px; 
+  word-spacing: 5px;
 }
-#heading_th{
-width:100px;
-overflow: auto;
-white-space: nowrap;
-position:absolute;
+.edit_div{
+  display:inline-block;
 }
