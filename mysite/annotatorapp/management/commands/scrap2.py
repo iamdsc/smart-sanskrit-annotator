@@ -1,31 +1,59 @@
 import os
 import pickle
+import romtoslp as conv
 
-dirname = os.path.dirname(__file__)
-directory_1 = os.path.join(dirname,'100')
-directory_2 = os.path.join(dirname,'100_graphml')
+#In case of any clarification, email to - amrith@iitkgp.ac.in
+# The latest modifications can be found at: www.amrithkrishna.com 
+# Class definition for pickle files
+# currently the pickle files can be opened only with Python 3
+
+cur_dir = os.path.dirname(os.path.realpath(__file__))
+dir_p = os.path.join(cur_dir,'pickle/')
+dir_graphml = os.path.join(cur_dir,'graphml/')
 
 class DCS:
-    def __init__(self,sent_id,sentence):
+    def __init__(self, sent_id, sentence):
         self.sent_id = sent_id
         self.sentence = sentence
         self.dcs_chunks = []
         self.lemmas = []
         self.cng = []
 
-for filename in os.listdir(directory_1):
-    print(filename)
-    if filename.endswith('.p'):
-        output_load = pickle.load(open('100/'+filename, "rb"), encoding='utf-8')
-        print(output_load)
-        print('Sentence Id:',output_load.sent_id)
-        print('Sentence:',output_load.sentence)
-        print('Chunks:',output_load.dcs_chunks)
-        print('Lemmas:',output_load.lemmas)
-        print('Morphological class (CNG):',output_load.cng)
+node = {'word':'', 'morph':'', 'morph_no':'',};
+new_cng = []
+_out = open('answers.txt','w',encoding='utf8')
 
-##for filename in os.listdir(directory_2):
-##    print(filename)
-##    f = open(filename)
-##    
-    
+for filename in os.listdir(dir_p):
+    if('.p' in filename):
+        output_load = pickle.load(open(dir_p+filename, "rb"), encoding='utf-8')
+        lemmas = sum(output_load.lemmas,[])
+        for i in range(len(lemmas)):
+            lemmas[i] = conv.rom_slp(lemmas[i])
+        
+        cng = sum(output_load.cng,[])
+        g_file = dir_graphml+filename[:-1]+'txt'
+        print(g_file)
+        nodes = []
+        with open(g_file,'r') as f:
+            for line in f:
+                if('edge source' in line):
+                    break
+                if('data key=\"d0\"' in line):
+                    node['morph_no'] = line.replace('<','>').split('>')[2]
+                if('data key=\"d4\"' in line):
+                    node['word'] = line.replace('<','>').split('>')[2]
+                if('data key=\"d5\"' in line):
+                    node['morph'] = line.replace('<','>').split('>')[2]
+                if('/node' in line):
+                    nodes.append(node.copy())    
+        nodes = [dict(t) for t in set([tuple(d.items()) for d in nodes])]
+        
+        # compare 
+        for lemma,_cng in zip(lemmas,cng):
+            for cdict in nodes:
+                if lemma == cdict['word'] and _cng == cdict['morph_no']:
+                    new_cng.append(cdict['morph'])
+        _out.write(str(output_load.sentence)+'#'+str(output_load.dcs_chunks)+'#'+str(lemmas)+'#'+str(new_cng)+'\n')
+        new_cng.clear()
+
+_out.close()
