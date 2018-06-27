@@ -186,9 +186,10 @@ def conflicts(df, sent):
     pass
 
 
+#retruns string converted from df object from WordOptions model and performing required modifications.
 def getsentwordtree(sent_id):
     df = pd.DataFrame(columns=['id', 'wordid', 'word', 'morph', 'lemma', 'rel', 'parent'])
-    Sentence1 = Sentences.objects.get(id=sent_id)
+    Sentence1 = Sentences.objects.get(id=sent_id)#extracting sentences corresponding to given id
     wordsdata = WordOptions.objects.all().filter(sentence=Sentence1)
     temp = {}
     df = {}
@@ -201,6 +202,7 @@ def getsentwordtree(sent_id):
             i = i + 1
 
     i = 0
+    #adding further details involving lemma for the input .
     for wd in wordsdata:
         if wd.isSelected:
             lemma = wd.lemma

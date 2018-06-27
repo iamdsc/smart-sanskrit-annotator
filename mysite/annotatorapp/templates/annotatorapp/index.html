@@ -32,6 +32,8 @@
 {%endblock%}
 {%block javascript%}
 <script type="text/javascript">
+
+//this function helps the sentence(among the example statements) that has been clicked upon to be automatically pasted over the input slot
 $(document).ready(function(){
   var urlParams = new URLSearchParams(window.location.search);
   var line = urlParams.toString();
