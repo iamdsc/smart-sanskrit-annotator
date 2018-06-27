@@ -130,11 +130,19 @@ strong{
 .other {background-color: #e7e7e7; color: black;}
 table{
   border:none;
+  padding:0;
+  margin:0;
+  max-width:100%;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 /*styling rows of tabular structures*/
 td{
   border:none;
+  padding:0;
+  margin:0;
 }
 thead > tr > td {
   font-weight: bold;
@@ -248,4 +256,7 @@ thead > tr > td {
   margin-left: 20px;
   font-family: Arial;
   word-spacing: 5px; 
+}
+.edit_div{
+  display:inline-block;
 }

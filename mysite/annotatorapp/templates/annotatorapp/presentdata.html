@@ -92,7 +92,7 @@
 
 										{% with wd1=wordsdata|getword:x y=wordsdata|getallwordids:x%}
 											<!--this will generate all possible segments from the input sentence-->
-											<td colspan={{wd1.colspan}} align="left">
+											<td colspan={{wd1.colspan}}>
 												<div class='edit_div' id = '{{x}}-edit_div'>
 													<input type='button' title="{{wordsdata|nbinputs:y}}" data-nb-status='lemma' data-nb-ids='{{y}}' data-nb-inputs="{{y|nbios:1}}" data-nb-lemmas="{{wordsdata|nbinputs:y}}" id = '{{x}}' datastatus = 'off' class="draggable_operator ui-draggable ui-draggable-handle {{wd1.color_class}} words" value='{{wd1.word}}'>
 
