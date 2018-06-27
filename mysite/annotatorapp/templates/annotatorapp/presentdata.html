@@ -37,7 +37,7 @@
 
 		<h3 class="panel-title" >
 			<a data-toggle="collapse" href="#collapse{{sentid}}">
-			<table >
+			<table class='styling'>
 				{% for word in line.split%}
 					<th>
 						{%for c in word%}
@@ -83,7 +83,7 @@
 			</table>
 		</div>
 		<div class="panel-body">
-			<table class="table-responsive" id='word-table'>
+			<table class="table-responsive styling" id='word-table'>
 				<tbody>
 					{%for l in levelrange%}
 						<tr>

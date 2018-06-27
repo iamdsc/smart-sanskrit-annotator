@@ -39,6 +39,9 @@
 .panel-info{
 	width:100%;
 }
+.panel-info > .panel-heading{
+  padding:1px;
+}
 .panel-body{
 	padding:0px;
     min-height: 300px;
@@ -46,7 +49,7 @@
 #heading{
 	text-align:center;
 	padding:3.5px;
-	letter-spacing:0;
+	letter-spacing:1px;
 	white-space:nowrap;
 }
 
@@ -129,10 +132,8 @@ strong{
   font-size: 15px;
 }
 .other {background-color: #e7e7e7; color: black;}
-table{
+.styling{
   border:none;
-  padding:0;
-  margin:0;
   max-width:100%;
   display: block;
   overflow-x: auto;
