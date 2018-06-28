@@ -16,6 +16,7 @@ class Command(BaseCommand):
 			line = c[0].rstrip()
 			chunks = c[1]
 			lemmas = c[2]
+			print(lemmas)
 			morph_cng = c[3][:-1]
 			try:
 				xsent = Exsentences(line=line,chunks=chunks,lemmas=lemmas,morph_cng=morph_cng)
@@ -23,6 +24,10 @@ class Command(BaseCommand):
 			except Exception as e:
 				print(e)
 		f.close()			
+	
+	def delete_data(self):
+		Exsentences.objects.all().delete()
 
 	def handle(self, *args, **options):
+		self.delete_data()
 		self.extract()	

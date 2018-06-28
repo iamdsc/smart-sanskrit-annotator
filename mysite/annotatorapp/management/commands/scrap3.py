@@ -24,6 +24,7 @@ for filename in os.listdir(dir_p):
     if('.p' in filename):
         output_load = pickle.load(open(dir_p+filename, "rb"), encoding='utf-8')
         lemmas = sum(output_load.lemmas,[])
+        roman_lemmas = sum(output_load.lemmas,[])
         for i in range(len(lemmas)):
             lemmas[i] = conv.rom_slp(lemmas[i])
         
@@ -50,7 +51,7 @@ for filename in os.listdir(dir_p):
             for cdict in nodes:
                 if lemma == cdict['word'] and _cng == cdict['morph_no']:
                     new_cng.append(cdict['morph'])
-        _out.write(str(output_load.sentence)+'#'+str(output_load.dcs_chunks)+'#'+str(output_load.lemmas)+'#'+str(new_cng)+'\n')
+        _out.write(str(output_load.sentence)+'#'+str(output_load.dcs_chunks)+'#'+str(roman_lemmas)+'#'+str(new_cng)+'\n')
         new_cng.clear()
 _out.close()
 
