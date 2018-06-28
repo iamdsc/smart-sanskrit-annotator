@@ -16,5 +16,6 @@ urlpatterns = [
 	path('presentdata/ajax/save_data/',views.save_dragdata,name='save_dragdata'),
 	path('presentdata/ajax/get_data/',views.get_dragdata,name='get_dragdata'),
 	path('presentdata/ajax/save_data_to_db/',views.save_data_to_db,name='save_data_to_db'),
-	path('presentdata/ajax/get_word_form/',views.get_form_data,name='get_form_data')
+	path('presentdata/ajax/get_word_form/',views.get_form_data,name='get_form_data'),
+	path('presentdata/ajax/get_xsent_sol/',views.get_sol_data,name='get_sol_data')
 	]

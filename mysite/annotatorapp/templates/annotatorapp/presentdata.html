@@ -207,7 +207,7 @@
 <script type="text/javascript">
 //function is made available after the document is loaded to initialize values to variables
 $(document).ready(function()
-{
+{	
 	var nop = 0;
 	var cur_op_id=0;
 	var if_done = 0;
@@ -223,7 +223,7 @@ $(document).ready(function()
 	var data ={};
 	var date = new Date();
 	var id = 0;
-	var btn = $('#word-table > tbody > tr:first > td > div > input[type="button"]');
+	// var btn = $('#word-table > tbody > tr:first > td > div > input[type="button"]');
 
 	var c = true;
 
@@ -232,24 +232,54 @@ $(document).ready(function()
 	$('#recommend1').prop('checked',false);
 	$('#recommend2').prop('checked',false);
 	//for applying shadows to buttons in the given table consisting of possible segments
-	function btnHigh(){
-		if(c)
-			btn.toggleClass('high');
-		else
-			btn.toggleClass('high');
-		c = !c;
-	}
+	// function btnHigh(){
+	// 	if(c)
+	// 		btn.toggleClass('high');
+	// 	else
+	// 		btn.toggleClass('high');
+	// 	c = !c;
+	// }
 	//recommendation using segmentation only which highlights the first row
+	var btn;
 	$('#recommend1').change(function(){
+		var xsent = JSON.stringify('{{line}}');
+		$.ajax({
+			type:'POST',
+			url:'ajax/get_xsent_sol/',
+			data:{
+				'line': xsent
+			},
+			success: function(data)
+			{
+				data = JSON.parse(data);
+				data.lemmas = data.lemmas.replace(/'|"|\[|\]/g,'').split(", ");
+				data.morph_cng = data.morph_cng.replace(/'|"|\[|\]/g,'').split(", ");
+			 	console.log(data.lemmas);
+			 	console.log(data.morph_cng);
+				for(var i=0;i<data.lemmas.length;i++){
+					btn = $('input[type="button"]');
+					for(var j = 0 ;j<btn.length;j++){
+						arr = btn[j].title.replace(/{|\[|\]|}/g,'').split('\n ');
+						for(var k = 0;k<arr.length;k++){
+							if((arr[k].indexOf(data.lemmas[i])>=0) && (arr[k].indexOf(data.morph_cng[i])>=0)){
+			 					console.log(arr[k]);
+			 					break;
+			 				}
+						}
+			 		}
+				}
+		}
+		})
+		
 		nop = 0;
 		line = 20;
-		var c1 = this.checked;
-		if(c1)
-			id = setInterval(btnHigh,800);
-		else{
-			clearInterval(id);
-			btn.removeClass('high');
-		}
+		// var c1 = this.checked;
+		// if(c1)
+		// 	id = setInterval(btnHigh,800);
+		// else{
+		// 	clearInterval(id);
+		// 	btn.removeClass('high');
+		// }
 		var conf = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
 		for(var key in conf){
 			if(conf[key].length == 0){
@@ -262,13 +292,13 @@ $(document).ready(function()
 	$('#recommend2').change(function(){
 		nop = 0;
 		line = 20;
-		var c2 = this.checked;
-		if(c2)
-			id = setInterval(btnHigh,800);
-		else{
-			clearInterval(id);
-			btn.removeClass('high');
-		}
+		// var c2 = this.checked;
+		// if(c2)
+		// 	id = setInterval(btnHigh,800);
+		// else{
+		// 	clearInterval(id);
+		// 	btn.removeClass('high');
+		// }
 		var conf = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
 		for(var key in conf){
 			if(conf[key].length == 0){

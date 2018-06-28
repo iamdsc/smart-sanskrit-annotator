@@ -150,6 +150,7 @@ def presentdataview(request):
                     sent_id = Sentence1.id
                     pos = 0
                     context = codeforline.contestofwordsdata(sent_id)
+                    print(context)
                     return render(request, 'annotatorapp/presentdata.html', context)
                 else:
                     wordsdata = codeforline.worddataofsentence(df, Sentence)
@@ -241,6 +242,25 @@ def get_form_data(request):
             return HttpResponse(data)
     else:
         raise Http404
+
+def get_sol_data(request):
+    if request.is_ajax():
+        if request.method == 'POST':
+            try:
+                line = json.loads(request.POST['line'])
+            except Exception as e:
+                print(e)
+            data = {}
+            xsent = Exsentences.objects.filter(line=line)
+            data['id'] = xsent[0].xsent_id
+            data['chunks'] = xsent[0].chunks
+            data['lemmas'] = xsent[0].lemmas
+            data['morph_cng'] = xsent[0].morph_cng
+            print(data)
+            return HttpResponse(json.dumps(data))
+    else:
+        raise Http404
+
 
 
 
