@@ -251,38 +251,30 @@ $(document).ready(function()
 			},
 			success: function(data)
 			{
+				var lem;
+				var mor;
 				data = JSON.parse(data);
 				dl = data.lemmas.replace(/'|"|\[|\]/g,'').split(", ");
 				dm = data.morph_cng.replace(/'|"|\[|\]/g,'').split(", ");
-			 	// console.log(dl);
-			 	// console.log(dm);
+			 	console.log(dl);
+			 	console.log(dm);
 			 	btn = $('input[type="button"]');
-			 	// console.log(btn);
+
 			 	for(var i=0;i<dl.length;i++){
 			 		t = '{ '+dm[i]+' }'+'@['+dl[i]+']';
-			 		// console.log(t);
+			 		console.log(t);
 			 		for(var j=0;j<btn.length;j++){
-			 			if(btn[j].title.indexOf(t)>=0){
-			 				console.log(btn[j].title);
+			 			arr = btn[j].title.split('\n');
+			 			for(var k=0;k<arr.length;k++){
+			 				console.log(arr[k]);
+			 				if(arr[k]==t){
+			 					console.log("match");
+			 				}
 			 			}
 			 		}
 			 		
 				}
 			}
-
-				// for(var i=0;i<data.lemmas.length;i++){
-				// 	btn = $('input[type="button"]');
-				// 	for(var j = 0 ;j<btn.length;j++){
-				// 		arr = btn[j].title.replace(/{|\[|\]|}/g,'').split('\n ');
-				// 		for(var k = 0;k<arr.length;k++){
-				// 			if((arr[k].indexOf(data.lemmas[i])>=0) && (arr[k].indexOf(data.morph_cng[i])>=0)){
-			 // 					console.log(arr[k]);
-			 // 					break;
-			 // 				}
-				// 		}
-			 // 		}
-				// }
-
 		})
 		
 		nop = 0;

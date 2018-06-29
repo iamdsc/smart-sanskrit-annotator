@@ -24,7 +24,8 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$('.exs').click(function(){
-		$(this).attr('href','/?line='+ $(this).text());
+		var bid = JSON.parse('{{batch_id}}');
+		$(this).attr('href','/?bid='+bid+'&line='+ $(this).text());
 	});
 });
 </script>

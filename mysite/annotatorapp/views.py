@@ -38,16 +38,16 @@ def wordsinsentenceview(request):
     return render(request, 'annotatorapp/tables.html', {'tabledata': tabledata})
 
 #renders a list consisting of lines and ids
-def xsentenceview(request):
+def xsentenceview(request,batch_id):
     l = [0,20,40,60,80,100,120,140,160,180]
-    r = random.choice(l)
+    r = l[batch_id]
     ids = Exsentences.objects.values('xsent_id')[r:r+20]
     line = Exsentences.objects.values('line')[r:r+20]
     chunks = Exsentences.objects.values('chunks')[r:r+20]
     lemmas = Exsentences.objects.values('lemmas')[r:r+20]
     morph_cng = Exsentences.objects.values('morph_cng')[r:r+20]
     lists = zip(ids,line,chunks,lemmas,morph_cng)
-    return render(request, 'annotatorapp/exsent.html', {'lists':lists})
+    return render(request, 'annotatorapp/exsent.html', {'lists':lists,'batch_id':batch_id})
 
 # for rendering response  upon obtaining saved word data (present as Draggable operators) from the database
 def get_dragdata(request):
@@ -150,7 +150,6 @@ def presentdataview(request):
                     sent_id = Sentence1.id
                     pos = 0
                     context = codeforline.contestofwordsdata(sent_id)
-                    print(context)
                     return render(request, 'annotatorapp/presentdata.html', context)
                 else:
                     wordsdata = codeforline.worddataofsentence(df, Sentence)

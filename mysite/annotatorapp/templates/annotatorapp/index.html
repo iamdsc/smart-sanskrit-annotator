@@ -35,14 +35,16 @@
 
 //this function helps the sentence(among the example statements) that has been clicked upon to be automatically pasted over the input slot
 $(document).ready(function(){
-  var urlParams = new URLSearchParams(window.location.search);
-  var line = urlParams.toString();
-  line=line.replace(/\+/g,' ').slice(5,);
-  console.log(line);
-  if(line!=''){
-  $('#line').attr('value',line);
-  $('#linetype').val('SLP');
-  }
+var urlParams = new URLSearchParams(window.location.search);
+var line = urlParams.toString();
+bid=line.slice(4,5);
+line=line.replace(/\+/g,' ').slice(11,);
+if(line!=''){
+$('#line').attr('value',line);
+$('#linetype').val('SLP');
+$('#exid').attr('href','/sentences/'+bid);
+}
 });
+
 </script>
 {%endblock%}
