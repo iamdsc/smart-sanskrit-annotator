@@ -10,6 +10,9 @@ def rom_slp(a):
         
     double_dict={}
     f=open('rom2.txt','r',encoding='utf8')
+
+    #extracting words out of the lines of the text
+
     for lines in f.readlines():
         words=lines.split(',')
         words[1]=words[1].replace('\n','')
@@ -23,7 +26,9 @@ def rom_slp(a):
         words[1]=words[1].replace('\n','')
         single_dict[words[0]]=words[1]
     q.close()
-    
+
+    #change the value of 'a' through the following replacements.
+    #for dictionaries single_dict and double_dict
     for elem in double_dict:
         if elem in a:
             a=a.replace(elem,double_dict[elem])
@@ -31,5 +36,5 @@ def rom_slp(a):
         if elem in a:
             a=a.replace(elem,single_dict[elem])
     return(a)
-    
-    
+
+

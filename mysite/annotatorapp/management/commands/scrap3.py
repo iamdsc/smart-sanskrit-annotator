@@ -24,6 +24,9 @@ _out = open('answers.txt','w',encoding='utf8')
 
 for filename in os.listdir(dir_p):
     if('.p' in filename):
+
+        #loading the .p files
+
         output_load = pickle.load(open(dir_p+filename, "rb"), encoding='utf-8')
         lemmas = sum(output_load.lemmas,[])
         roman_lemmas = sum(output_load.lemmas,[])
