@@ -6,6 +6,7 @@ Created on Tue Apr  5 19:14:27 2016
 """
 
 #conversion module from roman notations to SLP notations
+
 def rom_slp(a):
         
     double_dict={}
@@ -29,6 +30,7 @@ def rom_slp(a):
 
     #change the value of 'a' through the following replacements.
     #for dictionaries single_dict and double_dict
+
     for elem in double_dict:
         if elem in a:
             a=a.replace(elem,double_dict[elem])

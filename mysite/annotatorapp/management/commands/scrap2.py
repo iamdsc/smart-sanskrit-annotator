@@ -8,7 +8,9 @@ path = os.path.join(dirname,'answers.txt')
 
 class Command(BaseCommand):
 	help = 'Populates the database with example sentences and their solution'
-	    # extracting the line, chunks, lemmas
+
+	# extracting the line, chunks, lemmas
+
 	def extract(self):
 		f = open(path,encoding='utf-8')
 		for l in f.readlines():

@@ -7,7 +7,9 @@ import romtoslp as conv
 # currently the pickle files can be opened only with Python 3
 
 
-#This file loads the sample 200 sentences from answers.txt onto a table in the db so that batches of it can be taken for testing
+#This file loads the sample 200 sentences from answers.txt onto a table
+# in the db so that batches of it can be taken for testing
+
 cur_dir = os.path.dirname(os.path.realpath(__file__))
 dir_p = os.path.join(cur_dir,'pickle/')
 dir_graphml = os.path.join(cur_dir,'graphml/')
@@ -51,7 +53,8 @@ for filename in os.listdir(dir_p):
                     nodes.append(node.copy())    
         nodes = [dict(t) for t in set([tuple(d.items()) for d in nodes])]
         
-        # compare 
+        # compare
+
         for lemma,_cng in zip(lemmas,cng):
             for cdict in nodes:
                 if lemma == cdict['word'] and _cng == cdict['morph_no']:
