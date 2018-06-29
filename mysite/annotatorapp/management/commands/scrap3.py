@@ -6,6 +6,8 @@ import romtoslp as conv
 # Class definition for pickle files
 # currently the pickle files can be opened only with Python 3
 
+
+#This file loads the sample 200 sentences from answers.txt onto a table in the db so that batches of it can be taken for testing
 cur_dir = os.path.dirname(os.path.realpath(__file__))
 dir_p = os.path.join(cur_dir,'pickle/')
 dir_graphml = os.path.join(cur_dir,'graphml/')
