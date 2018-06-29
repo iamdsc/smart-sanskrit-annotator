@@ -6,7 +6,6 @@ import json
 from django_datatables_view.base_datatable_view import BaseDatatableView
 import random
 
-
 # renders response for index page
 def index(request):
     return render(request, 'annotatorapp/index.html', {})
@@ -150,7 +149,7 @@ def presentdataview(request):
                     sent_id = Sentence1.id
                     pos = 0
                     context = codeforline.contestofwordsdata(sent_id)
-                    return render(request, 'annotatorapp/presentdata.html', context)
+                    return render(request, 'annotatorapp/presentdata.html',context)
                 else:
                     wordsdata = codeforline.worddataofsentence(df, Sentence)
                     return render(request, 'annotatorapp/presentdata.html',
@@ -255,7 +254,6 @@ def get_sol_data(request):
             data['chunks'] = xsent[0].chunks
             data['lemmas'] = xsent[0].lemmas
             data['morph_cng'] = xsent[0].morph_cng
-            print(data)
             return HttpResponse(json.dumps(data))
     else:
         raise Http404

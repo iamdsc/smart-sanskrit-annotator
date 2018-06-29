@@ -14,9 +14,9 @@ class Command(BaseCommand):
 		for l in f.readlines():
 			c=l.split('#')
 			line = c[0].rstrip()
+			line = line.replace("'","\\'")
 			chunks = c[1]
 			lemmas = c[2]
-			print(lemmas)
 			morph_cng = c[3][:-1]
 			try:
 				xsent = Exsentences(line=line,chunks=chunks,lemmas=lemmas,morph_cng=morph_cng)

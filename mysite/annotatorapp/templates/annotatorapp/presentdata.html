@@ -223,8 +223,8 @@ $(document).ready(function()
 	var data ={};
 	var date = new Date();
 	var id = 0;
-	// var btn = $('#word-table > tbody > tr:first > td > div > input[type="button"]');
-
+	var btn;
+	var btn_high;
 	var c = true;
 
 	init_time = date.getTime();
@@ -232,15 +232,14 @@ $(document).ready(function()
 	$('#recommend1').prop('checked',false);
 	$('#recommend2').prop('checked',false);
 	//for applying shadows to buttons in the given table consisting of possible segments
-	// function btnHigh(){
-	// 	if(c)
-	// 		btn.toggleClass('high');
-	// 	else
-	// 		btn.toggleClass('high');
-	// 	c = !c;
-	// }
+	function btnHigh(){
+		if(c)
+			btn_high.toggleClass('high');
+		else
+			btn_high.toggleClass('high');
+		c = !c;
+	}
 	//recommendation using segmentation only which highlights the first row
-	var btn;
 	$('#recommend1').change(function(){
 		var xsent = JSON.stringify('{{line}}');
 		$.ajax({
@@ -266,9 +265,11 @@ $(document).ready(function()
 			 		for(var j=0;j<btn.length;j++){
 			 			arr = btn[j].title.split('\n');
 			 			for(var k=0;k<arr.length;k++){
-			 				console.log(arr[k]);
+			 				ar=arr[k].split('-')[0]; 
 			 				if(arr[k]==t){
-			 					console.log("match");
+			 					btn[j].className += ' select_high';
+			 					console.log(btn[j]);
+			 					btn_high = $('.select_high')
 			 				}
 			 			}
 			 		}
@@ -279,13 +280,13 @@ $(document).ready(function()
 		
 		nop = 0;
 		line = 20;
-		// var c1 = this.checked;
-		// if(c1)
-		// 	id = setInterval(btnHigh,800);
-		// else{
-		// 	clearInterval(id);
-		// 	btn.removeClass('high');
-		// }
+		var c1 = this.checked;
+		if(c1)
+			id = setInterval(btnHigh,800);
+		else{
+			clearInterval(id);
+			btn_high.removeClass('high');
+		}
 		var conf = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
 		for(var key in conf){
 			if(conf[key].length == 0){
@@ -298,13 +299,13 @@ $(document).ready(function()
 	$('#recommend2').change(function(){
 		nop = 0;
 		line = 20;
-		// var c2 = this.checked;
-		// if(c2)
-		// 	id = setInterval(btnHigh,800);
-		// else{
-		// 	clearInterval(id);
-		// 	btn.removeClass('high');
-		// }
+		var c2 = this.checked;
+		if(c2)
+			id = setInterval(btnHigh,800);
+		else{
+			clearInterval(id);
+			btn_high.removeClass('high');
+		}
 		var conf = JSON.parse('{{conflictslp}}'.replace(/(&quot\;)/g,"\""));
 		for(var key in conf){
 			if(conf[key].length == 0){
@@ -1085,6 +1086,7 @@ $(document).ready(function()
 			})
 		}
 	});
+	$('#exid').attr('href','/sentences/'+bid);
 });
 </script>
 </div>

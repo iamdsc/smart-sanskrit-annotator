@@ -38,7 +38,7 @@ $(document).ready(function(){
 var urlParams = new URLSearchParams(window.location.search);
 var line = urlParams.toString();
 bid=line.slice(4,5);
-line=line.replace(/\+/g,' ').slice(11,);
+line=line.replace(/\+/g,' ').replace(/%27/,"'").slice(11,);
 if(line!=''){
 $('#line').attr('value',line);
 $('#linetype').val('SLP');
