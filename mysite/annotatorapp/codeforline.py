@@ -54,8 +54,8 @@ def getdatafromsite(inputsent):  # Scrapping data from site
                     linechar.append(char.string)
                     c += 1
                 i += 1
-                line = "".join(linechar)
-                linechunks = line.split("\xa0")
+                line_header = "".join(linechar)
+                linechunks = line_header.split("\xa0")
                 continue
             position_ = 0
             j = 0
@@ -109,7 +109,8 @@ def getdatafromsite(inputsent):  # Scrapping data from site
                 else:
                     position_ += 1
             i = i + 1
-    return t
+            dict_ = {'t':t,'line_header':line_header}
+    return dict_
 
 
 def savedatafromsite(df, sent):
@@ -222,6 +223,7 @@ def getsentwordtree(sent_id):
 
 #this function helps decide the conflicts asociated with each segment in the input sentence
 def contestofwordsdata(sent_id):
+    # print(sent_id['line_header'])
     Sentence1 = Sentences.objects.get(id=sent_id)
     wordsdata = WordOptions.objects.all().filter(sentence=Sentence1)
     wordsinsentence = Wordsinsentence.objects.all().filter(sentence=Sentence1)
@@ -358,7 +360,6 @@ def contestofwordsdata(sent_id):
 
         for i in df.index:
             if (l == df.loc[i].level) and ((df.loc[i].position > p) and df.loc[i].position < e):
-                # print(l,p,e,df.loc[i].level,df.loc[i].position)
                 if not str(df.loc[i].level) + '-' + str(df.loc[i].position) in conflictslp[key]:
                     conflictslp[key].append(str(df.loc[i].level) + '-' + str(df.loc[i].position))
             if not (l == df.loc[i].level):
@@ -373,7 +374,7 @@ def contestofwordsdata(sent_id):
         conflictslp1color[key.split('-')[0] + '-' + key.split('-')[1]] = key.split('-')[3]
 
     #context dictionary containing every detailed bit of the word in the sentence
-    context = {'line': Sentence1.line, 'wordsdata': wordsdata, 'words': sentwords, 'chunknum': chunknum,
+    context = {'line': Sentence1.line,'line_header':Sentence1.line_header, 'wordsdata': wordsdata, 'words': sentwords, 'chunknum': chunknum,
                'sentid': sent_id, 'dragdata': json.dumps(dragdata), 'links': json.dumps(links),
                'conflictslp': json.dumps(conflictslp1), 'colorlp': json.dumps(conflictslp1color),
                'levelofword': levelofword, 'levelrange': levelrange, 'posofword': posofword, 'idsofword': idsofword,

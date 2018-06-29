@@ -5,6 +5,7 @@ class Sentences(models.Model):
 	"""docstring for Sentence"""
 	line = models.CharField(max_length=200)
 	linetype = models.CharField(max_length=100)
+	line_header = models.CharField(max_length=200)
 	
 	def __str__(self):
 		return str(self.id) +"/ "+ self.line+"/"+self.linetype

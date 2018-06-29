@@ -132,8 +132,12 @@ def presentdataview(request):
                 )
 
                 if not codeforline.checksent(Sentence):  # if new sentence appears
-                    df = codeforline.getdatafromsite(Sentence)
+                    dict_ = codeforline.getdatafromsite(Sentence)
+                    df = dict_['t']
+                    line_header = dict_['line_header']
+                    # print("hello "+ line_header)
                     if saveline:
+                        Sentence.line_header = line_header
                         Sentence.save()
                         codeforline.savedatafromsite(df, Sentence)
                         print("Adding Sentences data to Database \n\n")
@@ -148,6 +152,7 @@ def presentdataview(request):
                         chunknum[word] = c
                     sent_id = Sentence1.id
                     pos = 0
+                    # _dict = {'sent_id':sent_id,'line_header':line_header} 
                     context = codeforline.contestofwordsdata(sent_id)
                     return render(request, 'annotatorapp/presentdata.html',context)
                 else:
