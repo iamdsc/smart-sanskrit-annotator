@@ -5,6 +5,7 @@ Created on Tue Apr  5 19:14:27 2016
 @author: puneet
 """
 
+#conversion module from roman characters to roman
 def rom_slp(a):
         
     double_dict={}
