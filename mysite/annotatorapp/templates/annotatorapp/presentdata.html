@@ -262,13 +262,15 @@ $(document).ready(function()
 			 	for(var i=0;i<dl.length;i++){
 			 		t = '{ '+dm[i]+' }'+'@['+dl[i]+']';
 			 		console.log(t);
+			 		console.log('########');
 			 		for(var j=0;j<btn.length;j++){
 			 			arr = btn[j].title.split('\n');
 			 			for(var k=0;k<arr.length;k++){
-			 				ar=arr[k].split('-')[0]; 
-			 				if(arr[k]==t){
+			 				ar = arr[k].split('-')[0] + ']';
+			 				console.log(arr[k]);
+			 				if(arr[k]==t || ar==t){
 			 					btn[j].className += ' select_high';
-			 					console.log(btn[j]);
+			 					console.log('matched');
 			 					btn_high = $('.select_high')
 			 				}
 			 			}
@@ -1086,7 +1088,6 @@ $(document).ready(function()
 			})
 		}
 	});
-	$('#exid').attr('href','/sentences/'+bid);
 });
 </script>
 </div>
