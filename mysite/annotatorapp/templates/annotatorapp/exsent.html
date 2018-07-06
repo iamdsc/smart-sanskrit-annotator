@@ -25,7 +25,7 @@
 $(document).ready(function(){
 	$('.exs').click(function(){
 		var bid = JSON.parse('{{batch_id}}');
-		$(this).attr('href','/?bid='+bid+'&line='+ $(this).text());
+		$(this).attr('href','/presentdata/?bid='+bid+'&linetype=SLP&line='+ $(this).text()+'&linetype=SLP');
 	});
 });
 </script>

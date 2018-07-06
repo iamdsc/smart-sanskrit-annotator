@@ -120,9 +120,52 @@ def save_dragdata(request):
 #function that checks if input sentence is present in database otherwise sends request to SHR for data scrap.
 #returns a dictionary and pandas dataframe with the data
 def presentdataview(request):
+    saveline = True
+    if request.method == 'GET':
+        try:
+            Sentence = Sentences(
+                line=request.GET.get('line',''),
+                linetype=request.GET.get('linetype',''),
+            )
+
+            if not codeforline.checksent(Sentence):  # if new sentence appears
+                dict_ = codeforline.getdatafromsite(Sentence)
+                df = dict_['t']
+                line_header = dict_['line_header']
+                # print("hello "+ line_header)
+                if saveline:
+                    Sentence.line_header = line_header
+                    Sentence.save()
+                    codeforline.savedatafromsite(df, Sentence)
+                    print("Adding Sentences data to Database \n\n")
+            if codeforline.checksent(Sentence):
+                Sentence1 = Sentences.objects.get(line=Sentence.line, linetype=Sentence.linetype)
+                wordsdata = WordOptions.objects.all().filter(sentence=Sentence1)
+                words = Sentence1.line.split(' ')
+                chunknum = {}
+                c = 0
+                for word in words:
+                    c = c + 1
+                    chunknum[word] = c
+                sent_id = Sentence1.id
+                pos = 0
+                # _dict = {'sent_id':sent_id,'line_header':line_header} 
+                context = codeforline.contestofwordsdata(sent_id)
+                return render(request, 'annotatorapp/presentdata.html',context)
+            else:
+                wordsdata = codeforline.worddataofsentence(df, Sentence)
+                return render(request, 'annotatorapp/presentdata.html',
+                              {'wordsdata': wordsdata, 'words': Sentence.line.split(' ')})
+        except Exception as e:
+            print("Sentence not inserted : ")
+            print(e)
+        Sentences1 = Sentences.objects.all()
+        for s in Sentences1:
+            sent_id = s.id
+            break
+        return render(request, 'annotatorapp/presentdata.html', {'sentid': sent_id})
     if request.method == "POST":
         Inputlineform = forms.inputlineform(request.POST)
-        saveline = True
         if Inputlineform.is_valid():
             print('form is valid')
             try:
@@ -130,7 +173,6 @@ def presentdataview(request):
                     line=Inputlineform.cleaned_data['line'],
                     linetype=Inputlineform.cleaned_data['linetype'],
                 )
-
                 if not codeforline.checksent(Sentence):  # if new sentence appears
                     dict_ = codeforline.getdatafromsite(Sentence)
                     df = dict_['t']
@@ -180,7 +222,6 @@ def presentdataview(request):
         pos = 0
         context = codeforline.contestofwordsdata(sent_id)
         return render(request, 'annotatorapp/presentdata.html', context)
-
 
 def select_wordoptionview(request, sent_id, wordoption_id):
     wo = WordOptions.objects.get(id=wordoption_id)
