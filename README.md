@@ -11,6 +11,7 @@ requests
 django
 django-datatable
 django_datatables_view
+table
 ```
 ## Apply Migrations for the database with following command
 ```
